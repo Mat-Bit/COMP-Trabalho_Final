@@ -1,6 +1,7 @@
 {
 	int a, b, e;
 	float c, d;
+	String f, abc;
 
 	print("Valor de A:");
 	read(a);

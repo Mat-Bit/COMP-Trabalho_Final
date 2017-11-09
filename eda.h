@@ -25,34 +25,34 @@ typedef struct Lista{
 } tLista;
 
 typedef struct no{
-  TIPO tipo;
-  char *valor;
-  int num;
-  struct no *direita;
-  struct no *esquerda;
+    char *valor;
+    TIPO tipo;
+    int num;
+    struct no *direita;
+    struct no *esquerda;
 } tNo;
 
 typedef struct arvore{
-  tNo *raiz;
-  int qtd;
+    tNo *raiz;
+    int qtd;
 }tArvore;
 
 typedef struct AST{
-  int cod;
-  char *id;
-  struct AST *pt1,*pt2;
-  int ConstInt;
-  float ConstFloat;
-  //
+    int cod;
+    char *id;
+    struct AST *pt1,*pt2;
+    int ConstInt;
+    float ConstFloat;
+    //
 }tAST;
 
 void printLista(tLista *cabeca);
 tLista *criarLista (char *id);
 void insereLista (tLista *head, char *id);
 tArvore * criarArvore();
-void insereArvore(tArvore * arv,char * valor);
-void insereArvoreInterna(tNo * no, char * valor, int posicao);
-tNo * criaNo(char* valor, int num);
+void insereArvore(tArvore *arv, tLista *lista);
+void insereArvoreInterna(tNo *no, tLista *lista, int posicao);
+tNo * criaNo(tLista *lista, int num);
 void printArvore(tArvore * arv);
 void printNos(tNo * no, int nivel);
 void insereListaNaArvore(tLista * lista, tArvore * arv);

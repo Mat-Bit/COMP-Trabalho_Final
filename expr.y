@@ -7,6 +7,7 @@ tArvore * tabelaSimbolos;
 
 typedef struct Atributo{
   tLista *listaId;
+  tArvore tabelaSimbolos;
   char id[MAXID];
   int tipo;
   int ConstInt;
@@ -19,7 +20,7 @@ typedef struct Atributo{
 int __linha__ = 1;
 %}
 
-%token TADD TSUB TMUL TDIV TMENOR TMAIOR TATB TMENORIG TMAIORIG TCOM TDIF TCEE TCOU TNEG TIF TWHILE TELSE TAPAR TFPAR TACOL TFCOL TACHA TFCHA TASP TINT TFLOAT TSTRING TID TDIGITO TPV TV TRET TPRINT TREAD TVOID TLITERAL TRUE FALSE TFLOAT TEND T_FIM TNINT
+%token TADD TSUB TMUL TDIV TMENOR TMAIOR TATB TMENORIG TMAIORIG TCOM TDIF TCEE TCOU TNEG TIF TWHILE TELSE TAPAR TFPAR TACHA TFCHA TASP TINT TFLOAT TSTRING TID TPV TV TRET TPRINT TREAD TVOID TLITERAL TRUE FALSE TEND T_FIM
 
 %%
 Programa: ListaFuncoes BlocoPrincipal
@@ -45,7 +46,7 @@ BlocoPrincipal: TACHA Declaracoes ListaCmd TFCHA
 Declaracoes: Declaracoes Declaracao
     | Declaracao;
 
-Declaracao: Tipo ListaId TPV {insereTipo($2.listaId, $1.tipo); printLista($2.listaId); insereListaNaArvore($2.listaId, tabelaSimbolos);};
+Declaracao: Tipo ListaId TPV {insereTipo($2.listaId, $1.tipo); printLista($2.listaId); insereListaNaArvore($2.listaId, tabelaSimbolos); printArvore(tabelaSimbolos);};
 
 Tipo: TINT {$$.tipo = T_INT;}
     | TSTRING {$$.tipo = T_STRING;}
@@ -92,7 +93,7 @@ ChamadaFuncao: TID TAPAR ListaParametros TFPAR
 
 ListaParametros: ListaParametros TV ExpressaoAritimetica
     | ListaParametros TV TLITERAL
-    | ExpressaoAritimetica 
+    | ExpressaoAritimetica
     | TLITERAL;
 
 //Expressões

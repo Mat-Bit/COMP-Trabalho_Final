@@ -29,31 +29,29 @@ void insereLista(tLista *head, char *id){
 }
 
 void printLista(tLista *cabeca){
-  int cond = 0;
   if (cabeca == NULL){
     printf(";\n");
     return;
   }
   else {
-    if (cabeca->tipo == T_INT){
-      printf("int");
-      cond = 1;
-    }
-    if (cabeca->tipo == T_FLOAT){
-      printf("float");
-      cond = 1;
-    }
-    if (cabeca->tipo == T_STRING){
-      printf("String");
-      cond = 1;
-    }
+    if (cabeca->tipo == T_INT)
+        printf("int");
+
+    if (cabeca->tipo == T_FLOAT)
+        printf("float");
+
+    if (cabeca->tipo == T_STRING)
+        printf("String");
+
     if(cabeca->proximo == NULL)
-    printf(" %s",(char*)cabeca->id );
+        printf(" %s",(char*)cabeca->id );
     else
-    printf(" %s,",(char*)cabeca->id );
+        printf(" %s,",(char*)cabeca->id );
+
     printLista(cabeca->proximo);
   }
 }
+
 
 tArvore * criarArvore(){
   tArvore * elem = (tArvore*)malloc(sizeof(tArvore));
@@ -62,47 +60,49 @@ tArvore * criarArvore(){
   return elem;
 }
 
-void insereArvore(tArvore *arv, char *valor){
+void insereArvore(tArvore *arv, tLista *lista){
   if(arv->raiz == NULL){
-    arv->raiz = criaNo(valor, arv->qtd);
+    arv->raiz = criaNo(lista, arv->qtd);
     arv->qtd++;
     return;
   }
   else{
-    insereArvoreInterna(arv->raiz,valor,arv->qtd);
+    insereArvoreInterna(arv->raiz, lista, arv->qtd);
     arv->qtd++;
     return;
   }
 }
 
-void insereArvoreInterna(tNo *no, char *valor, int posicao){
-  int elem = strcmp(no->valor, valor);
+void insereArvoreInterna(tNo *no, tLista *lista, int posicao){
+  int elem = strcmp(no->valor, lista->id);
   if(elem == 0){
-    printf("Símbolo %s já existe\n", valor);
+    printf("Símbolo %s já existe\n", lista->id);
     exit(-1);
   }
   if(elem > 0 && no->direita == NULL){
-    no->direita = criaNo(valor,posicao);
+    no->direita = criaNo(lista,posicao);
     return;
   }
   if(elem<0 && no->esquerda == NULL){
-    no->esquerda = criaNo(valor,posicao);
+    no->esquerda = criaNo(lista,posicao);
     return;
   }
   if(elem<0){
-    insereArvoreInterna(no->esquerda,valor,posicao);
+    insereArvoreInterna(no->esquerda, lista,posicao);
   }
   else {
-    insereArvoreInterna(no->direita,valor,posicao);
+    insereArvoreInterna(no->direita, lista,posicao);
   }
 }
 
-tNo * criaNo(char* valor, int num){
-  tNo * elem = (tNo*)malloc(sizeof(tNo));
-  elem-> valor = malloc(sizeof(char)*100);
-  strcpy(elem->valor,valor);
+tNo * criaNo(tLista *lista, int num){
+  tNo *elem = (tNo*)malloc(sizeof(tNo));
+
+  elem->tipo = lista->tipo;
+  elem->valor = malloc(sizeof(char)*100);
+  strcpy(elem->valor,lista->id);
+
   elem->valor[99] = '\0';
-  elem->tipo = NDEFINIDO;
   elem->num = num;
   elem->direita = NULL;
   elem->esquerda = NULL;
@@ -115,17 +115,21 @@ void printArvore(tArvore *arv){
 
 void printNos(tNo *no, int nivel){
   if(no == NULL) return;
+  if(no->tipo == T_INT) printf("int ");
+  if(no->tipo == T_FLOAT) printf("float ");
+  if(no->tipo == T_STRING) printf("String ");
+
   for(int j=0;j<nivel;j++){ printf("\t");}
-  //printf("%s", no->valor);
+  printf("%s\n", no->valor);
   printNos(no->direita, nivel+1);
   printNos(no->esquerda, nivel+1);
 }
 
 void insereListaNaArvore(tLista *lista, tArvore *arv){
-  if(lista == NULL) return;
-  if(arv == NULL) return;
-  insereArvore(arv,(char *)lista->id);
-  insereListaNaArvore((tLista*)lista->proximo,arv);
+    if(lista == NULL) return;
+    if(arv == NULL) return;
+    insereArvore(arv, (tLista *)lista);
+    insereListaNaArvore((tLista*)lista->proximo, arv);
 }
 
 tAST *criar_ast_id(char *id){

@@ -36,8 +36,6 @@ id ([_]|{letras})+{metacharacter}*
 
 "("	{return TAPAR;}
 ")"	{return TFPAR;}
-"["	{return TACOL;}
-"]"	{return TFCOL;}
 "{"	{return TACHA;}
 "}"	{return TFCHA;}
 "\"" {return TASP;}
@@ -55,8 +53,8 @@ id ([_]|{letras})+{metacharacter}*
 "float" {return TFLOAT;}
 "String" {return TSTRING;}
 {id} { strncpy(yylval.id, yytext, 9); return TID;}
-{float}	{yylval.ConstFloat=atof(yytext); return TFLOAT;}
 {int}	{yylval.ConstInt=atoi(yytext); return TINT;}
+{float}	{yylval.ConstFloat=atof(yytext); return TFLOAT;}
 {literal} {return TLITERAL;}
 "&" {return TEND;}
 \0	{return T_FIM;}
