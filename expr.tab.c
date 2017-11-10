@@ -49,11 +49,11 @@
 #include <stdlib.h>
 #include "eda.h"
 
-tArvore * tabelaSimbolos;
+tArvore *tabelaSimbolos;
 
 typedef struct Atributo{
   tLista *listaId;
-  tArvore tabelaSimbolos;
+  tArvore *tabelaSimbolos;
   char id[MAXID];
   int tipo;
   int ConstInt;
@@ -813,7 +813,7 @@ yyreduce:
 
 case 16:
 #line 49 "expr.y"
-{insereTipo(yyvsp[-1].listaId, yyvsp[-2].tipo); printLista(yyvsp[-1].listaId); insereListaNaArvore(yyvsp[-1].listaId, tabelaSimbolos); printArvore(tabelaSimbolos);;
+{insereTipo(yyvsp[-1].listaId, yyvsp[-2].tipo); printLista(yyvsp[-1].listaId); insereListaNaArvore(yyvsp[-1].listaId, tabelaSimbolos);;
     break;}
 case 17:
 #line 51 "expr.y"
@@ -873,7 +873,7 @@ case 59:
     break;}
 case 60:
 #line 111 "expr.y"
-{yyval.ast = criar_ast_id(yyvsp[0].id);;
+{yyval.ast = criar_ast_id(tabelaSimbolos, yyvsp[0].id);;
     break;}
 }
    /* the action file gets copied in in place of this dollarsign */

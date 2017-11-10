@@ -3,11 +3,11 @@
 #include <stdlib.h>
 #include "eda.h"
 
-tArvore * tabelaSimbolos;
+tArvore *tabelaSimbolos;
 
 typedef struct Atributo{
   tLista *listaId;
-  tArvore tabelaSimbolos;
+  tArvore *tabelaSimbolos;
   char id[MAXID];
   int tipo;
   int ConstInt;
@@ -46,7 +46,7 @@ BlocoPrincipal: TACHA Declaracoes ListaCmd TFCHA
 Declaracoes: Declaracoes Declaracao
     | Declaracao;
 
-Declaracao: Tipo ListaId TPV {insereTipo($2.listaId, $1.tipo); printLista($2.listaId); insereListaNaArvore($2.listaId, tabelaSimbolos); printArvore(tabelaSimbolos);};
+Declaracao: Tipo ListaId TPV {insereTipo($2.listaId, $1.tipo); printLista($2.listaId); insereListaNaArvore($2.listaId, tabelaSimbolos);};
 
 Tipo: TINT {$$.tipo = T_INT;}
     | TSTRING {$$.tipo = T_STRING;}
@@ -108,7 +108,7 @@ TExpressaoAritimetica: TExpressaoAritimetica TMUL FExpressaoAritmetica { $$.ast 
 FExpressaoAritmetica: TAPAR ExpressaoAritimetica TFPAR { $$.ast = $2.ast; }
     | TFLOAT {$$.ast = criar_ast_float($1.ConstFloat);}
     | TINT {$$.ast = criar_ast_int($1.ConstInt);}
-    | TID {$$.ast = criar_ast_id($1.id);};
+    | TID {$$.ast = criar_ast_id(tabelaSimbolos, $1.id);};
 
 ExpressaoLogica: ExpressaoLogica TCEE FExpressaoLogica
     | ExpressaoLogica TCOU FExpressaoLogica

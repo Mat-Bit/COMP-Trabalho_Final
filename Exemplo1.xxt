@@ -11,14 +11,14 @@
 	{
 		if (a > b)
 		{
-			a = a - b;
+			a = a + b;
 		}
 		if (b > a)
 		{
 			b = b - a;
 		}
 	}
-	a = b * 2 - 1 + c;
+	e = b * 2 - 1 + a;
 	print("\nRes=");
 	print(a);
 }
