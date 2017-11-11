@@ -813,7 +813,7 @@ yyreduce:
 
 case 16:
 #line 49 "expr.y"
-{insereTipo(yyvsp[-1].listaId, yyvsp[-2].tipo); printLista(yyvsp[-1].listaId); insereListaNaArvore(yyvsp[-1].listaId, tabelaSimbolos);;
+{insereTipo(yyvsp[-1].listaId, yyvsp[-2].tipo); printLista(yyvsp[-1].listaId); insereListaNaArvore(yyvsp[-1].listaId, tabelaSimbolos); printArvoreInicio(tabelaSimbolos);;
     break;}
 case 17:
 #line 51 "expr.y"

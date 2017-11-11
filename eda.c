@@ -74,6 +74,7 @@ void insereArvore(tArvore *arv, tLista *lista){
 }
 
 void insereArvoreInterna(tNo *no, tLista *lista, int posicao){
+
     int elem = strcmp(no->valor, lista->id);
     if(elem == 0){
         printf("Símbolo %s já existe\n", lista->id);
@@ -113,29 +114,28 @@ void printArvoreInicio(tArvore *arv){
     tNo *elem = (tNo*)malloc(sizeof(tNo));
     elem = arv->raiz;
     printArvore(elem, 0);
+    printf("\n");
 }
 
 void printArvore(tNo *elem, int nivel){
 
-    if(elem == NULL){
-        printf("*");
-        return;
-    }
+    if(elem == NULL) return;
     printArvore(elem->esquerda, nivel+1);
     printNos(elem, nivel);
     printArvore(elem->direita, nivel+1);
+    printf("\n");
 }
 
 void printNos(tNo *no, int nivel){
     int j;
 
     if(no == NULL) return;
-    if(no->tipo == T_INT) printf("int ");
-    if(no->tipo == T_FLOAT) printf("float ");
-    if(no->tipo == T_STRING) printf("String ");
+    //if(no->tipo == T_INT) printf("int ");
+    //if(no->tipo == T_FLOAT) printf("float ");
+    //if(no->tipo == T_STRING) printf("String ");
 
-    for(j=0;j<nivel;j++){ printf("   ");}
-    printf("%s\n", no->valor);
+    for(j=0;j<nivel;j++){ printf("\t");}
+    printf("%s(%d,%d)", no->valor, no->num, nivel);
 }
 
 void insereListaNaArvore(tLista *lista, tArvore *arv){
@@ -147,10 +147,10 @@ void insereListaNaArvore(tLista *lista, tArvore *arv){
 
 char *percorreArvore(tNo *no, int i){
     if(no->esquerda != NULL){
-        if(i < no->num) return no->esquerda->valor;
+        if(i < no->num) percorreArvore(no->esquerda, i);
     }
     if(no->direita != NULL){
-        if(i > no->num) return no->direita->valor;
+        if(i > no->num) percorreArvore(no->direita, i);
     }
     return no->valor;
 }

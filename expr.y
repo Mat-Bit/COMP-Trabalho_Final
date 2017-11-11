@@ -46,7 +46,7 @@ BlocoPrincipal: TACHA Declaracoes ListaCmd TFCHA
 Declaracoes: Declaracoes Declaracao
     | Declaracao;
 
-Declaracao: Tipo ListaId TPV {insereTipo($2.listaId, $1.tipo); printLista($2.listaId); insereListaNaArvore($2.listaId, tabelaSimbolos);};
+Declaracao: Tipo ListaId TPV {insereTipo($2.listaId, $1.tipo); printLista($2.listaId); insereListaNaArvore($2.listaId, tabelaSimbolos); printArvoreInicio(tabelaSimbolos);};
 
 Tipo: TINT {$$.tipo = T_INT;}
     | TSTRING {$$.tipo = T_STRING;}
