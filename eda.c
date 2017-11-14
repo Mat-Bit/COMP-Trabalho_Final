@@ -150,52 +150,45 @@ void insereListaNaArvore(tLista *lista, tArvore *arv){
     insereListaNaArvore(lista->proximo, arv);
 }
 
-char *percorreArvore(tNo *no, int i, char *id){
-    printf("Percorrendo o no %s\n", no->valor);
-    if(no->valor == id) return no->valor;
+tNo *busca(tNo *arvore, char *id){
+    int comp;
+    //printf("Valor no: %s, id pra conferir: %s\n", arvore->valor, id);
+    if (arvore == NULL)
+        return NULL;
 
-    /*
-    if(no->esquerda != NULL){
-        if(i < no->num) percorreArvore(no->esquerda, i, id);
-    }
-    if(no->direita != NULL){
-        if(i > no->num) percorreArvore(no->direita, i, id);
-    }
-    */
+        comp = strcmp(arvore->valor, id);
 
+    if (comp == 0){
+        //printf("Achooou\n");
+        return arvore;
+    }
+    if (comp > 0)
+        return busca(arvore->esquerda, id);
+    else
+        return busca(arvore->direita, id);
 }
 
 tAST *criar_ast_id(tArvore *tabSimb, char *id){
-    int i, aux;
-    char *var;
+    tAST *ast;
+    tNo *no, *aux;
 
-    tAST *ast = (tAST*)malloc(sizeof(tAST));
-    tNo *no = (tNo*)malloc(sizeof(tNo));
     no = tabSimb->raiz;
-    aux = 0;
 
-    for (i = 0; i < tabSimb->qtd; i++) {
-        if(no != NULL){
-            var = no->valor;
-            if(var == id) aux = 1;
-            var = percorreArvore(no->esquerda, i, id);
-            if(var == id) aux = 1;
-            var = percorreArvore(no->direita, i, id);
-            if(var == id) aux = 1;
-        }
-    }
-    // se o id informado for um id válido (dentro da tabelaSimbolos)
-    if(aux == 1){
-        printf("aux foi encontrado na tabSimb (%s)\n", var);
-        ast->id = id;
-        ast->pt1 = NULL;
-        ast->pt2 = NULL;
-        return ast;
-    }
-    else{
+    aux = busca(no, id);
+
+    if(aux == NULL){
         // o ID nao está na tabelaSimbolos, ou seja é um ID invalido
         printf("A variavel %s nao eh valida\n", id);
         exit(-1);
+    }else{
+        // se o id informado for um id válido (dentro da tabelaSimbolos)
+        printf("aux foi encontrado na tabSimb (%s)\n\n", aux->valor);
+        ast->id = id;
+        ast->ConstInt = 0;
+        ast->ConstFloat = 0.0;
+        ast->pt1 = NULL;
+        ast->pt2 = NULL;
+        return ast;
     }
 }
 
@@ -225,17 +218,32 @@ tAST *cria_ast_op(tAST *exp_esq, tAST *exp_dir, int cod){
     elem->pt2 = exp_dir;
     elem-> cod = cod;
     elem->id = NULL;
+    return elem;
 }
 
 void printa_arv_exp(tAST *cabeca){
 
     if(cabeca->pt1 != NULL) printa_arv_exp(cabeca->pt1);
-    if(cabeca->pt2 != NULL) printa_arv_exp(cabeca->pt1);
+    if(cabeca->pt2 != NULL) printa_arv_exp(cabeca->pt2);
 
     if(cabeca->id != NULL) printf("%s ", cabeca->id);
     else{
         if(cabeca->ConstInt != 0) printf("%d ", cabeca->ConstInt);
         if(cabeca->ConstFloat != 0.0) printf("%.1f ", cabeca->ConstFloat);
+    }
+    switch (cabeca->cod) {
+        case ADD:
+            printf("+\n");
+            break;
+        case SUB:
+            printf("-\n");
+            break;
+        case MUL:
+            printf("*\n");
+            break;
+        case DIV:
+            printf("/\n");
+            break;
     }
 
 }
