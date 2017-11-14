@@ -81,8 +81,8 @@ void insereArvoreInterna(tNo *no, tLista *lista, int posicao){
         exit(-1);
     }
 
-    printf("lista[id]: %s , no[valor]: %s\n", lista->id, no->valor);
-    printf("elem = %d\n\n", elem);
+    //printf("lista[id]: %s , no[valor]: %s\n", lista->id, no->valor);
+    //printf("elem = %d\n\n", elem);
 
     if(elem > 0 && no->direita == NULL){
         no->direita = criaNo(lista, posicao);
@@ -168,6 +168,7 @@ tNo *busca(tNo *arvore, char *id){
         return busca(arvore->direita, id);
 }
 
+
 tAST *criar_ast_id(tArvore *tabSimb, char *id){
     tAST *ast;
     tNo *no, *aux;
@@ -182,12 +183,13 @@ tAST *criar_ast_id(tArvore *tabSimb, char *id){
         exit(-1);
     }else{
         // se o id informado for um id válido (dentro da tabelaSimbolos)
-        printf("aux foi encontrado na tabSimb (%s)\n\n", aux->valor);
+        printf("A variavel %s eh valida\n", id);
         ast->id = id;
         ast->ConstInt = 0;
         ast->ConstFloat = 0.0;
         ast->pt1 = NULL;
         ast->pt2 = NULL;
+        ast->cod = 0;
         return ast;
     }
 }
@@ -195,57 +197,81 @@ tAST *criar_ast_id(tArvore *tabSimb, char *id){
 tAST *criar_ast_int(int valor_int){
     tAST *elem = (tAST*)malloc(sizeof(tAST));
     elem->ConstInt = valor_int;
-    elem->id = NULL;
+    elem->ConstFloat = 0.0;
+    elem->id = "NULL";
     elem->pt1 = NULL;
     elem->pt2 = NULL;
+    elem->cod = 0;
     return elem;
 }
 
 tAST *criar_ast_float(float valor_float){
     tAST *elem = (tAST*)malloc(sizeof(tAST));
     elem->ConstFloat = valor_float;
-    elem->id = NULL;
+    elem->ConstInt = 0;
+    elem->id = "NULL";
     elem->pt1 = NULL;
     elem->pt2 = NULL;
+    elem->cod = 0;
     return elem;
 }
 
 tAST *cria_ast_op(tAST *exp_esq, tAST *exp_dir, int cod){
-    int  dir=0, esq=0;
+    int  dir=0, esq=0, comp;
     float dirf=0.0, esqf=0.0, resultado;
     tAST *elem = (tAST*)malloc(sizeof(tAST));
+
     elem->pt1 = exp_esq;
     elem->pt2 = exp_dir;
-    elem-> cod = cod;
-    elem->id = NULL;
+
+    comp = strcmp(exp_esq->id, "NULL");
+    if (comp != 0) elem->pt1->id = exp_esq->id;
+    else{
+        if(exp_esq->ConstInt != 0) elem->pt1->ConstInt = exp_esq->ConstInt;
+        if(exp_esq->ConstFloat != 0.0) elem->pt1->ConstFloat = exp_esq->ConstFloat;
+    }
+    comp = strcmp(exp_dir->id, "NULL");
+    if (comp != 0) elem->pt2->id = exp_dir->id;
+    else{
+        if(exp_dir->ConstInt != 0) elem->pt2->ConstInt = exp_dir->ConstInt;
+        if(exp_dir->ConstFloat != 0.0) elem->pt2->ConstFloat = exp_dir->ConstFloat;
+    }
+    elem->id = "NULL";
+    elem->cod = cod;
     return elem;
 }
 
 void printa_arv_exp(tAST *cabeca){
+    int comp;
 
     if(cabeca->pt1 != NULL) printa_arv_exp(cabeca->pt1);
     if(cabeca->pt2 != NULL) printa_arv_exp(cabeca->pt2);
 
-    if(cabeca->id != NULL) printf("%s ", cabeca->id);
-    else{
-        if(cabeca->ConstInt != 0) printf("%d ", cabeca->ConstInt);
-        if(cabeca->ConstFloat != 0.0) printf("%.1f ", cabeca->ConstFloat);
-    }
-    switch (cabeca->cod) {
-        case ADD:
-            printf("+\n");
-            break;
-        case SUB:
-            printf("-\n");
-            break;
-        case MUL:
-            printf("*\n");
-            break;
-        case DIV:
-            printf("/\n");
-            break;
+    if(cabeca->pt1 == NULL && cabeca->pt2 == NULL){
+        comp = strcmp(cabeca->id, "NULL");
+        if(comp != 0) printf("%s ", cabeca->id);
+        else{
+            if(cabeca->ConstInt != 0) printf("%d ", cabeca->ConstInt);
+            if(cabeca->ConstFloat != 0.0) printf("%.1f ", cabeca->ConstFloat);
+        }
     }
 
+    if(cabeca->cod != 0){
+        switch (cabeca->cod) {
+            case ADD:
+            printf("+ ");
+            break;
+            case SUB:
+            printf("- ");
+            break;
+            case MUL:
+            printf("* ");
+            break;
+            case DIV:
+            printf("/ ");
+            break;
+        }
+    }
 }
 
 /*

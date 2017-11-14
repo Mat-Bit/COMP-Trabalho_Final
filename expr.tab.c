@@ -837,7 +837,7 @@ case 21:
     break;}
 case 51:
 #line 100 "expr.y"
-{ yyval.ast = cria_ast_op(yyvsp[-2].ast, yyvsp[0].ast, ADD); printa_arv_exp(yyval.ast);;
+{ yyval.ast = cria_ast_op(yyvsp[-2].ast, yyvsp[0].ast, ADD); printa_arv_exp(yyval.ast); printf("\n");;
     break;}
 case 52:
 #line 101 "expr.y"

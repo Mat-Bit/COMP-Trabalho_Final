@@ -97,7 +97,7 @@ ListaParametros: ListaParametros TV ExpressaoAritimetica
     | TLITERAL;
 
 //Expressões
-ExpressaoAritimetica: ExpressaoAritimetica TADD TExpressaoAritimetica { $$.ast = cria_ast_op($1.ast, $3.ast, ADD); printa_arv_exp($$.ast);}
+ExpressaoAritimetica: ExpressaoAritimetica TADD TExpressaoAritimetica { $$.ast = cria_ast_op($1.ast, $3.ast, ADD); printa_arv_exp($$.ast); printf("\n");}
     | ExpressaoAritimetica TSUB TExpressaoAritimetica { $$.ast = cria_ast_op($1.ast, $3.ast, SUB); }
     | TExpressaoAritimetica { $$.ast = $1.ast; } ;
 
