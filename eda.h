@@ -57,7 +57,7 @@ void printArvoreInicio(tArvore *arv);
 void printArvore(tNo *elem, int nivel);
 void printNos(tNo *no, int nivel);
 void insereListaNaArvore(tLista * lista, tArvore * arv);
-char *percorreArvore(tNo *no, int i);
+char *percorreArvore(tNo *no, int i, char *id);
 
 tAST *criar_ast_id(tArvore *tabSimb, char *id);
 tAST *criar_ast_int(int valor_int);

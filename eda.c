@@ -75,24 +75,28 @@ void insereArvore(tArvore *arv, tLista *lista){
 
 void insereArvoreInterna(tNo *no, tLista *lista, int posicao){
 
-    int elem = strcmp(no->valor, lista->id);
+    int elem = strcmp(lista->id, no->valor);
     if(elem == 0){
         printf("Símbolo %s já existe\n", lista->id);
         exit(-1);
     }
+
+    printf("lista[id]: %s , no[valor]: %s\n", lista->id, no->valor);
+    printf("elem = %d\n\n", elem);
+
     if(elem > 0 && no->direita == NULL){
-        no->direita = criaNo(lista,posicao);
+        no->direita = criaNo(lista, posicao);
         return;
     }
-    if(elem<0 && no->esquerda == NULL){
-        no->esquerda = criaNo(lista,posicao);
+    if(elem < 0 && no->esquerda == NULL){
+        no->esquerda = criaNo(lista, posicao);
         return;
     }
-    if(elem<0){
-        insereArvoreInterna(no->esquerda, lista,posicao);
+    if(elem < 0){
+        insereArvoreInterna(no->esquerda, lista, posicao);
     }
     else {
-        insereArvoreInterna(no->direita, lista,posicao);
+        insereArvoreInterna(no->direita, lista, posicao);
     }
 }
 
@@ -120,10 +124,10 @@ void printArvoreInicio(tArvore *arv){
 void printArvore(tNo *elem, int nivel){
 
     if(elem == NULL) return;
-    printArvore(elem->esquerda, nivel+1);
     printNos(elem, nivel);
-    printArvore(elem->direita, nivel+1);
     printf("\n");
+    printArvore(elem->esquerda, nivel+1);
+    printArvore(elem->direita, nivel+1);
 }
 
 void printNos(tNo *no, int nivel){
@@ -138,6 +142,7 @@ void printNos(tNo *no, int nivel){
     printf("%s(%d,%d)", no->valor, no->num, nivel);
 }
 
+
 void insereListaNaArvore(tLista *lista, tArvore *arv){
     if(lista == NULL) return;
 
@@ -145,39 +150,53 @@ void insereListaNaArvore(tLista *lista, tArvore *arv){
     insereListaNaArvore(lista->proximo, arv);
 }
 
-char *percorreArvore(tNo *no, int i){
+char *percorreArvore(tNo *no, int i, char *id){
+    printf("Percorrendo o no %s\n", no->valor);
+    if(no->valor == id) return no->valor;
+
+    /*
     if(no->esquerda != NULL){
-        if(i < no->num) percorreArvore(no->esquerda, i);
+        if(i < no->num) percorreArvore(no->esquerda, i, id);
     }
     if(no->direita != NULL){
-        if(i > no->num) percorreArvore(no->direita, i);
+        if(i > no->num) percorreArvore(no->direita, i, id);
     }
-    return no->valor;
+    */
+
 }
 
 tAST *criar_ast_id(tArvore *tabSimb, char *id){
-    int i;
-    char *aux;
+    int i, aux;
+    char *var;
 
     tAST *ast = (tAST*)malloc(sizeof(tAST));
     tNo *no = (tNo*)malloc(sizeof(tNo));
     no = tabSimb->raiz;
+    aux = 0;
 
     for (i = 0; i < tabSimb->qtd; i++) {
         if(no != NULL){
-            aux = percorreArvore(no, i);
-            // se o id informado for um id válido (dentro da tabelaSimbolos)
-            if(aux == id){
-                ast->id = id;
-                ast->pt1 = NULL;
-                ast->pt2 = NULL;
-                return ast;
-            }
+            var = no->valor;
+            if(var == id) aux = 1;
+            var = percorreArvore(no->esquerda, i, id);
+            if(var == id) aux = 1;
+            var = percorreArvore(no->direita, i, id);
+            if(var == id) aux = 1;
         }
     }
-    // o ID nao está na tabelaSimbolos, ou seja é um ID invalido
-    printf("A variavel %s nao eh valida\n", id);
-    //exit(-1);
+    // se o id informado for um id válido (dentro da tabelaSimbolos)
+    if(aux == 1){
+        printf("aux foi encontrado na tabSimb (%s)\n", var);
+        ast->id = id;
+        ast->pt1 = NULL;
+        ast->pt2 = NULL;
+        return ast;
+    }
+    else{
+        // o ID nao está na tabelaSimbolos, ou seja é um ID invalido
+        printf("A variavel %s nao eh valida\n", id);
+        exit(-1);
+    }
 }
 
 tAST *criar_ast_int(int valor_int){
