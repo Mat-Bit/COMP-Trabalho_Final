@@ -170,8 +170,9 @@ tNo *busca(tNo *arvore, char *id){
 
 
 tAST *criar_ast_id(tArvore *tabSimb, char *id){
-    tAST *ast;
-    tNo *no, *aux;
+    tAST *ast = (tAST*)malloc(sizeof(tAST));
+    tNo *aux = (tNo*)malloc(sizeof(tNo));
+    tNo *no = (tNo*)malloc(sizeof(tNo));
 
     no = tabSimb->raiz;
 
@@ -183,7 +184,6 @@ tAST *criar_ast_id(tArvore *tabSimb, char *id){
         exit(-1);
     }else{
         // se o id informado for um id válido (dentro da tabelaSimbolos)
-        printf("A variavel %s eh valida\n", id);
         ast->id = id;
         ast->ConstInt = 0;
         ast->ConstFloat = 0.0;
@@ -224,6 +224,9 @@ tAST *cria_ast_op(tAST *exp_esq, tAST *exp_dir, int cod){
     elem->pt1 = exp_esq;
     elem->pt2 = exp_dir;
 
+    elem->id = "NULL";
+    elem->cod = cod;
+
     comp = strcmp(exp_esq->id, "NULL");
     if (comp != 0) elem->pt1->id = exp_esq->id;
     else{
@@ -236,16 +239,18 @@ tAST *cria_ast_op(tAST *exp_esq, tAST *exp_dir, int cod){
         if(exp_dir->ConstInt != 0) elem->pt2->ConstInt = exp_dir->ConstInt;
         if(exp_dir->ConstFloat != 0.0) elem->pt2->ConstFloat = exp_dir->ConstFloat;
     }
-    elem->id = "NULL";
-    elem->cod = cod;
+
     return elem;
 }
 
 void printa_arv_exp(tAST *cabeca){
     int comp;
 
-    if(cabeca->pt1 != NULL) printa_arv_exp(cabeca->pt1);
-    if(cabeca->pt2 != NULL) printa_arv_exp(cabeca->pt2);
+    if(cabeca->cod != 0){
+      printf("(");
+      printa_arv_exp(cabeca->pt1);
+      printa_arv_exp(cabeca->pt2);
+    }
 
     if(cabeca->pt1 == NULL && cabeca->pt2 == NULL){
         comp = strcmp(cabeca->id, "NULL");
@@ -271,36 +276,34 @@ void printa_arv_exp(tAST *cabeca){
             printf("/ ");
             break;
         }
+        printf(") ");
     }
 }
 
-/*
-if (elem->pt1->id != NULL){
-if(elem->id->tipo == T_INT) esq = elem->id->num;
-else{
-if(elem->id->tipo == T_FLOAT) esqf = elem->id->num;
-}
-}
-else{
-if(elem->pt1->ConstInt != 0) esq = elem->pt1->ConstInt;
-else{
-if(elem->pt1->ConstFloat != 0.0) esqf = elem->pt1->ConstFloat;
-}
-}
-if (elem->pt2->id != NULL){
-if(elem->id->tipo == T_INT) dir = elem->id->num;
-else{
-if(elem->id->tipo == T_FLOAT) dirf = elem->id->num;
-}
-}
-else{
-if(elem->pt2->ConstInt != 0) dir = elem->id->ConstInt;
-else{
-if(elem->pt2->ConstFloat != 0.0) dirf = elem->id->ConstFloat;
-}
-}
+tAST *criar_ast_atrb(tArvore *tabSimb, tAST *cabeca, char *id){
+    tAST *ast = (tAST*)malloc(sizeof(tAST));
+    tNo *aux = (tNo*)malloc(sizeof(tNo));
+    tNo *no = (tNo*)malloc(sizeof(tNo));
 
-if(cod == ADD){
-if(esq != 0 && dir != 0) resultado = esq + dir;
+    no = tabSimb->raiz;
+
+    aux = busca(no, id);
+
+    if(aux == NULL){
+        // o ID nao está na tabelaSimbolos, ou seja é um ID invalido
+        printf("A variavel %s nao eh valida\n", id);
+        exit(-1);
+    }else{
+        // se o id informado for um id válido (dentro da tabelaSimbolos)
+        ast->id = id;
+        ast->ConstInt = 0;
+        ast->ConstFloat = 0.0;
+        ast->pt1 = cabeca;
+        ast->pt2 = NULL;
+        ast->cod = ATR;
+        printf("%s = ", ast->id);
+        printa_arv_exp(cabeca);
+
+        return ast;
+    }
 }
-*/

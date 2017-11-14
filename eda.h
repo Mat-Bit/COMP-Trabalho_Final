@@ -9,6 +9,7 @@
 #define SUB 200
 #define MUL 300
 #define DIV 400
+#define ATR 500
 
 #define MAXID 10
 #define TIPO int
@@ -64,5 +65,6 @@ tAST *criar_ast_int(int valor_int);
 tAST *criar_ast_float(float valor_float);
 tAST *cria_ast_op(tAST *exp_esq, tAST *exp_dir, int cod);
 void printa_arv_exp(tAST *cabeca);
+tAST *criar_ast_atrb(tArvore *tabSimb, tAST *cabeca, char *id);
 
 #endif

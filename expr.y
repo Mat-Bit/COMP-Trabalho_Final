@@ -46,7 +46,7 @@ BlocoPrincipal: TACHA Declaracoes ListaCmd TFCHA
 Declaracoes: Declaracoes Declaracao
     | Declaracao;
 
-Declaracao: Tipo ListaId TPV {insereTipo($2.listaId, $1.tipo); printLista($2.listaId); insereListaNaArvore($2.listaId, tabelaSimbolos); printArvoreInicio(tabelaSimbolos);};
+Declaracao: Tipo ListaId TPV {insereTipo($2.listaId, $1.tipo); printLista($2.listaId); insereListaNaArvore($2.listaId, tabelaSimbolos); printf("\n");};
 
 Tipo: TINT {$$.tipo = T_INT;}
     | TSTRING {$$.tipo = T_STRING;}
@@ -76,7 +76,7 @@ CmdSe: TIF TAPAR ExpressaoLogica TFPAR Bloco
 
 CmdEnquanto: TWHILE TAPAR ExpressaoLogica TFPAR Bloco;
 
-CmdAtrib: TID TATB ExpressaoAritimetica TPV
+CmdAtrib: TID TATB ExpressaoAritimetica TPV {$$.ast = criar_ast_atrb(tabelaSimbolos, $3.ast, $1.id); printf("\n");}
     | TID TATB TLITERAL;
 
 CmdEscrita: TPRINT TAPAR TASP ExpressaoAritimetica TASP TFPAR TPV
@@ -97,8 +97,8 @@ ListaParametros: ListaParametros TV ExpressaoAritimetica
     | TLITERAL;
 
 //Expressões
-ExpressaoAritimetica: ExpressaoAritimetica TADD TExpressaoAritimetica { $$.ast = cria_ast_op($1.ast, $3.ast, ADD); printa_arv_exp($$.ast); printf("\n");}
-    | ExpressaoAritimetica TSUB TExpressaoAritimetica { $$.ast = cria_ast_op($1.ast, $3.ast, SUB); }
+ExpressaoAritimetica: ExpressaoAritimetica TADD TExpressaoAritimetica { $$.ast = cria_ast_op($1.ast, $3.ast, ADD); printa_arv_exp($$.ast); printf("\n\n");}
+    | ExpressaoAritimetica TSUB TExpressaoAritimetica { $$.ast = cria_ast_op($1.ast, $3.ast, SUB); printa_arv_exp($$.ast); printf("\n\n");}
     | TExpressaoAritimetica { $$.ast = $1.ast; } ;
 
 TExpressaoAritimetica: TExpressaoAritimetica TMUL FExpressaoAritmetica { $$.ast = cria_ast_op($1.ast, $3.ast, MUL); }
