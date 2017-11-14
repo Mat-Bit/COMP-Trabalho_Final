@@ -58,7 +58,7 @@ ListaId: ListaId TV TID {insereLista($1.listaId, $3.id); $$.listaId = $1.listaId
 Bloco: TACHA ListaCmd TFCHA;
 
 ListaCmd: ListaCmd Comando
-    | Comando;
+    | Comando
 
 Comando: CmdSe
     | CmdEnquanto
@@ -76,7 +76,7 @@ CmdSe: TIF TAPAR ExpressaoLogica TFPAR Bloco
 
 CmdEnquanto: TWHILE TAPAR ExpressaoLogica TFPAR Bloco;
 
-CmdAtrib: TID TATB ExpressaoAritimetica TPV {$$.ast = criar_ast_atrb(tabelaSimbolos, $3.ast, $1.id); printf("\n");}
+CmdAtrib: TID TATB ExpressaoAritimetica TPV {$$.ast = criar_ast_atrb(tabelaSimbolos, $3.ast, $1.id); printf("\n\n");}
     | TID TATB TLITERAL;
 
 CmdEscrita: TPRINT TAPAR TASP ExpressaoAritimetica TASP TFPAR TPV
@@ -97,8 +97,8 @@ ListaParametros: ListaParametros TV ExpressaoAritimetica
     | TLITERAL;
 
 //Expressões
-ExpressaoAritimetica: ExpressaoAritimetica TADD TExpressaoAritimetica { $$.ast = cria_ast_op($1.ast, $3.ast, ADD); printa_arv_exp($$.ast); printf("\n\n");}
-    | ExpressaoAritimetica TSUB TExpressaoAritimetica { $$.ast = cria_ast_op($1.ast, $3.ast, SUB); printa_arv_exp($$.ast); printf("\n\n");}
+ExpressaoAritimetica: ExpressaoAritimetica TADD TExpressaoAritimetica { $$.ast = cria_ast_op($1.ast, $3.ast, ADD); }
+    | ExpressaoAritimetica TSUB TExpressaoAritimetica { $$.ast = cria_ast_op($1.ast, $3.ast, SUB); }
     | TExpressaoAritimetica { $$.ast = $1.ast; } ;
 
 TExpressaoAritimetica: TExpressaoAritimetica TMUL FExpressaoAritmetica { $$.ast = cria_ast_op($1.ast, $3.ast, MUL); }

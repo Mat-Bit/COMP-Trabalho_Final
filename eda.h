@@ -10,6 +10,9 @@
 #define MUL 300
 #define DIV 400
 #define ATR 500
+#define IDD 600
+#define CONSTI 700
+#define CONSTF 800
 
 #define MAXID 10
 #define TIPO int

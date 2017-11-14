@@ -1,6 +1,6 @@
 {
 	int a, b, e;
-	float c, d;
+	float c, d, bit_foda;
 	String f, abc;
 
 	print("Valor de A:");
@@ -19,6 +19,7 @@
 		}
 	}
 	e = b * 2 - 1 + a;
+	bit_foda = c * d + (a + 1 - b) / e;
 	print("\nRes=");
 	print(a);
 }

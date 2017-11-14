@@ -1401,19 +1401,19 @@ yyreduce:
 
   case 38:
 #line 79 "expr.y" /* yacc.c:1646  */
-    {(yyval).ast = criar_ast_atrb(tabelaSimbolos, (yyvsp[-1]).ast, (yyvsp[-3]).id); printf("\n");}
+    {(yyval).ast = criar_ast_atrb(tabelaSimbolos, (yyvsp[-1]).ast, (yyvsp[-3]).id); printf("\n\n");}
 #line 1406 "expr.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
 #line 100 "expr.y" /* yacc.c:1646  */
-    { (yyval).ast = cria_ast_op((yyvsp[-2]).ast, (yyvsp[0]).ast, ADD); printa_arv_exp((yyval).ast); printf("\n\n");}
+    { (yyval).ast = cria_ast_op((yyvsp[-2]).ast, (yyvsp[0]).ast, ADD); }
 #line 1412 "expr.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
 #line 101 "expr.y" /* yacc.c:1646  */
-    { (yyval).ast = cria_ast_op((yyvsp[-2]).ast, (yyvsp[0]).ast, SUB); printa_arv_exp((yyval).ast); printf("\n\n");}
+    { (yyval).ast = cria_ast_op((yyvsp[-2]).ast, (yyvsp[0]).ast, SUB); }
 #line 1418 "expr.tab.c" /* yacc.c:1646  */
     break;
 
