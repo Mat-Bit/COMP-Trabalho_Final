@@ -102,7 +102,7 @@ ExpressaoAritimetica: ExpressaoAritimetica TADD TExpressaoAritimetica { $$.ast =
     | TExpressaoAritimetica { $$.ast = $1.ast; } ;
 
 TExpressaoAritimetica: TExpressaoAritimetica TMUL FExpressaoAritmetica { $$.ast = cria_ast_op($1.ast, $3.ast, MUL); }
-    | ExpressaoAritimetica TDIV FExpressaoAritmetica { $$.ast = cria_ast_op($1.ast, $3.ast, DIV); }
+    | TExpressaoAritimetica TDIV FExpressaoAritmetica { $$.ast = cria_ast_op($1.ast, $3.ast, DIV); }
     | FExpressaoAritmetica  { $$.ast = $1.ast; } ;
 
 FExpressaoAritmetica: TAPAR ExpressaoAritimetica TFPAR { $$.ast = $2.ast; }

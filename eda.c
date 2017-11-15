@@ -189,7 +189,7 @@ tAST *criar_ast_id(tArvore *tabSimb, char *id){
         ast->ConstFloat = 0.0;
         ast->pt1 = NULL;
         ast->pt2 = NULL;
-        ast->cod = 0;
+        ast->cod = IDD;
         return ast;
     }
 }
@@ -201,7 +201,7 @@ tAST *criar_ast_int(int valor_int){
     elem->id = "NULL";
     elem->pt1 = NULL;
     elem->pt2 = NULL;
-    elem->cod = 0;
+    elem->cod = CONSTI;
     return elem;
 }
 
@@ -212,7 +212,7 @@ tAST *criar_ast_float(float valor_float){
     elem->id = "NULL";
     elem->pt1 = NULL;
     elem->pt2 = NULL;
-    elem->cod = 0;
+    elem->cod = CONSTF;
     return elem;
 }
 
@@ -246,7 +246,8 @@ tAST *cria_ast_op(tAST *exp_esq, tAST *exp_dir, int cod){
 void printa_arv_exp(tAST *cabeca){
     int comp;
 
-    if(cabeca->cod != 0){
+    /*
+    if((cabeca->cod != IDD) || (cabeca->cod != CONSTI) || (cabeca->cod != CONSTF)){
       printf("(");
       printa_arv_exp(cabeca->pt1);
       printa_arv_exp(cabeca->pt2);
@@ -260,23 +261,48 @@ void printa_arv_exp(tAST *cabeca){
             if(cabeca->ConstFloat != 0.0) printf("%.1f ", cabeca->ConstFloat);
         }
     }
+    */
 
     if(cabeca->cod != 0){
         switch (cabeca->cod) {
+            case IDD:
+                printf("%s", cabeca->id);
+                break;
+            case CONSTI:
+                printf("%d", cabeca->ConstInt);
+                break;
+            case CONSTF:
+                printf("%.1f", cabeca->ConstFloat);
+                break;
             case ADD:
-            printf("+ ");
-            break;
+                //printf("Simbolo raiz: +\n");
+                printf("(");
+                printa_arv_exp(cabeca->pt1);
+                printa_arv_exp(cabeca->pt2);
+                printf("+) ");
+                break;
             case SUB:
-            printf("- ");
-            break;
+                //printf("Simbolo raiz: -\n");
+                printf("(");
+                printa_arv_exp(cabeca->pt1);
+                printa_arv_exp(cabeca->pt2);
+                printf("-) ");
+                break;
             case MUL:
-            printf("* ");
-            break;
+                //printf("Simbolo raiz: *\n");
+                printf("(");
+                printa_arv_exp(cabeca->pt1);
+                printa_arv_exp(cabeca->pt2);
+                printf("*) ");
+                break;
             case DIV:
-            printf("/ ");
-            break;
+                //printf("Simbolo raiz: /\n");
+                printf("(");
+                printa_arv_exp(cabeca->pt1);
+                printa_arv_exp(cabeca->pt2);
+                printf("/) ");
+                break;
         }
-        printf(") ");
     }
 }
 
