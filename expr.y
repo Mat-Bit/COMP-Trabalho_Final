@@ -76,7 +76,7 @@ CmdSe: TIF TAPAR ExpressaoLogica TFPAR Bloco
 
 CmdEnquanto: TWHILE TAPAR ExpressaoLogica TFPAR Bloco;
 
-CmdAtrib: TID TATB ExpressaoAritimetica TPV {$$.ast = criar_ast_atrb(tabelaSimbolos, $3.ast, $1.id); printf("\n\n");}
+CmdAtrib: TID TATB ExpressaoAritimetica TPV {$$.ast = criar_ast_atrb(tabelaSimbolos, $3.ast, $1.id); printf("\n");printa_op_code($$.ast, tabelaSimbolos); printf("\n\n");}
     | TID TATB TLITERAL;
 
 CmdEscrita: TPRINT TAPAR TASP ExpressaoAritimetica TASP TFPAR TPV
@@ -106,9 +106,9 @@ TExpressaoAritimetica: TExpressaoAritimetica TMUL FExpressaoAritmetica { $$.ast 
     | FExpressaoAritmetica  { $$.ast = $1.ast; } ;
 
 FExpressaoAritmetica: TAPAR ExpressaoAritimetica TFPAR { $$.ast = $2.ast; }
-    | TFLOAT {$$.ast = criar_ast_float($1.ConstFloat);}
-    | TINT {$$.ast = criar_ast_int($1.ConstInt);}
-    | TID {$$.ast = criar_ast_id(tabelaSimbolos, $1.id);};
+    | TFLOAT {$$.ast = criar_ast_float($1.ConstFloat);printa_op_code($$.ast, tabelaSimbolos);}
+    | TINT {$$.ast = criar_ast_int($1.ConstInt); printa_op_code($$.ast, tabelaSimbolos);}
+    | TID {$$.ast = criar_ast_id(tabelaSimbolos, $1.id); printa_op_code($$.ast, tabelaSimbolos);};
 
 ExpressaoLogica: ExpressaoLogica TCEE FExpressaoLogica
     | ExpressaoLogica TCOU FExpressaoLogica

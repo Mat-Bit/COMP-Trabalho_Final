@@ -21,6 +21,7 @@
 #define T_FLOAT 2
 #define T_STRING 3
 #define T_VOID 4
+#define NATRIBUIDO -696969
 
 typedef struct Lista{
     char id[MAXID];
@@ -32,6 +33,7 @@ typedef struct no{
     char *valor;
     TIPO tipo;
     int num;
+    float atrib;
     struct no *direita;
     struct no *esquerda;
 } tNo;
@@ -69,5 +71,6 @@ tAST *criar_ast_float(float valor_float);
 tAST *cria_ast_op(tAST *exp_esq, tAST *exp_dir, int cod);
 void printa_arv_exp(tAST *cabeca);
 tAST *criar_ast_atrb(tArvore *tabSimb, tAST *cabeca, char *id);
+void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos);
 
 #endif

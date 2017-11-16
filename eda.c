@@ -109,6 +109,7 @@ tNo * criaNo(tLista *lista, int num){
 
     elem->valor[99] = '\0';
     elem->num = num;
+    elem->atrib = NATRIBUIDO;
     elem->direita = NULL;
     elem->esquerda = NULL;
     return elem;
@@ -184,7 +185,14 @@ tAST *criar_ast_id(tArvore *tabSimb, char *id){
         exit(-1);
     }else{
         // se o id informado for um id válido (dentro da tabelaSimbolos)
-        ast->id = id;
+
+        // Se o id for uma String:
+        if(aux->tipo == T_STRING){
+          printf("%s nao pode estar numa Op. Aritimetica pois eh uma String\n", aux->valor);
+          exit(-1);
+        }
+
+        ast->id = aux->valor;
         ast->ConstInt = 0;
         ast->ConstFloat = 0.0;
         ast->pt1 = NULL;
@@ -244,24 +252,6 @@ tAST *cria_ast_op(tAST *exp_esq, tAST *exp_dir, int cod){
 }
 
 void printa_arv_exp(tAST *cabeca){
-    int comp;
-
-    /*
-    if((cabeca->cod != IDD) || (cabeca->cod != CONSTI) || (cabeca->cod != CONSTF)){
-      printf("(");
-      printa_arv_exp(cabeca->pt1);
-      printa_arv_exp(cabeca->pt2);
-    }
-
-    if(cabeca->pt1 == NULL && cabeca->pt2 == NULL){
-        comp = strcmp(cabeca->id, "NULL");
-        if(comp != 0) printf("%s ", cabeca->id);
-        else{
-            if(cabeca->ConstInt != 0) printf("%d ", cabeca->ConstInt);
-            if(cabeca->ConstFloat != 0.0) printf("%.1f ", cabeca->ConstFloat);
-        }
-    }
-    */
 
     if(cabeca->cod != 0){
         switch (cabeca->cod) {
@@ -321,7 +311,7 @@ tAST *criar_ast_atrb(tArvore *tabSimb, tAST *cabeca, char *id){
         exit(-1);
     }else{
         // se o id informado for um id válido (dentro da tabelaSimbolos)
-        ast->id = id;
+        ast->id = aux->valor;
         ast->ConstInt = 0;
         ast->ConstFloat = 0.0;
         ast->pt1 = cabeca;
@@ -332,4 +322,71 @@ tAST *criar_ast_atrb(tArvore *tabSimb, tAST *cabeca, char *id){
 
         return ast;
     }
+}
+
+void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos){
+  tNo *aux = (tNo*)malloc(sizeof(tNo));
+  tNo *no = (tNo*)malloc(sizeof(tNo));
+
+
+  if(cabeca->cod != 0){
+      switch (cabeca->cod) {
+          case ATR:
+              no = tabelaSimbolos->raiz;
+              aux = busca(no, cabeca->id);
+              if(aux == NULL){
+                  // o ID nao está na tabelaSimbolos, ou seja é um ID invalido
+                  printf("A variavel %s nao eh valida\n", cabeca->id);
+                  exit(-1);
+              }else{
+                  // se o id informado for um id válido (dentro da tabelaSimbolos)
+                  printf("istore %d\n", aux->num);
+                  break;
+              }
+          case CONSTI:
+              if(cabeca->ConstInt <= 5){
+                printf("iconst_%d\n", cabeca->ConstInt);
+              }
+              else{
+                printf("bipush %d\n", cabeca->ConstInt);
+              }
+              break;
+          case CONSTF:
+              if(cabeca->ConstFloat <= 5.00){
+                printf("fconst_%f\n", cabeca->ConstFloat);
+              }
+              else{
+                  printf("bipush %f\n", cabeca->ConstFloat);
+              }
+              break;
+          case ADD:
+              //printf("Simbolo raiz: +\n");
+              printf("(");
+              printa_arv_exp(cabeca->pt1);
+              printa_arv_exp(cabeca->pt2);
+              printf("+) ");
+              break;
+          case SUB:
+              //printf("Simbolo raiz: -\n");
+              printf("(");
+              printa_arv_exp(cabeca->pt1);
+              printa_arv_exp(cabeca->pt2);
+              printf("-) ");
+              break;
+          case MUL:
+              //printf("Simbolo raiz: *\n");
+              printf("(");
+              printa_arv_exp(cabeca->pt1);
+              printa_arv_exp(cabeca->pt2);
+              printf("*) ");
+              break;
+          case DIV:
+              //printf("Simbolo raiz: /\n");
+              printf("(");
+              printa_arv_exp(cabeca->pt1);
+              printa_arv_exp(cabeca->pt2);
+              printf("/) ");
+              break;
+      }
+  }
 }
