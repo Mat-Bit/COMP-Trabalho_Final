@@ -14,6 +14,13 @@
 #define CONSTI 700
 #define CONSTF 800
 
+#define IGUAL 900
+#define DIF 910
+#define MENIG 920
+#define MAIIG 930
+#define MAIOR 940
+#define MENOR 950
+
 #define MAXID 10
 #define TIPO int
 #define NDEFINIDO 0
@@ -55,6 +62,7 @@ typedef struct AST{
 void printLista(tLista *cabeca);
 tLista *criarLista (char *id);
 void insereLista (tLista *head, char *id);
+
 tArvore * criarArvore();
 void insereArvore(tArvore *arv, tLista *lista);
 void insereArvoreInterna(tNo *no, tLista *lista, int posicao);
@@ -68,9 +76,12 @@ tNo *busca(tNo *arvore, char *id);
 tAST *criar_ast_id(tArvore *tabSimb, char *id);
 tAST *criar_ast_int(int valor_int);
 tAST *criar_ast_float(float valor_float);
-tAST *cria_ast_op(tAST *exp_esq, tAST *exp_dir, int cod);
+tAST *criaAst_ExpArit(tAST *exp_esq, tAST *exp_dir, int cod);
 void printa_arv_exp(tAST *cabeca);
-tAST *criar_ast_atrb(tArvore *tabSimb, tAST *cabeca, char *id);
+tAST *criaCmdAtrib(tArvore *tabSimb, tAST *cabeca, char *id);
+tAST *insereListaComando(tAST *listaCmd, tAST *comando);
+tAST *criaAst_ExpRelac(tAST *exp_esq, tAST *exp_dir, int cod);
+
 void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos);
 
 #endif

@@ -52,7 +52,6 @@ void printLista(tLista *cabeca){
     }
 }
 
-
 tArvore * criarArvore(){
     tArvore * elem = (tArvore*)malloc(sizeof(tArvore));
     elem->raiz = NULL;
@@ -143,7 +142,6 @@ void printNos(tNo *no, int nivel){
     printf("%s(%d,%d)", no->valor, no->num, nivel);
 }
 
-
 void insereListaNaArvore(tLista *lista, tArvore *arv){
     if(lista == NULL) return;
 
@@ -224,9 +222,8 @@ tAST *criar_ast_float(float valor_float){
     return elem;
 }
 
-tAST *cria_ast_op(tAST *exp_esq, tAST *exp_dir, int cod){
-    int  dir=0, esq=0, comp;
-    float dirf=0.0, esqf=0.0, resultado;
+tAST *criaAst_ExpArit(tAST *exp_esq, tAST *exp_dir, int cod){
+    int comp;
     tAST *elem = (tAST*)malloc(sizeof(tAST));
 
     elem->pt1 = exp_esq;
@@ -296,7 +293,7 @@ void printa_arv_exp(tAST *cabeca){
     }
 }
 
-tAST *criar_ast_atrb(tArvore *tabSimb, tAST *cabeca, char *id){
+tAST *criaCmdAtrib(tArvore *tabSimb, tAST *cabeca, char *id){
     tAST *ast = (tAST*)malloc(sizeof(tAST));
     tNo *aux = (tNo*)malloc(sizeof(tNo));
     tNo *no = (tNo*)malloc(sizeof(tNo));
@@ -311,7 +308,7 @@ tAST *criar_ast_atrb(tArvore *tabSimb, tAST *cabeca, char *id){
         exit(-1);
     }else{
         // se o id informado for um id válido (dentro da tabelaSimbolos)
-        ast->id = aux->valor;
+        ast->id = aux->valor; // que eh = ao id passado como parametro
         ast->ConstInt = 0;
         ast->ConstFloat = 0.0;
         ast->pt1 = cabeca;
@@ -322,6 +319,37 @@ tAST *criar_ast_atrb(tArvore *tabSimb, tAST *cabeca, char *id){
 
         return ast;
     }
+}
+
+tAST *criaAst_ExpRelac(tAST *exp_esq, tAST *exp_dir, int cod){
+    tAST *elem = (tAST*)malloc(sizeof(tAST));
+
+    elem->pt1 = exp_esq;
+    elem->pt2 = exp_dir;
+    elem->cod = cod;
+
+    switch (cod) {
+        case DIF:
+            //TODO DIF
+            break;
+        case IGUAL:
+            //TODO IGUAL
+            break;
+        /*
+        ...
+        */
+    }
+}
+
+tAST *insereListaComando(tAST *listaCmd, tAST *comando){
+    tAST *ast = (tAST*)malloc(sizeof(tAST));
+
+    if (listaCmd->cod == ATR && comando->cod == ATR){
+        ast->pt1 = listaCmd;
+        ast->pt2 = comando;
+        ast->cod = ATR;
+    }
+    return ast;
 }
 
 void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos){

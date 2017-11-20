@@ -57,12 +57,12 @@ ListaId: ListaId TV TID {insereLista($1.listaId, $3.id); $$.listaId = $1.listaId
 
 Bloco: TACHA ListaCmd TFCHA;
 
-ListaCmd: ListaCmd Comando
+ListaCmd: ListaCmd Comando {$$.ast = insereListaComando($1.ast, $2.ast);}
     | Comando
 
 Comando: CmdSe
     | CmdEnquanto
-    | CmdAtrib
+    | CmdAtrib  {$$.ast = $1.ast}
     | CmdEscrita
     | CmdLeitura
     | ChamadaProc
@@ -76,7 +76,7 @@ CmdSe: TIF TAPAR ExpressaoLogica TFPAR Bloco
 
 CmdEnquanto: TWHILE TAPAR ExpressaoLogica TFPAR Bloco;
 
-CmdAtrib: TID TATB ExpressaoAritimetica TPV {$$.ast = criar_ast_atrb(tabelaSimbolos, $3.ast, $1.id); printf("\n");printa_op_code($$.ast, tabelaSimbolos); printf("\n\n");}
+CmdAtrib: TID TATB ExpressaoAritimetica TPV {$$.ast = criaCmdAtrib(tabelaSimbolos, $3.ast, $1.id); printf("\n");printa_op_code($$.ast, tabelaSimbolos); printf("\n\n");}
     | TID TATB TLITERAL;
 
 CmdEscrita: TPRINT TAPAR TASP ExpressaoAritimetica TASP TFPAR TPV
@@ -97,12 +97,12 @@ ListaParametros: ListaParametros TV ExpressaoAritimetica
     | TLITERAL;
 
 //Expressões
-ExpressaoAritimetica: ExpressaoAritimetica TADD TExpressaoAritimetica { $$.ast = cria_ast_op($1.ast, $3.ast, ADD); }
-    | ExpressaoAritimetica TSUB TExpressaoAritimetica { $$.ast = cria_ast_op($1.ast, $3.ast, SUB); }
+ExpressaoAritimetica: ExpressaoAritimetica TADD TExpressaoAritimetica { $$.ast = criaAst_ExpArit($1.ast, $3.ast, ADD); }
+    | ExpressaoAritimetica TSUB TExpressaoAritimetica { $$.ast = criaAst_ExpArit($1.ast, $3.ast, SUB); }
     | TExpressaoAritimetica { $$.ast = $1.ast; } ;
 
-TExpressaoAritimetica: TExpressaoAritimetica TMUL FExpressaoAritmetica { $$.ast = cria_ast_op($1.ast, $3.ast, MUL); }
-    | TExpressaoAritimetica TDIV FExpressaoAritmetica { $$.ast = cria_ast_op($1.ast, $3.ast, DIV); }
+TExpressaoAritimetica: TExpressaoAritimetica TMUL FExpressaoAritmetica { $$.ast = criaAst_ExpArit($1.ast, $3.ast, MUL); }
+    | TExpressaoAritimetica TDIV FExpressaoAritmetica { $$.ast = criaAst_ExpArit($1.ast, $3.ast, DIV); }
     | FExpressaoAritmetica  { $$.ast = $1.ast; } ;
 
 FExpressaoAritmetica: TAPAR ExpressaoAritimetica TFPAR { $$.ast = $2.ast; }
@@ -120,12 +120,12 @@ FExpressaoLogica: TNEG FExpressaoLogica
     | FALSE
     | ExpressaoRelacional;
 
-ExpressaoRelacional: ExpressaoAritimetica TMAIOR ExpressaoAritimetica
-    | ExpressaoAritimetica TMAIORIG ExpressaoAritimetica
-    | ExpressaoAritimetica TMENOR ExpressaoAritimetica
-    | ExpressaoAritimetica TMENORIG ExpressaoAritimetica
-    | ExpressaoAritimetica TCOM ExpressaoAritimetica
-    | ExpressaoAritimetica TDIF ExpressaoAritimetica;
+ExpressaoRelacional: ExpressaoAritimetica TMAIOR ExpressaoAritimetica {$$.ast = criaAst_ExpRelac($1.ast, $3.ast, MAIOR);}
+    | ExpressaoAritimetica TMAIORIG ExpressaoAritimetica {$$.ast = criaAst_ExpRelac($1.ast, $3.ast, MAIIG);}
+    | ExpressaoAritimetica TMENOR ExpressaoAritimetica  {$$.ast = criaAst_ExpRelac($1.ast, $3.ast, MENOR);}
+    | ExpressaoAritimetica TMENORIG ExpressaoAritimetica {$$.ast = criaAst_ExpRelac($1.ast, $3.ast, MENIG);}
+    | ExpressaoAritimetica TCOM ExpressaoAritimetica {$$.ast = criaAst_ExpRelac($1.ast, $3.ast, IGUAL);}
+    | ExpressaoAritimetica TDIF ExpressaoAritimetica {$$.ast = criaAst_ExpRelac($1.ast, $3.ast, DIF);};
 
 %%
 #include "lex.yy.c"
