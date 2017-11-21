@@ -62,7 +62,7 @@ ListaCmd: ListaCmd Comando {$$.ast = insereListaComando($1.ast, $2.ast);}
 
 Comando: CmdSe
     | CmdEnquanto
-    | CmdAtrib  {$$.ast = $1.ast}
+    | CmdAtrib  {$$.ast = $1.ast;}
     | CmdEscrita
     | CmdLeitura
     | ChamadaProc

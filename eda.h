@@ -53,6 +53,7 @@ typedef struct arvore{
 typedef struct AST{
     int cod;
     char *id;
+    float atrib;
     struct AST *pt1,*pt2;
     int ConstInt;
     float ConstFloat;

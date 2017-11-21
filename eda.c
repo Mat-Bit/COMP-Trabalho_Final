@@ -189,13 +189,13 @@ tAST *criar_ast_id(tArvore *tabSimb, char *id){
           printf("%s nao pode estar numa Op. Aritimetica pois eh uma String\n", aux->valor);
           exit(-1);
         }
-
         ast->id = aux->valor;
         ast->ConstInt = 0;
         ast->ConstFloat = 0.0;
         ast->pt1 = NULL;
         ast->pt2 = NULL;
         ast->cod = IDD;
+        ast->atrib = aux->atrib;
         return ast;
     }
 }
@@ -208,6 +208,7 @@ tAST *criar_ast_int(int valor_int){
     elem->pt1 = NULL;
     elem->pt2 = NULL;
     elem->cod = CONSTI;
+    elem->atrib = valor_int / 1.0;
     return elem;
 }
 
@@ -219,10 +220,12 @@ tAST *criar_ast_float(float valor_float){
     elem->pt1 = NULL;
     elem->pt2 = NULL;
     elem->cod = CONSTF;
+    elem->atrib = valor_float;
     return elem;
 }
 
 tAST *criaAst_ExpArit(tAST *exp_esq, tAST *exp_dir, int cod){
+    float resultado1, resultado2;
     int comp;
     tAST *elem = (tAST*)malloc(sizeof(tAST));
 
@@ -233,16 +236,49 @@ tAST *criaAst_ExpArit(tAST *exp_esq, tAST *exp_dir, int cod){
     elem->cod = cod;
 
     comp = strcmp(exp_esq->id, "NULL");
-    if (comp != 0) elem->pt1->id = exp_esq->id;
-    else{
-        if(exp_esq->ConstInt != 0) elem->pt1->ConstInt = exp_esq->ConstInt;
-        if(exp_esq->ConstFloat != 0.0) elem->pt1->ConstFloat = exp_esq->ConstFloat;
+    if (comp != 0){
+        elem->pt1->id = exp_esq->id;
+        resultado1 = exp_esq->atrib;
     }
-    comp = strcmp(exp_dir->id, "NULL");
-    if (comp != 0) elem->pt2->id = exp_dir->id;
     else{
-        if(exp_dir->ConstInt != 0) elem->pt2->ConstInt = exp_dir->ConstInt;
-        if(exp_dir->ConstFloat != 0.0) elem->pt2->ConstFloat = exp_dir->ConstFloat;
+        if(exp_esq->ConstInt != 0){
+            elem->pt1->ConstInt = exp_esq->ConstInt;
+            resultado1 = exp_esq->atrib;
+        }
+        if(exp_esq->ConstFloat != 0.0){
+            elem->pt1->ConstFloat = exp_esq->ConstFloat;
+            resultado1 = exp_esq->atrib;
+        }
+    }
+
+    comp = strcmp(exp_dir->id, "NULL");
+    if (comp != 0){
+        elem->pt2->id = exp_dir->id;
+        resultado2 = exp_dir->atrib;
+    }
+    else{
+        if(exp_dir->ConstInt != 0){
+            elem->pt2->ConstInt = exp_dir->ConstInt;
+            resultado2 = exp_dir->atrib;
+        }
+        if(exp_dir->ConstFloat != 0.0){
+            elem->pt2->ConstFloat = exp_dir->ConstFloat;
+            resultado2 = exp_dir->atrib;
+        }
+    }
+    switch (cod) {
+        case ADD:
+            elem->atrib = resultado1 + resultado2;
+            break;
+        case SUB:
+            elem->atrib = resultado1 - resultado2;
+            break;
+        case MUL:
+            elem->atrib = resultado1 * resultado2;
+            break;
+        case DIV:
+            elem->atrib = resultado1 / resultado2;
+            break;
     }
 
     return elem;
@@ -314,8 +350,12 @@ tAST *criaCmdAtrib(tArvore *tabSimb, tAST *cabeca, char *id){
         ast->pt1 = cabeca;
         ast->pt2 = NULL;
         ast->cod = ATR;
+        ast->atrib = cabeca->atrib;
         printf("%s = ", ast->id);
         printa_arv_exp(cabeca);
+
+        aux->atrib = ast->atrib;
+        printf("\n%s = %.1f\n", aux->valor, aux->atrib);
 
         return ast;
     }
@@ -330,15 +370,31 @@ tAST *criaAst_ExpRelac(tAST *exp_esq, tAST *exp_dir, int cod){
 
     switch (cod) {
         case DIF:
-            //TODO DIF
+            if (exp_esq->atrib != exp_dir->atrib) {elem->id = "TRUE";}
+            else {elem->id = "FALSE";}
             break;
         case IGUAL:
-            //TODO IGUAL
+            if (exp_esq->atrib == exp_dir->atrib) {elem->id = "TRUE";}
+            else {elem->id = "FALSE";}
             break;
-        /*
-        ...
-        */
+        case MENIG:
+            if (exp_esq->atrib <= exp_dir->atrib) {elem->id = "TRUE";}
+            else {elem->id = "FALSE";}
+            break;
+        case MENOR:
+            if (exp_esq->atrib < exp_dir->atrib) {elem->id = "TRUE";}
+            else {elem->id = "FALSE";}
+            break;
+        case MAIIG:
+            if (exp_esq->atrib >= exp_dir->atrib) {elem->id = "TRUE";}
+            else {elem->id = "FALSE";}
+            break;
+        case MAIOR:
+            if (exp_esq->atrib > exp_dir->atrib) {elem->id = "TRUE";}
+            else {elem->id = "FALSE";}
+            break;
     }
+    return elem;
 }
 
 tAST *insereListaComando(tAST *listaCmd, tAST *comando){
