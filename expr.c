@@ -14,6 +14,7 @@ int main(int c, char *argv[])
 	tabelaSimbolos = criarArvore();
 	yyin = file;
 	yyparse();
+	printf("\n");
 	printArvoreInicio(tabelaSimbolos);
 	return 0;
 }

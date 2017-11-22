@@ -61,13 +61,13 @@ tArvore * criarArvore(){
 
 void insereArvore(tArvore *arv, tLista *lista){
     if(arv->raiz == NULL){
-        arv->raiz = criaNo(lista, arv->qtd);
         arv->qtd++;
+        arv->raiz = criaNo(lista, arv->qtd);
         return;
     }
     else{
-        insereArvoreInterna(arv->raiz, lista, arv->qtd);
         arv->qtd++;
+        insereArvoreInterna(arv->raiz, lista, arv->qtd);
         return;
     }
 }
@@ -99,15 +99,15 @@ void insereArvoreInterna(tNo *no, tLista *lista, int posicao){
     }
 }
 
-tNo * criaNo(tLista *lista, int num){
+tNo * criaNo(tLista *lista, int posicao){
     tNo *elem = (tNo*)malloc(sizeof(tNo));
 
-    elem->tipo = lista->tipo;
     elem->valor = malloc(sizeof(char)*100);
     strcpy(elem->valor,lista->id);
-
     elem->valor[99] = '\0';
-    elem->num = num;
+
+    elem->tipo = lista->tipo;
+    elem->pos = posicao;
     elem->atrib = NATRIBUIDO;
     elem->direita = NULL;
     elem->esquerda = NULL;
@@ -139,7 +139,7 @@ void printNos(tNo *no, int nivel){
     //if(no->tipo == T_STRING) printf("String ");
 
     for(j=0;j<nivel;j++){ printf("\t");}
-    printf("%s(%d,%d)", no->valor, no->num, nivel);
+    printf("%s(%d,%d)", no->valor, no->pos, nivel);
 }
 
 void insereListaNaArvore(tLista *lista, tArvore *arv){
@@ -153,20 +153,19 @@ tNo *busca(tNo *arvore, char *id){
     int comp;
     //printf("Valor no: %s, id pra conferir: %s\n", arvore->valor, id);
     if (arvore == NULL)
-        return NULL;
+    return NULL;
 
-        comp = strcmp(arvore->valor, id);
+    comp = strcmp(arvore->valor, id);
 
     if (comp == 0){
         //printf("Achooou\n");
         return arvore;
     }
     if (comp > 0)
-        return busca(arvore->esquerda, id);
+    return busca(arvore->esquerda, id);
     else
-        return busca(arvore->direita, id);
+    return busca(arvore->direita, id);
 }
-
 
 tAST *criar_ast_id(tArvore *tabSimb, char *id){
     tAST *ast = (tAST*)malloc(sizeof(tAST));
@@ -179,23 +178,21 @@ tAST *criar_ast_id(tArvore *tabSimb, char *id){
 
     if(aux == NULL){
         // o ID nao está na tabelaSimbolos, ou seja é um ID invalido
-        printf("A variavel %s nao eh valida\n", id);
+        printf("A variavel %s nao foi declarada\n", id);
         exit(-1);
-    }else{
+    }
+    else{
         // se o id informado for um id válido (dentro da tabelaSimbolos)
 
-        // Se o id for uma String:
-        if(aux->tipo == T_STRING){
-          printf("%s nao pode estar numa Op. Aritimetica pois eh uma String\n", aux->valor);
-          exit(-1);
-        }
         ast->id = aux->valor;
         ast->ConstInt = 0;
         ast->ConstFloat = 0.0;
         ast->pt1 = NULL;
         ast->pt2 = NULL;
         ast->cod = IDD;
+        ast->tipo = aux->tipo;
         ast->atrib = aux->atrib;
+
         return ast;
     }
 }
@@ -208,7 +205,8 @@ tAST *criar_ast_int(int valor_int){
     elem->pt1 = NULL;
     elem->pt2 = NULL;
     elem->cod = CONSTI;
-    elem->atrib = valor_int / 1.0;
+    elem->tipo = T_INT;
+    elem->atrib = valor_int;
     return elem;
 }
 
@@ -220,6 +218,7 @@ tAST *criar_ast_float(float valor_float){
     elem->pt1 = NULL;
     elem->pt2 = NULL;
     elem->cod = CONSTF;
+    elem->tipo = T_FLOAT;
     elem->atrib = valor_float;
     return elem;
 }
@@ -234,6 +233,21 @@ tAST *criaAst_ExpArit(tAST *exp_esq, tAST *exp_dir, int cod){
 
     elem->id = "NULL";
     elem->cod = cod;
+
+    //Definindo o tipo:
+    if(exp_esq->tipo == T_STRING || exp_dir->tipo == T_STRING){
+        printf("Um dos valores eh do tipo string, logo nao eh possivel a Op. Arit.\n");
+        exit(-1);
+    }
+    else {
+        if (exp_esq->tipo != exp_dir->tipo){
+            if(exp_esq->tipo == T_FLOAT){
+                elem->tipo = T_FLOAT;
+            }
+            else elem->tipo = T_INT;
+        }
+        else elem->tipo = exp_esq->tipo;
+    }
 
     comp = strcmp(exp_esq->id, "NULL");
     if (comp != 0){
@@ -266,6 +280,7 @@ tAST *criaAst_ExpArit(tAST *exp_esq, tAST *exp_dir, int cod){
             resultado2 = exp_dir->atrib;
         }
     }
+
     switch (cod) {
         case ADD:
             elem->atrib = resultado1 + resultado2;
@@ -298,28 +313,24 @@ void printa_arv_exp(tAST *cabeca){
                 printf("%.1f", cabeca->ConstFloat);
                 break;
             case ADD:
-                //printf("Simbolo raiz: +\n");
                 printf("(");
                 printa_arv_exp(cabeca->pt1);
                 printa_arv_exp(cabeca->pt2);
                 printf("+) ");
                 break;
             case SUB:
-                //printf("Simbolo raiz: -\n");
                 printf("(");
                 printa_arv_exp(cabeca->pt1);
                 printa_arv_exp(cabeca->pt2);
                 printf("-) ");
                 break;
             case MUL:
-                //printf("Simbolo raiz: *\n");
                 printf("(");
                 printa_arv_exp(cabeca->pt1);
                 printa_arv_exp(cabeca->pt2);
                 printf("*) ");
                 break;
             case DIV:
-                //printf("Simbolo raiz: /\n");
                 printf("(");
                 printa_arv_exp(cabeca->pt1);
                 printa_arv_exp(cabeca->pt2);
@@ -344,6 +355,7 @@ tAST *criaCmdAtrib(tArvore *tabSimb, tAST *cabeca, char *id){
         exit(-1);
     }else{
         // se o id informado for um id válido (dentro da tabelaSimbolos)
+
         ast->id = aux->valor; // que eh = ao id passado como parametro
         ast->ConstInt = 0;
         ast->ConstFloat = 0.0;
@@ -351,11 +363,12 @@ tAST *criaCmdAtrib(tArvore *tabSimb, tAST *cabeca, char *id){
         ast->pt2 = NULL;
         ast->cod = ATR;
         ast->atrib = cabeca->atrib;
-        printf("%s = ", ast->id);
+        printf("%s = ", id);
         printa_arv_exp(cabeca);
+        printf("\n");
 
         aux->atrib = ast->atrib;
-        printf("\n%s = %.1f\n", aux->valor, aux->atrib);
+        //printf("\n%s = %.1f\n", aux->valor, aux->atrib);
 
         return ast;
     }
@@ -367,34 +380,35 @@ tAST *criaAst_ExpRelac(tAST *exp_esq, tAST *exp_dir, int cod){
     elem->pt1 = exp_esq;
     elem->pt2 = exp_dir;
     elem->cod = cod;
-
+    /*
     switch (cod) {
-        case DIF:
-            if (exp_esq->atrib != exp_dir->atrib) {elem->id = "TRUE";}
-            else {elem->id = "FALSE";}
-            break;
-        case IGUAL:
-            if (exp_esq->atrib == exp_dir->atrib) {elem->id = "TRUE";}
-            else {elem->id = "FALSE";}
-            break;
-        case MENIG:
-            if (exp_esq->atrib <= exp_dir->atrib) {elem->id = "TRUE";}
-            else {elem->id = "FALSE";}
-            break;
-        case MENOR:
-            if (exp_esq->atrib < exp_dir->atrib) {elem->id = "TRUE";}
-            else {elem->id = "FALSE";}
-            break;
-        case MAIIG:
-            if (exp_esq->atrib >= exp_dir->atrib) {elem->id = "TRUE";}
-            else {elem->id = "FALSE";}
-            break;
-        case MAIOR:
-            if (exp_esq->atrib > exp_dir->atrib) {elem->id = "TRUE";}
-            else {elem->id = "FALSE";}
-            break;
-    }
-    return elem;
+    case DIF:
+    if (exp_esq->atrib != exp_dir->atrib) {elem->id = "TRUE";}
+    else {elem->id = "FALSE";}
+    break;
+    case IGUAL:
+    if (exp_esq->atrib == exp_dir->atrib) {elem->id = "TRUE";}
+    else {elem->id = "FALSE";}
+    break;
+    case MENIG:
+    if (exp_esq->atrib <= exp_dir->atrib) {elem->id = "TRUE";}
+    else {elem->id = "FALSE";}
+    break;
+    case MENOR:
+    if (exp_esq->atrib < exp_dir->atrib) {elem->id = "TRUE";}
+    else {elem->id = "FALSE";}
+    break;
+    case MAIIG:
+    if (exp_esq->atrib >= exp_dir->atrib) {elem->id = "TRUE";}
+    else {elem->id = "FALSE";}
+    break;
+    case MAIOR:
+    if (exp_esq->atrib > exp_dir->atrib) {elem->id = "TRUE";}
+    else {elem->id = "FALSE";}
+    break;
+}
+*/
+return elem;
 }
 
 tAST *insereListaComando(tAST *listaCmd, tAST *comando){
@@ -409,68 +423,91 @@ tAST *insereListaComando(tAST *listaCmd, tAST *comando){
 }
 
 void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos){
-  tNo *aux = (tNo*)malloc(sizeof(tNo));
-  tNo *no = (tNo*)malloc(sizeof(tNo));
+    tNo *aux = (tNo*)malloc(sizeof(tNo));
+    tNo *no = (tNo*)malloc(sizeof(tNo));
 
+    if(cabeca->cod != 0){
+        switch (cabeca->cod) {
+            case ATR:
+                no = tabelaSimbolos->raiz;
+                aux = busca(no, cabeca->id);
+                if(aux == NULL){
+                    // o ID nao está na tabelaSimbolos, ou seja é um ID invalido
+                    printf("A variavel %s nao eh valida\n", cabeca->id);
+                    exit(-1);
+                }else{
+                    // se o id informado for um id válido (dentro da tabelaSimbolos)
+                    printa_op_code(cabeca->pt1, tabelaSimbolos);
+                    printf("istore %d\n", aux->pos);
+                    break;
+                }
+            case IDD:
+                no = tabelaSimbolos->raiz;
+                aux = busca(no, cabeca->id);
+                if(aux == NULL){
+                    // o ID nao está na tabelaSimbolos, ou seja é um ID invalido
+                    printf("A variavel %s nao eh valida\n", cabeca->id);
+                    exit(-1);
+                }else{
+                    // se o id informado for um id válido (dentro da tabelaSimbolos)
+                    printf("iload %d\n", aux->pos);
+                    break;
+                }
+            case CONSTI:
+                if(cabeca->ConstInt <= 5){
+                    printf("iconst_%d\n", cabeca->ConstInt);
+                }
+                else{
+                    printf("bipush %d\n", cabeca->ConstInt);
+                }
+                break;
+            case CONSTF:
+                if(cabeca->ConstFloat <= 5.00){
+                    printf("fconst_%f\n", cabeca->ConstFloat);
+                }
+                else{
+                    printf("bipush %f\n", cabeca->ConstFloat);
+                }
+                break;
+            case ADD:
+                printa_op_code(cabeca->pt1, tabelaSimbolos);
+                printa_op_code(cabeca->pt2, tabelaSimbolos);
+                vconversao(cabeca->pt1,cabeca->pt2);
+                printf("iadd\n");
+            break;
+            case SUB:
+                printa_op_code(cabeca->pt1, tabelaSimbolos);
+                printa_op_code(cabeca->pt2, tabelaSimbolos);
+                vconversao(cabeca->pt1,cabeca->pt2);
+                printf("isub\n");
+                break;
+            case MUL:
+                printa_op_code(cabeca->pt1, tabelaSimbolos);
+                printa_op_code(cabeca->pt2, tabelaSimbolos);
+                vconversao(cabeca->pt1,cabeca->pt2);
+                printf("imul\n");
+                break;
+            case DIV:
+                printa_op_code(cabeca->pt1, tabelaSimbolos);
+                printa_op_code(cabeca->pt2, tabelaSimbolos);
+                vconversao(cabeca->pt1,cabeca->pt2);
+                printf("idiv\n");
+                break;
+        }
+    }
+}
 
-  if(cabeca->cod != 0){
-      switch (cabeca->cod) {
-          case ATR:
-              no = tabelaSimbolos->raiz;
-              aux = busca(no, cabeca->id);
-              if(aux == NULL){
-                  // o ID nao está na tabelaSimbolos, ou seja é um ID invalido
-                  printf("A variavel %s nao eh valida\n", cabeca->id);
-                  exit(-1);
-              }else{
-                  // se o id informado for um id válido (dentro da tabelaSimbolos)
-                  printf("istore %d\n", aux->num);
-                  break;
-              }
-          case CONSTI:
-              if(cabeca->ConstInt <= 5){
-                printf("iconst_%d\n", cabeca->ConstInt);
-              }
-              else{
-                printf("bipush %d\n", cabeca->ConstInt);
-              }
-              break;
-          case CONSTF:
-              if(cabeca->ConstFloat <= 5.00){
-                printf("fconst_%f\n", cabeca->ConstFloat);
-              }
-              else{
-                  printf("bipush %f\n", cabeca->ConstFloat);
-              }
-              break;
-          case ADD:
-              //printf("Simbolo raiz: +\n");
-              printf("(");
-              printa_arv_exp(cabeca->pt1);
-              printa_arv_exp(cabeca->pt2);
-              printf("+) ");
-              break;
-          case SUB:
-              //printf("Simbolo raiz: -\n");
-              printf("(");
-              printa_arv_exp(cabeca->pt1);
-              printa_arv_exp(cabeca->pt2);
-              printf("-) ");
-              break;
-          case MUL:
-              //printf("Simbolo raiz: *\n");
-              printf("(");
-              printa_arv_exp(cabeca->pt1);
-              printa_arv_exp(cabeca->pt2);
-              printf("*) ");
-              break;
-          case DIV:
-              //printf("Simbolo raiz: /\n");
-              printf("(");
-              printa_arv_exp(cabeca->pt1);
-              printa_arv_exp(cabeca->pt2);
-              printf("/) ");
-              break;
-      }
-  }
+float i2f(int number){ return (float)number;}
+int f2i(float number){ return (int)number;}
+
+void vconversao (tAST *pam1,tAST *pam2){
+    if(pam1->tipo != pam2->tipo){
+        //printf("entrei\n" );
+        if(pam1->tipo == T_FLOAT){
+            printf("i2f\n");
+        }
+        else if(pam2->tipo != T_FLOAT){
+            printf("f2i\n");
+        }
+    }
 }

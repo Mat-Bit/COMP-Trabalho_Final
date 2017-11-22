@@ -28,7 +28,7 @@
 #define T_FLOAT 2
 #define T_STRING 3
 #define T_VOID 4
-#define NATRIBUIDO -696969
+#define NATRIBUIDO 0.0
 
 typedef struct Lista{
     char id[MAXID];
@@ -39,7 +39,7 @@ typedef struct Lista{
 typedef struct no{
     char *valor;
     TIPO tipo;
-    int num;
+    int pos;
     float atrib;
     struct no *direita;
     struct no *esquerda;
@@ -54,10 +54,10 @@ typedef struct AST{
     int cod;
     char *id;
     float atrib;
-    struct AST *pt1,*pt2;
+    TIPO tipo;
     int ConstInt;
     float ConstFloat;
-    //
+    struct AST *pt1,*pt2;
 }tAST;
 
 void printLista(tLista *cabeca);
@@ -67,7 +67,7 @@ void insereLista (tLista *head, char *id);
 tArvore * criarArvore();
 void insereArvore(tArvore *arv, tLista *lista);
 void insereArvoreInterna(tNo *no, tLista *lista, int posicao);
-tNo * criaNo(tLista *lista, int num);
+tNo * criaNo(tLista *lista, int posicao);
 void printArvoreInicio(tArvore *arv);
 void printArvore(tNo *elem, int nivel);
 void printNos(tNo *no, int nivel);
@@ -84,5 +84,6 @@ tAST *insereListaComando(tAST *listaCmd, tAST *comando);
 tAST *criaAst_ExpRelac(tAST *exp_esq, tAST *exp_dir, int cod);
 
 void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos);
+void vconversao (tAST *pam1,tAST *pam2);
 
 #endif

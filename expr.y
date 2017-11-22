@@ -46,7 +46,7 @@ BlocoPrincipal: TACHA Declaracoes ListaCmd TFCHA
 Declaracoes: Declaracoes Declaracao
     | Declaracao;
 
-Declaracao: Tipo ListaId TPV {insereTipo($2.listaId, $1.tipo); printLista($2.listaId); insereListaNaArvore($2.listaId, tabelaSimbolos); printf("\n");};
+Declaracao: Tipo ListaId TPV {insereTipo($2.listaId, $1.tipo); insereListaNaArvore($2.listaId, tabelaSimbolos);};
 
 Tipo: TINT {$$.tipo = T_INT;}
     | TSTRING {$$.tipo = T_STRING;}
@@ -57,12 +57,12 @@ ListaId: ListaId TV TID {insereLista($1.listaId, $3.id); $$.listaId = $1.listaId
 
 Bloco: TACHA ListaCmd TFCHA;
 
-ListaCmd: ListaCmd Comando {$$.ast = insereListaComando($1.ast, $2.ast);}
-    | Comando
+ListaCmd: ListaCmd Comando
+    | Comando ;
 
 Comando: CmdSe
     | CmdEnquanto
-    | CmdAtrib  {$$.ast = $1.ast;}
+    | CmdAtrib
     | CmdEscrita
     | CmdLeitura
     | ChamadaProc
@@ -76,7 +76,7 @@ CmdSe: TIF TAPAR ExpressaoLogica TFPAR Bloco
 
 CmdEnquanto: TWHILE TAPAR ExpressaoLogica TFPAR Bloco;
 
-CmdAtrib: TID TATB ExpressaoAritimetica TPV {$$.ast = criaCmdAtrib(tabelaSimbolos, $3.ast, $1.id); printf("\n");printa_op_code($$.ast, tabelaSimbolos); printf("\n\n");}
+CmdAtrib: TID TATB ExpressaoAritimetica TPV {$$.ast = criaCmdAtrib(tabelaSimbolos, $3.ast, $1.id); printa_op_code($$.ast, tabelaSimbolos); printf("\n");}
     | TID TATB TLITERAL;
 
 CmdEscrita: TPRINT TAPAR TASP ExpressaoAritimetica TASP TFPAR TPV
@@ -97,7 +97,7 @@ ListaParametros: ListaParametros TV ExpressaoAritimetica
     | TLITERAL;
 
 //Expressões
-ExpressaoAritimetica: ExpressaoAritimetica TADD TExpressaoAritimetica { $$.ast = criaAst_ExpArit($1.ast, $3.ast, ADD); }
+ExpressaoAritimetica: ExpressaoAritimetica TADD TExpressaoAritimetica { $$.ast = criaAst_ExpArit($1.ast, $3.ast, ADD);}
     | ExpressaoAritimetica TSUB TExpressaoAritimetica { $$.ast = criaAst_ExpArit($1.ast, $3.ast, SUB); }
     | TExpressaoAritimetica { $$.ast = $1.ast; } ;
 
@@ -106,9 +106,9 @@ TExpressaoAritimetica: TExpressaoAritimetica TMUL FExpressaoAritmetica { $$.ast 
     | FExpressaoAritmetica  { $$.ast = $1.ast; } ;
 
 FExpressaoAritmetica: TAPAR ExpressaoAritimetica TFPAR { $$.ast = $2.ast; }
-    | TFLOAT {$$.ast = criar_ast_float($1.ConstFloat);printa_op_code($$.ast, tabelaSimbolos);}
-    | TINT {$$.ast = criar_ast_int($1.ConstInt); printa_op_code($$.ast, tabelaSimbolos);}
-    | TID {$$.ast = criar_ast_id(tabelaSimbolos, $1.id); printa_op_code($$.ast, tabelaSimbolos);};
+    | TFLOAT {$$.ast = criar_ast_float($1.ConstFloat);}
+    | TINT {$$.ast = criar_ast_int($1.ConstInt);}
+    | TID {$$.ast = criar_ast_id(tabelaSimbolos, $1.id);};
 
 ExpressaoLogica: ExpressaoLogica TCEE FExpressaoLogica
     | ExpressaoLogica TCOU FExpressaoLogica
