@@ -224,7 +224,7 @@ tAST *criar_ast_float(float valor_float){
 }
 
 tAST *criaAst_ExpArit(tAST *exp_esq, tAST *exp_dir, int cod){
-    float resultado1, resultado2;
+    float resultado1, resultado2, aux;
     int comp;
     tAST *elem = (tAST*)malloc(sizeof(tAST));
 
@@ -283,16 +283,20 @@ tAST *criaAst_ExpArit(tAST *exp_esq, tAST *exp_dir, int cod){
 
     switch (cod) {
         case ADD:
-            elem->atrib = resultado1 + resultado2;
+            aux = resultado1 + resultado2;
+            elem->atrib = aux;
             break;
         case SUB:
-            elem->atrib = resultado1 - resultado2;
+            aux = resultado1 - resultado2;
+            elem->atrib = aux;
             break;
         case MUL:
-            elem->atrib = resultado1 * resultado2;
+            aux = resultado1 * resultado2;
+            elem->atrib = aux;
             break;
         case DIV:
-            elem->atrib = resultado1 / resultado2;
+            aux = resultado1 / resultado2;
+            elem->atrib = aux;
             break;
     }
 
@@ -363,12 +367,14 @@ tAST *criaCmdAtrib(tArvore *tabSimb, tAST *cabeca, char *id){
         ast->pt2 = NULL;
         ast->cod = ATR;
         ast->atrib = cabeca->atrib;
+        ast->tipo = aux->tipo;
         printf("%s = ", id);
+        printf("%s = %d\n", aux->valor, aux->tipo);
         printa_arv_exp(cabeca);
         printf("\n");
 
         aux->atrib = ast->atrib;
-        //printf("\n%s = %.1f\n", aux->valor, aux->atrib);
+        printf("%s = %.2f\n", aux->valor, aux->atrib);
 
         return ast;
     }
@@ -438,6 +444,7 @@ void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos){
                 }else{
                     // se o id informado for um id válido (dentro da tabelaSimbolos)
                     printa_op_code(cabeca->pt1, tabelaSimbolos);
+                    vconversaoatrb(cabeca, cabeca->pt1);
                     printf("istore %d\n", aux->pos);
                     break;
                 }
@@ -451,22 +458,27 @@ void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos){
                 }else{
                     // se o id informado for um id válido (dentro da tabelaSimbolos)
                     printf("iload %d\n", aux->pos);
+                    printf("Tipo %s = %d\n", aux->valor, cabeca->tipo);
                     break;
                 }
             case CONSTI:
                 if(cabeca->ConstInt <= 5){
                     printf("iconst_%d\n", cabeca->ConstInt);
+                    printf("Tipo %d = %d\n", cabeca->ConstInt, cabeca->tipo);
                 }
                 else{
                     printf("bipush %d\n", cabeca->ConstInt);
+                    printf("Tipo %d = %d\n", cabeca->ConstInt, cabeca->tipo);
                 }
                 break;
             case CONSTF:
                 if(cabeca->ConstFloat <= 5.00){
-                    printf("fconst_%f\n", cabeca->ConstFloat);
+                    printf("fconst_%.2f\n", cabeca->ConstFloat);
+                    printf("Tipo %.2f = %d\n", cabeca->ConstFloat, cabeca->tipo);
                 }
                 else{
-                    printf("bipush %f\n", cabeca->ConstFloat);
+                    printf("bipush %.2f\n", cabeca->ConstFloat);
+                    printf("Tipo %.2f = %d\n", cabeca->ConstFloat, cabeca->tipo);
                 }
                 break;
             case ADD:
@@ -500,13 +512,23 @@ void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos){
 float i2f(int number){ return (float)number;}
 int f2i(float number){ return (int)number;}
 
-void vconversao (tAST *pam1,tAST *pam2){
-    if(pam1->tipo != pam2->tipo){
+void vconversao (tAST *p1,tAST *p2){
+    if(p1->tipo != p2->tipo){
         //printf("entrei\n" );
-        if(pam1->tipo == T_FLOAT){
+        if(p1->tipo == T_FLOAT){
+        }
+        else if(p2->tipo != T_FLOAT){
             printf("i2f\n");
         }
-        else if(pam2->tipo != T_FLOAT){
+    }
+}
+void vconversaoatrb (tAST *p1,tAST *p2){
+    if(p1->tipo != p2->tipo){
+        //printf("entrei\n" );
+        if(p1->tipo == T_FLOAT){
+            printf("i2f\n");
+        }
+        else{
             printf("f2i\n");
         }
     }
