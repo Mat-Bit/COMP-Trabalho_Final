@@ -74,7 +74,7 @@ typedef struct Atributo{
   tLista *listaId;
   tArvore *tabelaSimbolos;
   char id[MAXID];
-  int tipo;
+  TIPO tipo;
   int ConstInt;
   float ConstFloat;
   tAST *ast;

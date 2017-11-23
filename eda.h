@@ -66,8 +66,8 @@ void insereLista (tLista *head, char *id);
 
 tArvore * criarArvore();
 void insereArvore(tArvore *arv, tLista *lista);
-void insereArvoreInterna(tNo *no, tLista *lista, int posicao);
-tNo * criaNo(tLista *lista, int posicao);
+void insereArvoreInterna(tNo *no, tLista *lista, int posicao, TIPO tipo);
+tNo * criaNo(tLista *lista, int posicao, TIPO tipo);
 void printArvoreInicio(tArvore *arv);
 void printArvore(tNo *elem, int nivel);
 void printNos(tNo *no, int nivel);

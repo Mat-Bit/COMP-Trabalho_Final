@@ -10,8 +10,9 @@ tLista *criarLista (char *id){
 }
 
 void insereTipo(tLista *head, TIPO tipo){
-    if (head != NULL){
+    while (head != NULL){
         head->tipo = tipo;
+        head = head->proximo;
     }
 }
 
@@ -60,19 +61,21 @@ tArvore * criarArvore(){
 }
 
 void insereArvore(tArvore *arv, tLista *lista){
+    int tipo;
+    tipo = lista->tipo;
     if(arv->raiz == NULL){
         arv->qtd++;
-        arv->raiz = criaNo(lista, arv->qtd);
+        arv->raiz = criaNo(lista, arv->qtd, tipo);
         return;
     }
     else{
         arv->qtd++;
-        insereArvoreInterna(arv->raiz, lista, arv->qtd);
+        insereArvoreInterna(arv->raiz, lista, arv->qtd, tipo);
         return;
     }
 }
 
-void insereArvoreInterna(tNo *no, tLista *lista, int posicao){
+void insereArvoreInterna(tNo *no, tLista *lista, int posicao, TIPO tipo){
 
     int elem = strcmp(lista->id, no->valor);
     if(elem == 0){
@@ -84,29 +87,29 @@ void insereArvoreInterna(tNo *no, tLista *lista, int posicao){
     //printf("elem = %d\n\n", elem);
 
     if(elem > 0 && no->direita == NULL){
-        no->direita = criaNo(lista, posicao);
+        no->direita = criaNo(lista, posicao, tipo);
         return;
     }
     if(elem < 0 && no->esquerda == NULL){
-        no->esquerda = criaNo(lista, posicao);
+        no->esquerda = criaNo(lista, posicao, tipo);
         return;
     }
     if(elem < 0){
-        insereArvoreInterna(no->esquerda, lista, posicao);
+        insereArvoreInterna(no->esquerda, lista, posicao, tipo);
     }
     else {
-        insereArvoreInterna(no->direita, lista, posicao);
+        insereArvoreInterna(no->direita, lista, posicao, tipo);
     }
 }
 
-tNo * criaNo(tLista *lista, int posicao){
+tNo * criaNo(tLista *lista, int posicao, TIPO tipo){
     tNo *elem = (tNo*)malloc(sizeof(tNo));
 
     elem->valor = malloc(sizeof(char)*100);
     strcpy(elem->valor,lista->id);
     elem->valor[99] = '\0';
 
-    elem->tipo = lista->tipo;
+    elem->tipo = tipo;
     elem->pos = posicao;
     elem->atrib = NATRIBUIDO;
     elem->direita = NULL;
@@ -368,13 +371,13 @@ tAST *criaCmdAtrib(tArvore *tabSimb, tAST *cabeca, char *id){
         ast->cod = ATR;
         ast->atrib = cabeca->atrib;
         ast->tipo = aux->tipo;
-        printf("%s = ", id);
-        printf("%s = %d\n", aux->valor, aux->tipo);
-        printa_arv_exp(cabeca);
+        //printf("%s = ", id);
+        //printf("%s = %d\n", aux->valor, aux->tipo);
+        //printa_arv_exp(cabeca);
         printf("\n");
 
         aux->atrib = ast->atrib;
-        printf("%s = %.2f\n", aux->valor, aux->atrib);
+        //printf("%s = %.2f\n", aux->valor, aux->atrib);
 
         return ast;
     }
@@ -458,27 +461,27 @@ void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos){
                 }else{
                     // se o id informado for um id válido (dentro da tabelaSimbolos)
                     printf("iload %d\n", aux->pos);
-                    printf("Tipo %s = %d\n", aux->valor, cabeca->tipo);
+                    //printf("Tipo %s = %d\n", aux->valor, cabeca->tipo);
                     break;
                 }
             case CONSTI:
                 if(cabeca->ConstInt <= 5){
                     printf("iconst_%d\n", cabeca->ConstInt);
-                    printf("Tipo %d = %d\n", cabeca->ConstInt, cabeca->tipo);
+                    //printf("Tipo %d = %d\n", cabeca->ConstInt, cabeca->tipo);
                 }
                 else{
                     printf("bipush %d\n", cabeca->ConstInt);
-                    printf("Tipo %d = %d\n", cabeca->ConstInt, cabeca->tipo);
+                    //printf("Tipo %d = %d\n", cabeca->ConstInt, cabeca->tipo);
                 }
                 break;
             case CONSTF:
                 if(cabeca->ConstFloat <= 5.00){
                     printf("fconst_%.2f\n", cabeca->ConstFloat);
-                    printf("Tipo %.2f = %d\n", cabeca->ConstFloat, cabeca->tipo);
+                    //printf("Tipo %.2f = %d\n", cabeca->ConstFloat, cabeca->tipo);
                 }
                 else{
                     printf("bipush %.2f\n", cabeca->ConstFloat);
-                    printf("Tipo %.2f = %d\n", cabeca->ConstFloat, cabeca->tipo);
+                    //printf("Tipo %.2f = %d\n", cabeca->ConstFloat, cabeca->tipo);
                 }
                 break;
             case ADD:
@@ -515,11 +518,12 @@ int f2i(float number){ return (int)number;}
 void vconversao (tAST *p1,tAST *p2){
     if(p1->tipo != p2->tipo){
         //printf("entrei\n" );
-        if(p1->tipo == T_FLOAT){
-        }
-        else if(p2->tipo != T_FLOAT){
-            printf("i2f\n");
-        }
+        // if(p1->tipo == T_FLOAT){
+        // }
+        // else if(p2->tipo != T_FLOAT){
+        //     printf("i2f\n");
+        // }
+        printf("i2f\n");
     }
 }
 void vconversaoatrb (tAST *p1,tAST *p2){
