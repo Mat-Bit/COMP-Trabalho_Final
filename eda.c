@@ -120,7 +120,7 @@ tNo * criaNo(tLista *lista, int posicao, TIPO tipo){
 void printArvoreInicio(tArvore *arv){
     tNo *elem = (tNo*)malloc(sizeof(tNo));
     elem = arv->raiz;
-    printArvore(elem, 0);
+    printArvore(elem, 1);
     printf("\n");
 }
 
@@ -141,8 +141,8 @@ void printNos(tNo *no, int nivel){
     //if(no->tipo == T_FLOAT) printf("float ");
     //if(no->tipo == T_STRING) printf("String ");
 
-    for(j=0;j<nivel;j++){ printf("\t");}
-    printf("%s(%d,%d)", no->valor, no->pos, nivel);
+    for(j=1;j<nivel;j++){ printf("\t");}
+    printf("%s(%d,%.1f)", no->valor, no->pos, no->atrib);
 }
 
 void insereListaNaArvore(tLista *lista, tArvore *arv){
@@ -230,12 +230,12 @@ tAST *criaAst_ExpArit(tAST *exp_esq, tAST *exp_dir, int cod){
     float resultado1, resultado2, aux;
     int comp;
     tAST *elem = (tAST*)malloc(sizeof(tAST));
-
-    elem->pt1 = exp_esq;
-    elem->pt2 = exp_dir;
+    tAST *conv = (tAST*)malloc(sizeof(tAST));
 
     elem->id = "NULL";
     elem->cod = cod;
+
+    elem->pt1 = exp_esq;
 
     //Definindo o tipo:
     if(exp_esq->tipo == T_STRING || exp_dir->tipo == T_STRING){
@@ -245,70 +245,44 @@ tAST *criaAst_ExpArit(tAST *exp_esq, tAST *exp_dir, int cod){
     else {
         if (exp_esq->tipo != exp_dir->tipo){
             if(exp_esq->tipo == T_FLOAT){
+                conv = i2f(exp_dir);
+                elem->pt2 = conv;
                 elem->tipo = T_FLOAT;
             }
-            else elem->tipo = T_INT;
+            else{
+                conv = f2i(exp_dir);
+                elem->pt2 = conv;
+                elem->tipo = T_INT;
+            }
         }
-        else elem->tipo = exp_esq->tipo;
-    }
-
-    comp = strcmp(exp_esq->id, "NULL");
-    if (comp != 0){
-        elem->pt1->id = exp_esq->id;
-        resultado1 = exp_esq->atrib;
-    }
-    else{
-        if(exp_esq->ConstInt != 0){
-            elem->pt1->ConstInt = exp_esq->ConstInt;
-            resultado1 = exp_esq->atrib;
-        }
-        if(exp_esq->ConstFloat != 0.0){
-            elem->pt1->ConstFloat = exp_esq->ConstFloat;
-            resultado1 = exp_esq->atrib;
-        }
-    }
-
-    comp = strcmp(exp_dir->id, "NULL");
-    if (comp != 0){
-        elem->pt2->id = exp_dir->id;
-        resultado2 = exp_dir->atrib;
-    }
-    else{
-        if(exp_dir->ConstInt != 0){
-            elem->pt2->ConstInt = exp_dir->ConstInt;
-            resultado2 = exp_dir->atrib;
-        }
-        if(exp_dir->ConstFloat != 0.0){
-            elem->pt2->ConstFloat = exp_dir->ConstFloat;
-            resultado2 = exp_dir->atrib;
+        else{
+            elem->tipo = exp_esq->tipo;
+            elem->pt2 = exp_dir;
         }
     }
 
     switch (cod) {
         case ADD:
-            aux = resultado1 + resultado2;
-            elem->atrib = aux;
+            aux = elem->pt1->atrib + elem->pt2->atrib;
             break;
         case SUB:
-            aux = resultado1 - resultado2;
-            elem->atrib = aux;
+            aux = elem->pt1->atrib - elem->pt2->atrib;
             break;
         case MUL:
-            aux = resultado1 * resultado2;
-            elem->atrib = aux;
+            aux = elem->pt1->atrib * elem->pt2->atrib;
             break;
         case DIV:
-            aux = resultado1 / resultado2;
-            elem->atrib = aux;
+            aux = elem->pt1->atrib / elem->pt2->atrib;
             break;
     }
+    elem->atrib = aux;
 
     return elem;
 }
 
 void printa_arv_exp(tAST *cabeca){
 
-    if(cabeca->cod != 0){
+    if(cabeca->cod != 0 && cabeca != NULL){
         switch (cabeca->cod) {
             case IDD:
                 printf("%s", cabeca->id);
@@ -320,28 +294,30 @@ void printa_arv_exp(tAST *cabeca){
                 printf("%.1f", cabeca->ConstFloat);
                 break;
             case ADD:
-                printf("(");
                 printa_arv_exp(cabeca->pt1);
                 printa_arv_exp(cabeca->pt2);
-                printf("+) ");
+                printf("+");
                 break;
             case SUB:
-                printf("(");
                 printa_arv_exp(cabeca->pt1);
                 printa_arv_exp(cabeca->pt2);
-                printf("-) ");
+                printf("-");
                 break;
             case MUL:
-                printf("(");
                 printa_arv_exp(cabeca->pt1);
                 printa_arv_exp(cabeca->pt2);
-                printf("*) ");
+                printf("*");
                 break;
             case DIV:
-                printf("(");
                 printa_arv_exp(cabeca->pt1);
                 printa_arv_exp(cabeca->pt2);
-                printf("/) ");
+                printf("/");
+                break;
+            case I2F:
+                printa_arv_exp(cabeca->pt1);
+                break;
+            case F2I:
+                printa_arv_exp(cabeca->pt1);
                 break;
         }
     }
@@ -349,6 +325,7 @@ void printa_arv_exp(tAST *cabeca){
 
 tAST *criaCmdAtrib(tArvore *tabSimb, tAST *cabeca, char *id){
     tAST *ast = (tAST*)malloc(sizeof(tAST));
+    tAST *conv = (tAST*)malloc(sizeof(tAST));
     tNo *aux = (tNo*)malloc(sizeof(tNo));
     tNo *no = (tNo*)malloc(sizeof(tNo));
 
@@ -366,18 +343,29 @@ tAST *criaCmdAtrib(tArvore *tabSimb, tAST *cabeca, char *id){
         ast->id = aux->valor; // que eh = ao id passado como parametro
         ast->ConstInt = 0;
         ast->ConstFloat = 0.0;
-        ast->pt1 = cabeca;
         ast->pt2 = NULL;
         ast->cod = ATR;
         ast->atrib = cabeca->atrib;
         ast->tipo = aux->tipo;
-        //printf("%s = ", id);
-        //printf("%s = %d\n", aux->valor, aux->tipo);
-        //printa_arv_exp(cabeca);
+
+        if(ast->tipo != cabeca->tipo){
+            if(ast->tipo == T_FLOAT){
+                conv = i2f(cabeca);
+                ast->pt1 = conv;
+            }
+            else{
+                conv = f2i(cabeca);
+                ast->pt1 = conv;
+            }
+        }
+        else ast->pt1 = cabeca;
+
+        printf("%s = ", id);
+        printa_arv_exp(cabeca);
         printf("\n");
+        printf("%s = %.1f\n", aux->valor, ast->atrib);
 
         aux->atrib = ast->atrib;
-        //printf("%s = %.2f\n", aux->valor, aux->atrib);
 
         return ast;
     }
@@ -389,35 +377,85 @@ tAST *criaAst_ExpRelac(tAST *exp_esq, tAST *exp_dir, int cod){
     elem->pt1 = exp_esq;
     elem->pt2 = exp_dir;
     elem->cod = cod;
-    /*
+    elem->tipo = exp_esq->tipo;
+
     switch (cod) {
-    case DIF:
-    if (exp_esq->atrib != exp_dir->atrib) {elem->id = "TRUE";}
-    else {elem->id = "FALSE";}
-    break;
-    case IGUAL:
-    if (exp_esq->atrib == exp_dir->atrib) {elem->id = "TRUE";}
-    else {elem->id = "FALSE";}
-    break;
-    case MENIG:
-    if (exp_esq->atrib <= exp_dir->atrib) {elem->id = "TRUE";}
-    else {elem->id = "FALSE";}
-    break;
-    case MENOR:
-    if (exp_esq->atrib < exp_dir->atrib) {elem->id = "TRUE";}
-    else {elem->id = "FALSE";}
-    break;
-    case MAIIG:
-    if (exp_esq->atrib >= exp_dir->atrib) {elem->id = "TRUE";}
-    else {elem->id = "FALSE";}
-    break;
-    case MAIOR:
-    if (exp_esq->atrib > exp_dir->atrib) {elem->id = "TRUE";}
-    else {elem->id = "FALSE";}
-    break;
+        case DIF:
+            if (exp_esq->atrib != exp_dir->atrib) {elem->id = "TRUE";}
+            else {elem->id = "FALSE";}
+            break;
+        case IGUAL:
+            if (exp_esq->atrib == exp_dir->atrib) {elem->id = "TRUE";}
+            else {elem->id = "FALSE";}
+            break;
+        case MENIG:
+            if (exp_esq->atrib <= exp_dir->atrib) {elem->id = "TRUE";}
+            else {elem->id = "FALSE";}
+            break;
+        case MENOR:
+            if (exp_esq->atrib < exp_dir->atrib) {elem->id = "TRUE";}
+            else {elem->id = "FALSE";}
+            break;
+        case MAIIG:
+            if (exp_esq->atrib >= exp_dir->atrib) {elem->id = "TRUE";}
+            else {elem->id = "FALSE";}
+            break;
+        case MAIOR:
+            if (exp_esq->atrib > exp_dir->atrib) {elem->id = "TRUE";}
+            else {elem->id = "FALSE";}
+            break;
+    }
+
+    return elem;
 }
-*/
-return elem;
+
+int geraLabel(){
+    return contador++;
+}
+
+tAST *criaAst_ExpLog(tAST *ptr, int lv, int lf){
+    tAST *rel = (tAST*)malloc(sizeof(tAST));
+    int laux;
+
+    switch (ptr->cod) {
+        case EEE:
+            laux = geraLabel();
+            criaAst_ExpLog(ptr->pt1, laux, lf);
+            criaAst_ExpLog(ptr->pt2, lv, lf);
+            break;
+        case OOU:
+            laux = geraLabel();
+            criaAst_ExpLog(ptr->pt1, lv, laux);
+            criaAst_ExpLog(ptr->pt2, lv, lf);
+            break;
+        case NEG:
+            criaAst_ExpLog(ptr->pt1, lf, lv);
+            break;
+        case REL:
+            rel = criaAst_ExpRelac(ptr->pt1, ptr->pt2, ptr->cod);
+            break;
+    }
+
+    return rel;
+}
+
+tAST criaCmdIf(int cod, tAST *ptr1, tAST *ptr2, tAST *ptr3){
+    int lv,lf;
+    switch(cod){
+        case TIFFF:
+            lv = geraLabel();
+            lv = geraLabel();
+            criaAst_ExpLog(ptr1,lv,lf);
+        break;
+        case TIFELSEE:
+            lv = geraLabel();
+            lv = geraLabel();
+            criaAst_ExpLog(ptr1,lv,lf);
+            criaAst_ExpLog(ptr2,lv,lf);
+            criaAst_ExpLog(ptr3,lv,lf);
+        break;
+
+    }
 }
 
 tAST *insereListaComando(tAST *listaCmd, tAST *comando){
@@ -431,7 +469,27 @@ tAST *insereListaComando(tAST *listaCmd, tAST *comando){
     return ast;
 }
 
-void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos){
+tAST *i2f(tAST *ptr){
+    tAST *ast = (tAST*)malloc(sizeof(tAST));
+
+    ast->cod = I2F;
+    ast->pt1 = ptr;
+    ast->atrib = ptr->atrib;
+
+    return ast;
+}
+
+tAST *f2i(tAST *ptr){
+    tAST *ast = (tAST*)malloc(sizeof(tAST));
+
+    ast->cod = F2I;
+    ast->pt1 = ptr;
+    ast->atrib = ptr->atrib;
+
+    return ast;
+}
+
+void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos, FILE *arq_saida){
     tNo *aux = (tNo*)malloc(sizeof(tNo));
     tNo *no = (tNo*)malloc(sizeof(tNo));
 
@@ -446,9 +504,8 @@ void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos){
                     exit(-1);
                 }else{
                     // se o id informado for um id válido (dentro da tabelaSimbolos)
-                    printa_op_code(cabeca->pt1, tabelaSimbolos);
-                    vconversaoatrb(cabeca, cabeca->pt1);
-                    printf("istore %d\n", aux->pos);
+                    printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
+                    fprintf(arq_saida, "istore %d\n", aux->pos);
                     break;
                 }
             case IDD:
@@ -460,80 +517,49 @@ void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos){
                     exit(-1);
                 }else{
                     // se o id informado for um id válido (dentro da tabelaSimbolos)
-                    printf("iload %d\n", aux->pos);
-                    //printf("Tipo %s = %d\n", aux->valor, cabeca->tipo);
+                    fprintf(arq_saida, "iload %d\n", aux->pos);
                     break;
                 }
             case CONSTI:
-                if(cabeca->ConstInt <= 5){
-                    printf("iconst_%d\n", cabeca->ConstInt);
-                    //printf("Tipo %d = %d\n", cabeca->ConstInt, cabeca->tipo);
-                }
-                else{
-                    printf("bipush %d\n", cabeca->ConstInt);
-                    //printf("Tipo %d = %d\n", cabeca->ConstInt, cabeca->tipo);
-                }
+                if(cabeca->ConstInt <= 5) {fprintf(arq_saida, "iconst_%d\n", cabeca->ConstInt);}
+                else {fprintf(arq_saida, "bipush %d\n", cabeca->ConstInt);}
                 break;
             case CONSTF:
-                if(cabeca->ConstFloat <= 5.00){
-                    printf("fconst_%.2f\n", cabeca->ConstFloat);
-                    //printf("Tipo %.2f = %d\n", cabeca->ConstFloat, cabeca->tipo);
-                }
-                else{
-                    printf("bipush %.2f\n", cabeca->ConstFloat);
-                    //printf("Tipo %.2f = %d\n", cabeca->ConstFloat, cabeca->tipo);
-                }
+                if(cabeca->ConstFloat <= 5.00) {fprintf(arq_saida, "fconst_%.2f\n", cabeca->ConstFloat);}
+                else {fprintf(arq_saida, "bipush %.2f\n", cabeca->ConstFloat);}
                 break;
             case ADD:
-                printa_op_code(cabeca->pt1, tabelaSimbolos);
-                printa_op_code(cabeca->pt2, tabelaSimbolos);
-                vconversao(cabeca->pt1,cabeca->pt2);
-                printf("iadd\n");
-            break;
+                printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
+                printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
+                if (cabeca->tipo == T_INT) {fprintf(arq_saida, "iadd\n");}
+                if (cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "fadd\n");}
+                break;
             case SUB:
-                printa_op_code(cabeca->pt1, tabelaSimbolos);
-                printa_op_code(cabeca->pt2, tabelaSimbolos);
-                vconversao(cabeca->pt1,cabeca->pt2);
-                printf("isub\n");
+                printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
+                printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
+                if (cabeca->tipo == T_INT) {fprintf(arq_saida, "isub\n");}
+                if (cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "fsub\n");}
                 break;
             case MUL:
-                printa_op_code(cabeca->pt1, tabelaSimbolos);
-                printa_op_code(cabeca->pt2, tabelaSimbolos);
-                vconversao(cabeca->pt1,cabeca->pt2);
-                printf("imul\n");
+                printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
+                printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
+                if (cabeca->tipo == T_INT) {fprintf(arq_saida, "imul\n");}
+                if (cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "fmul\n");}
                 break;
             case DIV:
-                printa_op_code(cabeca->pt1, tabelaSimbolos);
-                printa_op_code(cabeca->pt2, tabelaSimbolos);
-                vconversao(cabeca->pt1,cabeca->pt2);
-                printf("idiv\n");
+                printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
+                printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
+                if (cabeca->tipo == T_INT) {fprintf(arq_saida, "idiv\n");}
+                if (cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "fdiv\n");}
                 break;
-        }
-    }
-}
-
-float i2f(int number){ return (float)number;}
-int f2i(float number){ return (int)number;}
-
-void vconversao (tAST *p1,tAST *p2){
-    if(p1->tipo != p2->tipo){
-        //printf("entrei\n" );
-        // if(p1->tipo == T_FLOAT){
-        // }
-        // else if(p2->tipo != T_FLOAT){
-        //     printf("i2f\n");
-        // }
-        printf("i2f\n");
-    }
-}
-void vconversaoatrb (tAST *p1,tAST *p2){
-    if(p1->tipo != p2->tipo){
-        //printf("entrei\n" );
-        if(p1->tipo == T_FLOAT){
-            printf("i2f\n");
-        }
-        else{
-            printf("f2i\n");
+            case I2F:
+                printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
+                fprintf(arq_saida, "i2f\n");
+                break;
+            case F2I:
+                printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
+                fprintf(arq_saida, "f2i\n");
+                break;
         }
     }
 }

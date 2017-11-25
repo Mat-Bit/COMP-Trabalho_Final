@@ -4,6 +4,8 @@
 #include "eda.h"
 
 tArvore *tabelaSimbolos;
+FILE *arq_saida;
+
 
 typedef struct Atributo{
   tLista *listaId;
@@ -71,12 +73,12 @@ Comando: CmdSe
 Retorno: TRET ExpressaoAritimetica TPV
     | TRET TLITERAL TPV;
 
-CmdSe: TIF TAPAR ExpressaoLogica TFPAR Bloco
-    | TIF TAPAR ExpressaoLogica TFPAR Bloco TELSE Bloco
+CmdSe: TIF TAPAR ExpressaoLogica TFPAR Bloco {$$.ast = criaCmdIf(TIFFF, $3.ast, $5.ast, NULL);}
+    | TIF TAPAR ExpressaoLogica TFPAR Bloco TELSE Bloco {$$.ast = criaCmdIf(TIFFF, $3.ast, $5.ast, $7.ast);}
 
 CmdEnquanto: TWHILE TAPAR ExpressaoLogica TFPAR Bloco;
 
-CmdAtrib: TID TATB ExpressaoAritimetica TPV {$$.ast = criaCmdAtrib(tabelaSimbolos, $3.ast, $1.id); printa_op_code($$.ast, tabelaSimbolos); printf("\n");}
+CmdAtrib: TID TATB ExpressaoAritimetica TPV {$$.ast = criaCmdAtrib(tabelaSimbolos, $3.ast, $1.id); printa_op_code($$.ast, tabelaSimbolos, arq_saida); printf("\n");}
     | TID TATB TLITERAL;
 
 CmdEscrita: TPRINT TAPAR TASP ExpressaoAritimetica TASP TFPAR TPV
@@ -114,8 +116,8 @@ ExpressaoLogica: ExpressaoLogica TCEE FExpressaoLogica
     | ExpressaoLogica TCOU FExpressaoLogica
     | FExpressaoLogica;
 
-FExpressaoLogica: TNEG FExpressaoLogica
-    | TAPAR FExpressaoLogica TFPAR
+FExpressaoLogica: TNEG FExpressaoLogica {$$.ast = criaAst_ExpLog($2.ast, )}
+    | TAPAR FExpressaoLogica TFPAR {$$.ast = $2.ast;}
     | TRUE
     | FALSE
     | ExpressaoRelacional;

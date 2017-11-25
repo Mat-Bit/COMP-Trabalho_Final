@@ -46,8 +46,8 @@ id ([_]|{letras})+{metacharacter}*
 "print" {return TPRINT;}
 "read" {return TREAD;}
 "void" {return TVOID;}
-"true" {return TRUE;}
-"false" {return FALSE;}
+"TRUE" {return TRUE;}
+"FALSE" {return FALSE;}
 
 "int" {return TINT;}
 "float" {return TFLOAT;}

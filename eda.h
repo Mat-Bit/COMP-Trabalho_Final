@@ -9,6 +9,9 @@
 #define SUB 200
 #define MUL 300
 #define DIV 400
+#define I2F 1000
+#define F2I 1010
+
 #define ATR 500
 #define IDD 600
 #define CONSTI 700
@@ -20,6 +23,14 @@
 #define MAIIG 930
 #define MAIOR 940
 #define MENOR 950
+
+#define NEG 1100
+#define EEE 1110
+#define OOU 1111
+#define REL 0001
+
+#define TIFFF 1200
+#define TIFELSEE 1250
 
 #define MAXID 10
 #define TIPO int
@@ -57,8 +68,11 @@ typedef struct AST{
     TIPO tipo;
     int ConstInt;
     float ConstFloat;
+    int lv, lf;
     struct AST *pt1,*pt2;
 }tAST;
+
+int contador = 0;
 
 void printLista(tLista *cabeca);
 tLista *criarLista (char *id);
@@ -83,7 +97,10 @@ tAST *criaCmdAtrib(tArvore *tabSimb, tAST *cabeca, char *id);
 tAST *insereListaComando(tAST *listaCmd, tAST *comando);
 tAST *criaAst_ExpRelac(tAST *exp_esq, tAST *exp_dir, int cod);
 
-void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos);
-void vconversao (tAST *pam1,tAST *pam2);
+int geraLabel();
+
+void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos, FILE *arq_saida);
+tAST *i2f(tAST *ptr);
+tAST *f2i(tAST *ptr);
 
 #endif
