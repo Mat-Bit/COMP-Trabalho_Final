@@ -1,5 +1,7 @@
 #include "eda.h"
 
+int conta_label = 0;
+
 tLista *criarLista (char *id){
     tLista *elem = (tLista*)malloc(sizeof(tLista));
     if (elem != NULL){
@@ -360,11 +362,6 @@ tAST *criaCmdAtrib(tArvore *tabSimb, tAST *cabeca, char *id){
         }
         else ast->pt1 = cabeca;
 
-        printf("%s = ", id);
-        printa_arv_exp(cabeca);
-        printf("\n");
-        printf("%s = %.1f\n", aux->valor, ast->atrib);
-
         aux->atrib = ast->atrib;
 
         return ast;
@@ -373,11 +370,27 @@ tAST *criaCmdAtrib(tArvore *tabSimb, tAST *cabeca, char *id){
 
 tAST *criaAst_ExpRelac(tAST *exp_esq, tAST *exp_dir, int cod){
     tAST *elem = (tAST*)malloc(sizeof(tAST));
+    tAST *conv = (tAST*)malloc(sizeof(tAST));
 
     elem->pt1 = exp_esq;
-    elem->pt2 = exp_dir;
     elem->cod = cod;
-    elem->tipo = exp_esq->tipo;
+
+    if (exp_esq->tipo != exp_dir->tipo){
+        if(exp_esq->tipo == T_FLOAT){
+            conv = i2f(exp_dir);
+            elem->pt2 = conv;
+            elem->tipo = T_FLOAT;
+        }
+        else{
+            conv = f2i(exp_dir);
+            elem->pt2 = conv;
+            elem->tipo = T_INT;
+        }
+    }
+    else{
+        elem->tipo = exp_esq->tipo;
+        elem->pt2 = exp_dir;
+    }
 
     switch (cod) {
         case DIF:
@@ -409,63 +422,108 @@ tAST *criaAst_ExpRelac(tAST *exp_esq, tAST *exp_dir, int cod){
     return elem;
 }
 
-int geraLabel(){
-    return contador++;
-}
-
-tAST *criaAst_ExpLog(tAST *ptr, int lv, int lf){
-    tAST *rel = (tAST*)malloc(sizeof(tAST));
+tAST *criaAst_ExpLog(tAST *exp_esq, tAST *exp_dir, int cod){
+    tAST *ast = (tAST*)malloc(sizeof(tAST));
     int laux;
 
-    switch (ptr->cod) {
+    ast->cod = cod;
+
+    switch (cod) {
         case EEE:
-            laux = geraLabel();
-            criaAst_ExpLog(ptr->pt1, laux, lf);
-            criaAst_ExpLog(ptr->pt2, lv, lf);
+            if(exp_esq->id == "TRUE" && exp_dir->id == "TRUE"){
+                ast->id = "TRUE";
+            }
+            else {ast->id = "FALSE";}
+            ast->pt1 = exp_esq;
+            ast->pt2 = exp_dir;
             break;
         case OOU:
-            laux = geraLabel();
-            criaAst_ExpLog(ptr->pt1, lv, laux);
-            criaAst_ExpLog(ptr->pt2, lv, lf);
+            if(exp_esq->id == "TRUE" || exp_dir->id == "TRUE"){
+                ast->id = "TRUE";
+            }
+            else {ast->id = "FALSE";}
+            ast->pt1 = exp_esq;
+            ast->pt2 = exp_dir;
             break;
         case NEG:
-            criaAst_ExpLog(ptr->pt1, lf, lv);
-            break;
-        case REL:
-            rel = criaAst_ExpRelac(ptr->pt1, ptr->pt2, ptr->cod);
+            if(exp_esq->id == "TRUE") {ast->id = "FALSE";}
+            else {ast->id = "TRUE";}
+            ast->pt1 = exp_esq;
+            ast->pt2 = exp_dir;
             break;
     }
 
-    return rel;
+    return ast;
 }
 
-tAST criaCmdIf(int cod, tAST *ptr1, tAST *ptr2, tAST *ptr3){
-    int lv,lf;
-    switch(cod){
-        case TIFFF:
-            lv = geraLabel();
-            lv = geraLabel();
-            criaAst_ExpLog(ptr1,lv,lf);
-        break;
-        case TIFELSEE:
-            lv = geraLabel();
-            lv = geraLabel();
-            criaAst_ExpLog(ptr1,lv,lf);
-            criaAst_ExpLog(ptr2,lv,lf);
-            criaAst_ExpLog(ptr3,lv,lf);
-        break;
+tAST *criaCmdIf(tAST *exp_esq, tAST *exp_dir, int cod){
+    tAST *ast = (tAST*)malloc(sizeof(tAST));
+    tAST *bloco = (tAST*)malloc(sizeof(tAST));
 
-    }
+    ast->cod = cod;
+    ast->pt1 = exp_esq;
+
+    bloco->cod = BLC;
+    bloco->pt1 = exp_dir;
+    bloco->pt2 = NULL;
+    ast->pt2 = bloco;
+
+    if (exp_esq->id == "TRUE") {ast->id = "TRUE";}
+    else {ast->id = "FALSE";}
+
+    return ast;
 }
 
-tAST *insereListaComando(tAST *listaCmd, tAST *comando){
+tAST *criaCmdIfElse(tAST *expr, tAST *p_if, tAST *p_else, int cod){
+    tAST *ast = (tAST*)malloc(sizeof(tAST));
+    tAST *bloco = (tAST*)malloc(sizeof(tAST));
+
+    ast->cod = cod;
+    ast->pt1 = expr;
+
+    bloco->cod = BLC;
+    bloco->pt1 = p_if;
+    bloco->pt2 = p_else;
+    ast->pt2 = bloco;
+
+    if (expr->id == "TRUE") {ast->id = "TRUE";}
+    else {ast->id = "FALSE";}
+
+    return ast;
+}
+
+tAST *criaCmdWhile(tAST *exp_esq, tAST *exp_dir, int cod){
+    tAST *ast = (tAST*)malloc(sizeof(tAST));
+    tAST *bloco = (tAST*)malloc(sizeof(tAST));
+
+    ast->cod = cod;
+    ast->pt1 = exp_esq;
+
+    bloco->cod = BLC;
+    bloco->pt1 = exp_dir;
+    bloco->pt2 = NULL;
+    ast->pt2 = bloco;
+
+    if (exp_esq->id == "TRUE") {ast->id = "TRUE";}
+    else {ast->id = "FALSE";}
+
+    return ast;
+}
+
+tAST *criaListaComando(tAST *comando, int cod){
     tAST *ast = (tAST*)malloc(sizeof(tAST));
 
-    if (listaCmd->cod == ATR && comando->cod == ATR){
-        ast->pt1 = listaCmd;
-        ast->pt2 = comando;
-        ast->cod = ATR;
-    }
+    ast->cod = cod;
+    ast->pt1 = comando;
+    return ast;
+}
+
+tAST *insereListaComando(tAST *listaCmd, tAST *comando, int cod){
+    tAST *ast = (tAST*)malloc(sizeof(tAST));
+
+    ast->cod = cod;
+    ast->pt1 = listaCmd;
+    ast->pt2 = comando;
     return ast;
 }
 
@@ -489,12 +547,21 @@ tAST *f2i(tAST *ptr){
     return ast;
 }
 
+int geraLabel(){
+    return ++conta_label;
+}
+
 void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos, FILE *arq_saida){
     tNo *aux = (tNo*)malloc(sizeof(tNo));
     tNo *no = (tNo*)malloc(sizeof(tNo));
+    int cont, laux;
 
     if(cabeca->cod != 0){
         switch (cabeca->cod) {
+            case CMD:
+                printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
+                printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
+                break;
             case ATR:
                 no = tabelaSimbolos->raiz;
                 aux = busca(no, cabeca->id);
@@ -506,6 +573,7 @@ void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos, FILE *arq_saida){
                     // se o id informado for um id válido (dentro da tabelaSimbolos)
                     printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
                     fprintf(arq_saida, "istore %d\n", aux->pos);
+                    printf("Salva (%s)\n", aux->valor);
                     break;
                 }
             case IDD:
@@ -518,47 +586,194 @@ void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos, FILE *arq_saida){
                 }else{
                     // se o id informado for um id válido (dentro da tabelaSimbolos)
                     fprintf(arq_saida, "iload %d\n", aux->pos);
+                    printf("Carrega (%s)\n", cabeca->id);
                     break;
                 }
             case CONSTI:
                 if(cabeca->ConstInt <= 5) {fprintf(arq_saida, "iconst_%d\n", cabeca->ConstInt);}
                 else {fprintf(arq_saida, "bipush %d\n", cabeca->ConstInt);}
+                printf("Le (%d)\n", cabeca->ConstInt);
                 break;
             case CONSTF:
                 if(cabeca->ConstFloat <= 5.00) {fprintf(arq_saida, "fconst_%.2f\n", cabeca->ConstFloat);}
                 else {fprintf(arq_saida, "bipush %.2f\n", cabeca->ConstFloat);}
+                printf("Le (%.2f)\n", cabeca->ConstFloat);
                 break;
             case ADD:
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
                 printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
                 if (cabeca->tipo == T_INT) {fprintf(arq_saida, "iadd\n");}
                 if (cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "fadd\n");}
+                printf("Op (add)\n");
                 break;
             case SUB:
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
                 printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
                 if (cabeca->tipo == T_INT) {fprintf(arq_saida, "isub\n");}
                 if (cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "fsub\n");}
+                printf("Op (sub)\n");
                 break;
             case MUL:
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
                 printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
                 if (cabeca->tipo == T_INT) {fprintf(arq_saida, "imul\n");}
                 if (cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "fmul\n");}
+                printf("Op (mul)\n");
                 break;
             case DIV:
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
                 printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
                 if (cabeca->tipo == T_INT) {fprintf(arq_saida, "idiv\n");}
                 if (cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "fdiv\n");}
+                printf("Op (div)\n");
                 break;
             case I2F:
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
                 fprintf(arq_saida, "i2f\n");
+                printf("Conv (i2f)\n");
                 break;
             case F2I:
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
                 fprintf(arq_saida, "f2i\n");
+                printf("Conv (f2i)\n");
+                break;
+            case DIF:
+                printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
+                printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
+                if(cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "if_fcmpne ");}
+                if(cabeca->tipo == T_INT) {fprintf(arq_saida, "if_icmpne ");}
+                fprintf(arq_saida, "L%d\n", cabeca->lv);
+                fprintf(arq_saida, "goto L%d\n", cabeca->lf);
+                printf("Rel (!=) \n");
+                break;
+            case IGUAL:
+                printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
+                printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
+                if(cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "if_fcmpeq ");}
+                if(cabeca->tipo == T_INT) {fprintf(arq_saida, "if_icmpeq ");}
+                fprintf(arq_saida, "L%d\n", cabeca->lv);
+                fprintf(arq_saida, "goto L%d\n", cabeca->lf);
+                printf("Rel (==) \n");
+                break;
+            case MENIG:
+                printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
+                printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
+                if(cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "if_fcmple ");}
+                if(cabeca->tipo == T_INT) {fprintf(arq_saida, "if_icmple ");}
+                fprintf(arq_saida, "L%d\n", cabeca->lv);
+                fprintf(arq_saida, "goto L%d\n", cabeca->lf);
+                printf("Rel (<=) \n");
+                break;
+            case MENOR:
+                printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
+                printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
+                if(cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "if_fcmplt ");}
+                if(cabeca->tipo == T_INT) {fprintf(arq_saida, "if_icmplt ");}
+                fprintf(arq_saida, "L%d\n", cabeca->lv);
+                fprintf(arq_saida, "goto L%d\n", cabeca->lf);
+                printf("Rel (<) \n");
+                break;
+            case MAIIG:
+                printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
+                printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
+                if(cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "if_fcmpge ");}
+                if(cabeca->tipo == T_INT) {fprintf(arq_saida, "if_icmpge ");}
+                fprintf(arq_saida, "L%d\n", cabeca->lv);
+                fprintf(arq_saida, "goto L%d\n", cabeca->lf);
+                printf("Rel (>=)\n");
+                break;
+            case MAIOR:
+                printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
+                printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
+                if(cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "if_fcmpgt ");}
+                if(cabeca->tipo == T_INT) {fprintf(arq_saida, "if_icmpgt ");}
+                fprintf(arq_saida, "L%d\n", cabeca->lv);
+                fprintf(arq_saida, "goto L%d\n", cabeca->lf);
+                printf("Rel (>)\n");
+                break;
+            case EEE:
+                laux = geraLabel();
+
+                cabeca->pt1->lv = laux;
+                cabeca->pt1->lf = cabeca->lf;
+                printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
+
+                fprintf(arq_saida, "L%d:\n", laux);
+
+                cabeca->pt2->lv = cabeca->lv;
+                cabeca->pt2->lf = cabeca->lf;
+                printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
+                break;
+            case OOU:
+                laux = geraLabel();
+
+                cabeca->pt1->lv = cabeca->lv;
+                cabeca->pt1->lf = laux;
+                printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
+
+                fprintf(arq_saida, "L%d:\n", laux);
+
+                cabeca->pt2->lv = cabeca->lv;
+                cabeca->pt2->lf = cabeca->lf;
+                printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
+                break;
+            case NEG:
+                cabeca->pt1->lv = cabeca->lf;
+                cabeca->pt1->lf = cabeca->lv;
+                printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
+                break;
+            case IFF:
+                cabeca->lv = geraLabel();
+                cabeca->lf = geraLabel();
+                cabeca->pt1->lv = cabeca->lv;
+                cabeca->pt1->lf = cabeca->lf;
+
+                printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
+                fprintf(arq_saida, "L%d:\n", cabeca->lv);
+
+                printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
+                fprintf(arq_saida, "L%d:\n", cabeca->lf);
+                break;
+            case IFEL:
+                cabeca->lv = geraLabel();
+                cabeca->lf = geraLabel();
+                cabeca->pt1->lv = cabeca->lv;
+                cabeca->pt1->lf = cabeca->lf;
+
+                printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
+                // Bloco if:
+                fprintf(arq_saida, "L%d:\n", cabeca->lv);
+                printa_op_code(cabeca->pt2->pt1, tabelaSimbolos, arq_saida);
+
+                laux = geraLabel();
+                fprintf(arq_saida, "goto L%d\n", laux);
+                // Bloco else:
+                fprintf(arq_saida, "L%d:\n", cabeca->lf);
+                printa_op_code(cabeca->pt2->pt2, tabelaSimbolos, arq_saida);
+
+                fprintf(arq_saida, "L%d:\n", laux);
+                break;
+            case WLE:
+                laux = geraLabel();
+                cabeca->lv = geraLabel();
+                cabeca->lf = geraLabel();
+                fprintf(arq_saida, "L%d:\n", laux);
+
+                cabeca->pt1->lv = cabeca->lv;
+                cabeca->pt1->lf = cabeca->lf;
+
+                printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
+                fprintf(arq_saida, "L%d:\n", cabeca->lv);
+
+                printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
+                fprintf(arq_saida, "goto L%d\n", laux);
+                fprintf(arq_saida, "L%d:\", cabeca->lf);
+
+                break;
+            case BLC:
+                printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
+                if (cabeca->pt2 != NULL)
+                    printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
                 break;
         }
     }

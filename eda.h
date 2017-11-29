@@ -27,10 +27,13 @@
 #define NEG 1100
 #define EEE 1110
 #define OOU 1111
-#define REL 0001
 
-#define TIFFF 1200
-#define TIFELSEE 1250
+#define IFF  1200
+#define IFEL 1250
+#define WLE  1300
+#define CMD 2000
+#define BLC 3000
+#define BLP 4000
 
 #define MAXID 10
 #define TIPO int
@@ -72,7 +75,6 @@ typedef struct AST{
     struct AST *pt1,*pt2;
 }tAST;
 
-int contador = 0;
 
 void printLista(tLista *cabeca);
 tLista *criarLista (char *id);
@@ -94,11 +96,15 @@ tAST *criar_ast_float(float valor_float);
 tAST *criaAst_ExpArit(tAST *exp_esq, tAST *exp_dir, int cod);
 void printa_arv_exp(tAST *cabeca);
 tAST *criaCmdAtrib(tArvore *tabSimb, tAST *cabeca, char *id);
-tAST *insereListaComando(tAST *listaCmd, tAST *comando);
+tAST *criaListaComando(tAST *comando, int cod);
+tAST *insereListaComando(tAST *listaCmd, tAST *comando, int cod);
 tAST *criaAst_ExpRelac(tAST *exp_esq, tAST *exp_dir, int cod);
+tAST *criaAst_ExpLog(tAST *exp_esq, tAST *exp_dir, int cod);
+tAST *criaCmdIf(tAST *exp_esq, tAST *exp_dir, int cod);
+tAST *criaCmdIfElse(tAST *expr, tAST *p_if, tAST *p_else, int cod);
+tAST *criaCmdWhile(tAST *exp_esq, tAST *exp_dir, int cod);
 
 int geraLabel();
-
 void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos, FILE *arq_saida);
 tAST *i2f(tAST *ptr);
 tAST *f2i(tAST *ptr);

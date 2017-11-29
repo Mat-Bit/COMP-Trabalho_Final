@@ -3,7 +3,6 @@
 extern FILE *yyin;
 extern tArvore *tabelaSimbolos;
 extern FILE *arq_saida;
-extern int contador;
 
 int main(int c, char *argv[])
 {

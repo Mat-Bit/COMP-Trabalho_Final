@@ -11,7 +11,7 @@ rule 1    Programa -> ListaFuncoes BlocoPrincipal
 rule 2    Programa -> BlocoPrincipal
 rule 3    ListaFuncoes -> ListaFuncoes Funcao
 rule 4    ListaFuncoes -> Funcao
-rule 5    Funcao -> TipoRetorno TID TAPAR DeclParametros TFPAR BlocoPrincipal
+rule 5    Funcao -> TipoRetorno TID TAPAR DeclParametros BlocoPrincipal TFPAR BlocoPrincipal
 rule 6    Funcao -> TipoRetorno TID TAPAR TFPAR BlocoPrincipal
 rule 7    TipoRetorno -> Tipo
 rule 8    TipoRetorno -> TVOID
@@ -195,7 +195,7 @@ state 0
     TSTRING	shift, and go to state 4
     TVOID	shift, and go to state 5
 
-    Programa	go to state 148
+    Programa	go to state 149
     ListaFuncoes	go to state 6
     Funcao	go to state 7
     TipoRetorno	go to state 8
@@ -295,7 +295,7 @@ state 7
 
 state 8
 
-    Funcao  ->  TipoRetorno . TID TAPAR DeclParametros TFPAR BlocoPrincipal   (rule 5)
+    Funcao  ->  TipoRetorno . TID TAPAR DeclParametros BlocoPrincipal TFPAR BlocoPrincipal   (rule 5)
     Funcao  ->  TipoRetorno . TID TAPAR TFPAR BlocoPrincipal   (rule 6)
 
     TID 	shift, and go to state 32
@@ -546,7 +546,7 @@ state 31
 
 state 32
 
-    Funcao  ->  TipoRetorno TID . TAPAR DeclParametros TFPAR BlocoPrincipal   (rule 5)
+    Funcao  ->  TipoRetorno TID . TAPAR DeclParametros BlocoPrincipal TFPAR BlocoPrincipal   (rule 5)
     Funcao  ->  TipoRetorno TID . TAPAR TFPAR BlocoPrincipal   (rule 6)
 
     TAPAR	shift, and go to state 54
@@ -818,7 +818,7 @@ state 53
 
 state 54
 
-    Funcao  ->  TipoRetorno TID TAPAR . DeclParametros TFPAR BlocoPrincipal   (rule 5)
+    Funcao  ->  TipoRetorno TID TAPAR . DeclParametros BlocoPrincipal TFPAR BlocoPrincipal   (rule 5)
     Funcao  ->  TipoRetorno TID TAPAR . TFPAR BlocoPrincipal   (rule 6)
 
     TFPAR	shift, and go to state 85
@@ -1181,11 +1181,13 @@ state 85
 
 state 86
 
-    Funcao  ->  TipoRetorno TID TAPAR DeclParametros . TFPAR BlocoPrincipal   (rule 5)
+    Funcao  ->  TipoRetorno TID TAPAR DeclParametros . BlocoPrincipal TFPAR BlocoPrincipal   (rule 5)
     DeclParametros  ->  DeclParametros . TV Parametro   (rule 9)
 
-    TFPAR	shift, and go to state 117
-    TV  	shift, and go to state 118
+    TACHA	shift, and go to state 1
+    TV  	shift, and go to state 117
+
+    BlocoPrincipal	go to state 118
 
 
 
@@ -1541,24 +1543,22 @@ state 116
 
 state 117
 
-    Funcao  ->  TipoRetorno TID TAPAR DeclParametros TFPAR . BlocoPrincipal   (rule 5)
-
-    TACHA	shift, and go to state 1
-
-    BlocoPrincipal	go to state 139
-
-
-
-state 118
-
     DeclParametros  ->  DeclParametros TV . Parametro   (rule 9)
 
     TINT	shift, and go to state 2
     TFLOAT	shift, and go to state 3
     TSTRING	shift, and go to state 4
 
-    Parametro	go to state 140
+    Parametro	go to state 139
     Tipo	go to state 88
+
+
+
+state 118
+
+    Funcao  ->  TipoRetorno TID TAPAR DeclParametros BlocoPrincipal . TFPAR BlocoPrincipal   (rule 5)
+
+    TFPAR	shift, and go to state 140
 
 
 
@@ -1778,17 +1778,19 @@ state 138
 
 state 139
 
-    Funcao  ->  TipoRetorno TID TAPAR DeclParametros TFPAR BlocoPrincipal .   (rule 5)
+    DeclParametros  ->  DeclParametros TV Parametro .   (rule 9)
 
-    $default	reduce using rule 5 (Funcao)
+    $default	reduce using rule 9 (DeclParametros)
 
 
 
 state 140
 
-    DeclParametros  ->  DeclParametros TV Parametro .   (rule 9)
+    Funcao  ->  TipoRetorno TID TAPAR DeclParametros BlocoPrincipal TFPAR . BlocoPrincipal   (rule 5)
 
-    $default	reduce using rule 9 (DeclParametros)
+    TACHA	shift, and go to state 1
+
+    BlocoPrincipal	go to state 145
 
 
 
@@ -1799,7 +1801,7 @@ state 141
 
     TIF 	shift, and go to state 11
     TWHILE	shift, and go to state 12
-    TFCHA	shift, and go to state 145
+    TFCHA	shift, and go to state 146
     TID 	shift, and go to state 13
     TRET	shift, and go to state 14
     TPRINT	shift, and go to state 15
@@ -1823,7 +1825,7 @@ state 142
 
     TACHA	shift, and go to state 129
 
-    Bloco	go to state 146
+    Bloco	go to state 147
 
 
 
@@ -1831,7 +1833,7 @@ state 143
 
     CmdEscrita  ->  TPRINT TAPAR TASP ExpressaoAritimetica TASP TFPAR . TPV   (rule 39)
 
-    TPV 	shift, and go to state 147
+    TPV 	shift, and go to state 148
 
 
 
@@ -1845,13 +1847,21 @@ state 144
 
 state 145
 
+    Funcao  ->  TipoRetorno TID TAPAR DeclParametros BlocoPrincipal TFPAR BlocoPrincipal .   (rule 5)
+
+    $default	reduce using rule 5 (Funcao)
+
+
+
+state 146
+
     Bloco  ->  TACHA ListaCmd TFCHA .   (rule 22)
 
     $default	reduce using rule 22 (Bloco)
 
 
 
-state 146
+state 147
 
     CmdSe  ->  TIF TAPAR ExpressaoLogica TFPAR Bloco TELSE Bloco .   (rule 35)
 
@@ -1859,17 +1869,11 @@ state 146
 
 
 
-state 147
+state 148
 
     CmdEscrita  ->  TPRINT TAPAR TASP ExpressaoAritimetica TASP TFPAR TPV .   (rule 39)
 
     $default	reduce using rule 39 (CmdEscrita)
-
-
-
-state 148
-
-    $   	go to state 149
 
 
 
@@ -1880,5 +1884,11 @@ state 149
 
 
 state 150
+
+    $   	go to state 151
+
+
+
+state 151
 
     $default	accept

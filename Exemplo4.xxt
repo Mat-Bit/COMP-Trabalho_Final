@@ -2,11 +2,19 @@
 int a, b, c, k;
 float e,f;
 e = 4.3;
+c = 8.7;
+b = c / e;
 a = 1;
-b = 20;
-c = b + a * 2;
 f = c + e * b;
-b = f * e;
-
+if (a > 0 && b <= 30){
+    if(f != a || b == c){
+        k = 50;
+    }
+    else{
+    k = 37;
+    }
+    c = 41;
+}
+e = b - a;
 
 }

@@ -26,12 +26,12 @@ int __linha__ = 1;
 
 %%
 Programa: ListaFuncoes BlocoPrincipal
-    | BlocoPrincipal;
+    | BlocoPrincipal  ;
 
 ListaFuncoes: ListaFuncoes Funcao
     | Funcao;
 
-Funcao: TipoRetorno TID TAPAR DeclParametros TFPAR BlocoPrincipal
+Funcao: TipoRetorno TID TAPAR DeclParametros BlocoPrincipal TFPAR BlocoPrincipal
     | TipoRetorno TID TAPAR TFPAR BlocoPrincipal;
 
 TipoRetorno: Tipo
@@ -42,8 +42,8 @@ DeclParametros: DeclParametros TV Parametro
 
 Parametro: Tipo TID;
 
-BlocoPrincipal: TACHA Declaracoes ListaCmd TFCHA
-    | TACHA ListaCmd TFCHA;
+BlocoPrincipal: TACHA Declaracoes ListaCmd TFCHA {$$.ast = $3.ast; printa_op_code($$.ast, tabelaSimbolos, arq_saida);}
+    | TACHA ListaCmd TFCHA {$$.ast = $2.ast;};
 
 Declaracoes: Declaracoes Declaracao
     | Declaracao;
@@ -57,28 +57,30 @@ Tipo: TINT {$$.tipo = T_INT;}
 ListaId: ListaId TV TID {insereLista($1.listaId, $3.id); $$.listaId = $1.listaId;}
     | TID {$$.listaId = criarLista($1.id);};
 
-Bloco: TACHA ListaCmd TFCHA;
+Bloco: TACHA ListaCmd TFCHA {$$.ast = $2.ast;};
 
-ListaCmd: ListaCmd Comando
-    | Comando ;
 
-Comando: CmdSe
-    | CmdEnquanto
-    | CmdAtrib
-    | CmdEscrita
-    | CmdLeitura
-    | ChamadaProc
-    | Retorno;
+ListaCmd: ListaCmd Comando {$$.ast = insereListaComando($1.ast, $2.ast, CMD);}
+    | Comando {$$.ast = $1.ast;}
+    ;
+
+Comando: CmdSe {$$.ast = $1.ast;}
+    | CmdEnquanto {$$.ast = $1.ast;}
+    | CmdAtrib {$$.ast = $1.ast;}
+    | CmdEscrita {$$.ast = $1.ast;}
+    | CmdLeitura {$$.ast = $1.ast;}
+    | ChamadaProc {$$.ast = $1.ast;}
+    | Retorno {$$.ast = $1.ast;};
 
 Retorno: TRET ExpressaoAritimetica TPV
     | TRET TLITERAL TPV;
 
-CmdSe: TIF TAPAR ExpressaoLogica TFPAR Bloco {$$.ast = criaCmdIf(TIFFF, $3.ast, $5.ast, NULL);}
-    | TIF TAPAR ExpressaoLogica TFPAR Bloco TELSE Bloco {$$.ast = criaCmdIf(TIFFF, $3.ast, $5.ast, $7.ast);}
+CmdSe: TIF TAPAR ExpressaoLogica TFPAR Bloco {$$.ast = criaCmdIf($3.ast, $5.ast, IFF);}
+    | TIF TAPAR ExpressaoLogica TFPAR Bloco TELSE Bloco {$$.ast = criaCmdIfElse($3.ast, $5.ast, $7.ast, IFEL);};
 
-CmdEnquanto: TWHILE TAPAR ExpressaoLogica TFPAR Bloco;
+CmdEnquanto: TWHILE TAPAR ExpressaoLogica TFPAR Bloco {$$.ast = criaCmdWhile($3.ast, $5.ast, WLE);};
 
-CmdAtrib: TID TATB ExpressaoAritimetica TPV {$$.ast = criaCmdAtrib(tabelaSimbolos, $3.ast, $1.id); printa_op_code($$.ast, tabelaSimbolos, arq_saida); printf("\n");}
+CmdAtrib: TID TATB ExpressaoAritimetica TPV {$$.ast = criaCmdAtrib(tabelaSimbolos, $3.ast, $1.id);}
     | TID TATB TLITERAL;
 
 CmdEscrita: TPRINT TAPAR TASP ExpressaoAritimetica TASP TFPAR TPV
@@ -112,11 +114,11 @@ FExpressaoAritmetica: TAPAR ExpressaoAritimetica TFPAR { $$.ast = $2.ast; }
     | TINT {$$.ast = criar_ast_int($1.ConstInt);}
     | TID {$$.ast = criar_ast_id(tabelaSimbolos, $1.id);};
 
-ExpressaoLogica: ExpressaoLogica TCEE FExpressaoLogica
-    | ExpressaoLogica TCOU FExpressaoLogica
+ExpressaoLogica: ExpressaoLogica TCEE FExpressaoLogica {$$.ast = criaAst_ExpLog($1.ast, $3.ast, EEE);}
+    | ExpressaoLogica TCOU FExpressaoLogica {$$.ast = criaAst_ExpLog($1.ast, $3.ast, OOU);}
     | FExpressaoLogica;
 
-FExpressaoLogica: TNEG FExpressaoLogica {$$.ast = criaAst_ExpLog($2.ast, )}
+FExpressaoLogica: TNEG FExpressaoLogica {$$.ast = criaAst_ExpLog($2.ast, NULL, NEG);}
     | TAPAR FExpressaoLogica TFPAR {$$.ast = $2.ast;}
     | TRUE
     | FALSE
