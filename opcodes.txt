@@ -1,26 +1,18 @@
-fconst_4.30
-istore 5
 iconst_1
 istore 1
 bipush 20
 istore 2
+L1:
+iload 1
 iload 2
+if_icmplt L2
+goto L3
+L2:
 iload 1
 iconst_2
-imul
 iadd
-istore 3
-iload 3
-iload 5
-iload 2
-i2f
-fmul
-f2i
-iadd
-i2f
-istore 6
-iload 6
-iload 5
-fmul
-f2i
+istore 1
+goto 1
+L3:
+bipush 10
 istore 2

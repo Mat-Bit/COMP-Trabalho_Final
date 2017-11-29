@@ -572,7 +572,7 @@ void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos, FILE *arq_saida){
                 }else{
                     // se o id informado for um id válido (dentro da tabelaSimbolos)
                     printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
-                    fprintf(arq_saida, "istore %d\n", aux->pos);
+                    fprintf(arq_saida, "\tistore %d\n", aux->pos);
                     printf("Salva (%s)\n", aux->valor);
                     break;
                 }
@@ -585,110 +585,110 @@ void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos, FILE *arq_saida){
                     exit(-1);
                 }else{
                     // se o id informado for um id válido (dentro da tabelaSimbolos)
-                    fprintf(arq_saida, "iload %d\n", aux->pos);
+                    fprintf(arq_saida, "\tiload %d\n", aux->pos);
                     printf("Carrega (%s)\n", cabeca->id);
                     break;
                 }
             case CONSTI:
-                if(cabeca->ConstInt <= 5) {fprintf(arq_saida, "iconst_%d\n", cabeca->ConstInt);}
-                else {fprintf(arq_saida, "bipush %d\n", cabeca->ConstInt);}
+                if(cabeca->ConstInt <= 5) {fprintf(arq_saida, "\ticonst_%d\n", cabeca->ConstInt);}
+                else {fprintf(arq_saida, "\tbipush %d\n", cabeca->ConstInt);}
                 printf("Le (%d)\n", cabeca->ConstInt);
                 break;
             case CONSTF:
-                if(cabeca->ConstFloat <= 5.00) {fprintf(arq_saida, "fconst_%.2f\n", cabeca->ConstFloat);}
-                else {fprintf(arq_saida, "bipush %.2f\n", cabeca->ConstFloat);}
+                if(cabeca->ConstFloat <= 5.00) {fprintf(arq_saida, "\tfconst_%.2f\n", cabeca->ConstFloat);}
+                else {fprintf(arq_saida, "\tbipush %.2f\n", cabeca->ConstFloat);}
                 printf("Le (%.2f)\n", cabeca->ConstFloat);
                 break;
             case ADD:
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
                 printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
-                if (cabeca->tipo == T_INT) {fprintf(arq_saida, "iadd\n");}
-                if (cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "fadd\n");}
+                if (cabeca->tipo == T_INT) {fprintf(arq_saida, "\tiadd\n");}
+                if (cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "\tfadd\n");}
                 printf("Op (add)\n");
                 break;
             case SUB:
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
                 printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
-                if (cabeca->tipo == T_INT) {fprintf(arq_saida, "isub\n");}
-                if (cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "fsub\n");}
+                if (cabeca->tipo == T_INT) {fprintf(arq_saida, "\tisub\n");}
+                if (cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "\tfsub\n");}
                 printf("Op (sub)\n");
                 break;
             case MUL:
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
                 printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
-                if (cabeca->tipo == T_INT) {fprintf(arq_saida, "imul\n");}
-                if (cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "fmul\n");}
+                if (cabeca->tipo == T_INT) {fprintf(arq_saida, "\timul\n");}
+                if (cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "\tfmul\n");}
                 printf("Op (mul)\n");
                 break;
             case DIV:
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
                 printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
-                if (cabeca->tipo == T_INT) {fprintf(arq_saida, "idiv\n");}
-                if (cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "fdiv\n");}
+                if (cabeca->tipo == T_INT) {fprintf(arq_saida, "\tidiv\n");}
+                if (cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "\tfdiv\n");}
                 printf("Op (div)\n");
                 break;
             case I2F:
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
-                fprintf(arq_saida, "i2f\n");
+                fprintf(arq_saida, "\ti2f\n");
                 printf("Conv (i2f)\n");
                 break;
             case F2I:
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
-                fprintf(arq_saida, "f2i\n");
+                fprintf(arq_saida, "\tf2i\n");
                 printf("Conv (f2i)\n");
                 break;
             case DIF:
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
                 printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
-                if(cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "if_fcmpne ");}
-                if(cabeca->tipo == T_INT) {fprintf(arq_saida, "if_icmpne ");}
+                if(cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "\tif_fcmpne ");}
+                if(cabeca->tipo == T_INT) {fprintf(arq_saida, "\tif_icmpne ");}
                 fprintf(arq_saida, "L%d\n", cabeca->lv);
-                fprintf(arq_saida, "goto L%d\n", cabeca->lf);
+                fprintf(arq_saida, "\tgoto L%d\n", cabeca->lf);
                 printf("Rel (!=) \n");
                 break;
             case IGUAL:
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
                 printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
-                if(cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "if_fcmpeq ");}
-                if(cabeca->tipo == T_INT) {fprintf(arq_saida, "if_icmpeq ");}
+                if(cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "\tif_fcmpeq ");}
+                if(cabeca->tipo == T_INT) {fprintf(arq_saida, "\tif_icmpeq ");}
                 fprintf(arq_saida, "L%d\n", cabeca->lv);
-                fprintf(arq_saida, "goto L%d\n", cabeca->lf);
+                fprintf(arq_saida, "\tgoto L%d\n", cabeca->lf);
                 printf("Rel (==) \n");
                 break;
             case MENIG:
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
                 printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
-                if(cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "if_fcmple ");}
-                if(cabeca->tipo == T_INT) {fprintf(arq_saida, "if_icmple ");}
+                if(cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "\tif_fcmple ");}
+                if(cabeca->tipo == T_INT) {fprintf(arq_saida, "\tif_icmple ");}
                 fprintf(arq_saida, "L%d\n", cabeca->lv);
-                fprintf(arq_saida, "goto L%d\n", cabeca->lf);
+                fprintf(arq_saida, "\tgoto L%d\n", cabeca->lf);
                 printf("Rel (<=) \n");
                 break;
             case MENOR:
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
                 printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
-                if(cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "if_fcmplt ");}
-                if(cabeca->tipo == T_INT) {fprintf(arq_saida, "if_icmplt ");}
+                if(cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "\tif_fcmplt ");}
+                if(cabeca->tipo == T_INT) {fprintf(arq_saida, "\tif_icmplt ");}
                 fprintf(arq_saida, "L%d\n", cabeca->lv);
-                fprintf(arq_saida, "goto L%d\n", cabeca->lf);
+                fprintf(arq_saida, "\tgoto L%d\n", cabeca->lf);
                 printf("Rel (<) \n");
                 break;
             case MAIIG:
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
                 printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
-                if(cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "if_fcmpge ");}
-                if(cabeca->tipo == T_INT) {fprintf(arq_saida, "if_icmpge ");}
+                if(cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "\tif_fcmpge ");}
+                if(cabeca->tipo == T_INT) {fprintf(arq_saida, "\tif_icmpge ");}
                 fprintf(arq_saida, "L%d\n", cabeca->lv);
-                fprintf(arq_saida, "goto L%d\n", cabeca->lf);
+                fprintf(arq_saida, "\tgoto L%d\n", cabeca->lf);
                 printf("Rel (>=)\n");
                 break;
             case MAIOR:
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
                 printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
-                if(cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "if_fcmpgt ");}
-                if(cabeca->tipo == T_INT) {fprintf(arq_saida, "if_icmpgt ");}
+                if(cabeca->tipo == T_FLOAT) {fprintf(arq_saida, "\tif_fcmpgt ");}
+                if(cabeca->tipo == T_INT) {fprintf(arq_saida, "\tif_icmpgt ");}
                 fprintf(arq_saida, "L%d\n", cabeca->lv);
-                fprintf(arq_saida, "goto L%d\n", cabeca->lf);
+                fprintf(arq_saida, "\tgoto L%d\n", cabeca->lf);
                 printf("Rel (>)\n");
                 break;
             case EEE:
@@ -698,7 +698,7 @@ void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos, FILE *arq_saida){
                 cabeca->pt1->lf = cabeca->lf;
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
 
-                fprintf(arq_saida, "L%d:\n", laux);
+                fprintf(arq_saida, "L%d:", laux);
 
                 cabeca->pt2->lv = cabeca->lv;
                 cabeca->pt2->lf = cabeca->lf;
@@ -711,7 +711,7 @@ void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos, FILE *arq_saida){
                 cabeca->pt1->lf = laux;
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
 
-                fprintf(arq_saida, "L%d:\n", laux);
+                fprintf(arq_saida, "L%d:", laux);
 
                 cabeca->pt2->lv = cabeca->lv;
                 cabeca->pt2->lf = cabeca->lf;
@@ -729,10 +729,10 @@ void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos, FILE *arq_saida){
                 cabeca->pt1->lf = cabeca->lf;
 
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
-                fprintf(arq_saida, "L%d:\n", cabeca->lv);
+                fprintf(arq_saida, "L%d:", cabeca->lv);
 
                 printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
-                fprintf(arq_saida, "L%d:\n", cabeca->lf);
+                fprintf(arq_saida, "L%d:", cabeca->lf);
                 break;
             case IFEL:
                 cabeca->lv = geraLabel();
@@ -742,32 +742,31 @@ void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos, FILE *arq_saida){
 
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
                 // Bloco if:
-                fprintf(arq_saida, "L%d:\n", cabeca->lv);
+                fprintf(arq_saida, "L%d:", cabeca->lv);
                 printa_op_code(cabeca->pt2->pt1, tabelaSimbolos, arq_saida);
 
                 laux = geraLabel();
-                fprintf(arq_saida, "goto L%d\n", laux);
+                fprintf(arq_saida, "\tgoto L%d\n", laux);
                 // Bloco else:
-                fprintf(arq_saida, "L%d:\n", cabeca->lf);
+                fprintf(arq_saida, "L%d:", cabeca->lf);
                 printa_op_code(cabeca->pt2->pt2, tabelaSimbolos, arq_saida);
-
-                fprintf(arq_saida, "L%d:\n", laux);
+                fprintf(arq_saida, "L%d:", laux);
                 break;
             case WLE:
                 laux = geraLabel();
                 cabeca->lv = geraLabel();
                 cabeca->lf = geraLabel();
-                fprintf(arq_saida, "L%d:\n", laux);
+                fprintf(arq_saida, "L%d:", laux);
 
                 cabeca->pt1->lv = cabeca->lv;
                 cabeca->pt1->lf = cabeca->lf;
 
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
-                fprintf(arq_saida, "L%d:\n", cabeca->lv);
+                fprintf(arq_saida, "L%d:", cabeca->lv);
 
                 printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
-                fprintf(arq_saida, "goto L%d\n", laux);
-                fprintf(arq_saida, "L%d:\", cabeca->lf);
+                fprintf(arq_saida, "\tgoto L%d\n", laux);
+                fprintf(arq_saida, "L%d:", cabeca->lf);
 
                 break;
             case BLC:

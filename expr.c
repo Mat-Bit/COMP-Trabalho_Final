@@ -8,7 +8,7 @@ int main(int c, char *argv[])
 {
 	FILE *file;
 	file = fopen (argv[1], "r");
-	arq_saida = fopen("opcodes.txt", "w");
+	arq_saida = fopen("opcodes", "w");
 	if ( file == NULL){
 		printf("Arquivo \"%s\" não econtrado.\n", argv[1] );
 		return 1;

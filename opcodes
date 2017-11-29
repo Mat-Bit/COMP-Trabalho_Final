@@ -1,0 +1,50 @@
+	fconst_4.30
+	istore 5
+	bipush 8.70
+	f2i
+	istore 3
+	iload 3
+	iload 5
+	f2i
+	idiv
+	istore 2
+	iconst_1
+	istore 1
+	iload 3
+	iload 5
+	iload 2
+	i2f
+	fmul
+	f2i
+	iadd
+	i2f
+	istore 6
+	iload 1
+	iconst_0
+	if_icmpgt L3
+	goto L2
+L3:	iload 2
+	bipush 30
+	if_icmple L1
+	goto L2
+L1:	iload 6
+	iload 1
+	i2f
+	if_fcmpne L4
+	goto L6
+L6:	iload 2
+	iload 3
+	if_icmpeq L4
+	goto L5
+L4:	bipush 50
+	istore 4
+	goto L7
+L5:	bipush 37
+	istore 4
+L7:	bipush 41
+	istore 3
+L2:	iload 2
+	iload 1
+	isub
+	i2f
+	istore 5
