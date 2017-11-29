@@ -5,8 +5,10 @@
 
 	print("Valor de A:");
 	read(a);
+	a = 200;
 	print("Valor de B:");
 	read(b);
+	b = 100;
 	while (a != b)
 	{
 		if (a > b)
@@ -18,6 +20,8 @@
 			b = b - a;
 		}
 	}
+	c = 52.1;
+	d = 30.7;
 	e = b * 2 - 1 + a;
 	bit_foda = c * d + (a + 1 - b) / e;
 	print("\nRes=");

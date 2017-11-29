@@ -1,0 +1,14 @@
+1. Fazer o arquivo .y
+2. compilar ele: flex arquivo.y
+3. compilar arquivo.c arquivo-tab.c
+
+
+int main(int argc, char argv[]){
+	yyin = fopen(argv[1], "r");
+	if (yyin = null){
+		...	
+	}
+	yyparser();
+}
+
+\".*\"

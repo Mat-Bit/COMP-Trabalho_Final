@@ -11,7 +11,7 @@ rule 1    Programa -> ListaFuncoes BlocoPrincipal
 rule 2    Programa -> BlocoPrincipal
 rule 3    ListaFuncoes -> ListaFuncoes Funcao
 rule 4    ListaFuncoes -> Funcao
-rule 5    Funcao -> TipoRetorno TID TAPAR DeclParametros TFPAR BlocoPrincipal
+rule 5    Funcao -> TipoRetorno TID TAPAR DeclParametros BlocoPrincipal TFPAR BlocoPrincipal
 rule 6    Funcao -> TipoRetorno TID TAPAR TFPAR BlocoPrincipal
 rule 7    TipoRetorno -> Tipo
 rule 8    TipoRetorno -> TVOID
@@ -63,7 +63,7 @@ rule 53   ExpressaoAritimetica -> TExpressaoAritimetica
 rule 54   TExpressaoAritimetica -> TExpressaoAritimetica TMUL FExpressaoAritmetica
 rule 55   TExpressaoAritimetica -> TExpressaoAritimetica TDIV FExpressaoAritmetica
 rule 56   TExpressaoAritimetica -> FExpressaoAritmetica
-rule 57   FExpressaoAritmetica -> TAPAR TExpressaoAritimetica TFPAR
+rule 57   FExpressaoAritmetica -> TAPAR ExpressaoAritimetica TFPAR
 rule 58   FExpressaoAritmetica -> TFLOAT
 rule 59   FExpressaoAritmetica -> TINT
 rule 60   FExpressaoAritmetica -> TID
@@ -173,10 +173,10 @@ ChamadaFuncao (61)
 ListaParametros (62)
     on left: 47 48 49 50, on right: 45 47 48
 ExpressaoAritimetica (63)
-    on left: 51 52 53, on right: 32 37 39 40 47 49 51 52 69 70 71 72
-    73 74
+    on left: 51 52 53, on right: 32 37 39 40 47 49 51 52 57 69 70 71
+    72 73 74
 TExpressaoAritimetica (64)
-    on left: 54 55 56, on right: 51 52 53 54 55 57
+    on left: 54 55 56, on right: 51 52 53 54 55
 FExpressaoAritmetica (65)
     on left: 57 58 59 60, on right: 54 55 56
 ExpressaoLogica (66)
@@ -195,7 +195,7 @@ state 0
     TSTRING	shift, and go to state 4
     TVOID	shift, and go to state 5
 
-    Programa	go to state 148
+    Programa	go to state 149
     ListaFuncoes	go to state 6
     Funcao	go to state 7
     TipoRetorno	go to state 8
@@ -295,7 +295,7 @@ state 7
 
 state 8
 
-    Funcao  ->  TipoRetorno . TID TAPAR DeclParametros TFPAR BlocoPrincipal   (rule 5)
+    Funcao  ->  TipoRetorno . TID TAPAR DeclParametros BlocoPrincipal TFPAR BlocoPrincipal   (rule 5)
     Funcao  ->  TipoRetorno . TID TAPAR TFPAR BlocoPrincipal   (rule 6)
 
     TID 	shift, and go to state 32
@@ -546,7 +546,7 @@ state 31
 
 state 32
 
-    Funcao  ->  TipoRetorno TID . TAPAR DeclParametros TFPAR BlocoPrincipal   (rule 5)
+    Funcao  ->  TipoRetorno TID . TAPAR DeclParametros BlocoPrincipal TFPAR BlocoPrincipal   (rule 5)
     Funcao  ->  TipoRetorno TID . TAPAR TFPAR BlocoPrincipal   (rule 6)
 
     TAPAR	shift, and go to state 54
@@ -634,14 +634,15 @@ state 36
 
 state 37
 
-    FExpressaoAritmetica  ->  TAPAR . TExpressaoAritimetica TFPAR   (rule 57)
+    FExpressaoAritmetica  ->  TAPAR . ExpressaoAritimetica TFPAR   (rule 57)
 
     TAPAR	shift, and go to state 37
     TINT	shift, and go to state 38
     TFLOAT	shift, and go to state 39
     TID 	shift, and go to state 40
 
-    TExpressaoAritimetica	go to state 70
+    ExpressaoAritimetica	go to state 70
+    TExpressaoAritimetica	go to state 43
     FExpressaoAritmetica	go to state 44
 
 
@@ -817,7 +818,7 @@ state 53
 
 state 54
 
-    Funcao  ->  TipoRetorno TID TAPAR . DeclParametros TFPAR BlocoPrincipal   (rule 5)
+    Funcao  ->  TipoRetorno TID TAPAR . DeclParametros BlocoPrincipal TFPAR BlocoPrincipal   (rule 5)
     Funcao  ->  TipoRetorno TID TAPAR . TFPAR BlocoPrincipal   (rule 6)
 
     TFPAR	shift, and go to state 85
@@ -853,7 +854,7 @@ state 55
 
 state 56
 
-    FExpressaoAritmetica  ->  TAPAR . TExpressaoAritimetica TFPAR   (rule 57)
+    FExpressaoAritmetica  ->  TAPAR . ExpressaoAritimetica TFPAR   (rule 57)
     FExpressaoLogica  ->  TAPAR . FExpressaoLogica TFPAR   (rule 65)
 
     TNEG	shift, and go to state 55
@@ -864,8 +865,8 @@ state 56
     TRUE	shift, and go to state 57
     FALSE	shift, and go to state 58
 
-    ExpressaoAritimetica	go to state 59
-    TExpressaoAritimetica	go to state 90
+    ExpressaoAritimetica	go to state 90
+    TExpressaoAritimetica	go to state 43
     FExpressaoAritmetica	go to state 44
     FExpressaoLogica	go to state 91
     ExpressaoRelacional	go to state 62
@@ -1013,12 +1014,12 @@ state 69
 
 state 70
 
-    TExpressaoAritimetica  ->  TExpressaoAritimetica . TMUL FExpressaoAritmetica   (rule 54)
-    TExpressaoAritimetica  ->  TExpressaoAritimetica . TDIV FExpressaoAritmetica   (rule 55)
-    FExpressaoAritmetica  ->  TAPAR TExpressaoAritimetica . TFPAR   (rule 57)
+    ExpressaoAritimetica  ->  ExpressaoAritimetica . TADD TExpressaoAritimetica   (rule 51)
+    ExpressaoAritimetica  ->  ExpressaoAritimetica . TSUB TExpressaoAritimetica   (rule 52)
+    FExpressaoAritmetica  ->  TAPAR ExpressaoAritimetica . TFPAR   (rule 57)
 
-    TMUL	shift, and go to state 75
-    TDIV	shift, and go to state 76
+    TADD	shift, and go to state 72
+    TSUB	shift, and go to state 73
     TFPAR	shift, and go to state 105
 
 
@@ -1180,11 +1181,13 @@ state 85
 
 state 86
 
-    Funcao  ->  TipoRetorno TID TAPAR DeclParametros . TFPAR BlocoPrincipal   (rule 5)
+    Funcao  ->  TipoRetorno TID TAPAR DeclParametros . BlocoPrincipal TFPAR BlocoPrincipal   (rule 5)
     DeclParametros  ->  DeclParametros . TV Parametro   (rule 9)
 
-    TFPAR	shift, and go to state 117
-    TV  	shift, and go to state 118
+    TACHA	shift, and go to state 1
+    TV  	shift, and go to state 117
+
+    BlocoPrincipal	go to state 118
 
 
 
@@ -1214,16 +1217,25 @@ state 89
 
 state 90
 
-    ExpressaoAritimetica  ->  TExpressaoAritimetica .   (rule 53)
-    TExpressaoAritimetica  ->  TExpressaoAritimetica . TMUL FExpressaoAritmetica   (rule 54)
-    TExpressaoAritimetica  ->  TExpressaoAritimetica . TDIV FExpressaoAritmetica   (rule 55)
-    FExpressaoAritmetica  ->  TAPAR TExpressaoAritimetica . TFPAR   (rule 57)
+    ExpressaoAritimetica  ->  ExpressaoAritimetica . TADD TExpressaoAritimetica   (rule 51)
+    ExpressaoAritimetica  ->  ExpressaoAritimetica . TSUB TExpressaoAritimetica   (rule 52)
+    FExpressaoAritmetica  ->  TAPAR ExpressaoAritimetica . TFPAR   (rule 57)
+    ExpressaoRelacional  ->  ExpressaoAritimetica . TMAIOR ExpressaoAritimetica   (rule 69)
+    ExpressaoRelacional  ->  ExpressaoAritimetica . TMAIORIG ExpressaoAritimetica   (rule 70)
+    ExpressaoRelacional  ->  ExpressaoAritimetica . TMENOR ExpressaoAritimetica   (rule 71)
+    ExpressaoRelacional  ->  ExpressaoAritimetica . TMENORIG ExpressaoAritimetica   (rule 72)
+    ExpressaoRelacional  ->  ExpressaoAritimetica . TCOM ExpressaoAritimetica   (rule 73)
+    ExpressaoRelacional  ->  ExpressaoAritimetica . TDIF ExpressaoAritimetica   (rule 74)
 
-    TMUL	shift, and go to state 75
-    TDIV	shift, and go to state 76
+    TADD	shift, and go to state 72
+    TSUB	shift, and go to state 73
+    TMENOR	shift, and go to state 92
+    TMAIOR	shift, and go to state 93
+    TMENORIG	shift, and go to state 94
+    TMAIORIG	shift, and go to state 95
+    TCOM	shift, and go to state 96
+    TDIF	shift, and go to state 97
     TFPAR	shift, and go to state 105
-
-    $default	reduce using rule 53 (ExpressaoAritimetica)
 
 
 
@@ -1421,7 +1433,7 @@ state 104
 
 state 105
 
-    FExpressaoAritmetica  ->  TAPAR TExpressaoAritimetica TFPAR .   (rule 57)
+    FExpressaoAritmetica  ->  TAPAR ExpressaoAritimetica TFPAR .   (rule 57)
 
     $default	reduce using rule 57 (FExpressaoAritmetica)
 
@@ -1531,24 +1543,22 @@ state 116
 
 state 117
 
-    Funcao  ->  TipoRetorno TID TAPAR DeclParametros TFPAR . BlocoPrincipal   (rule 5)
-
-    TACHA	shift, and go to state 1
-
-    BlocoPrincipal	go to state 139
-
-
-
-state 118
-
     DeclParametros  ->  DeclParametros TV . Parametro   (rule 9)
 
     TINT	shift, and go to state 2
     TFLOAT	shift, and go to state 3
     TSTRING	shift, and go to state 4
 
-    Parametro	go to state 140
+    Parametro	go to state 139
     Tipo	go to state 88
+
+
+
+state 118
+
+    Funcao  ->  TipoRetorno TID TAPAR DeclParametros BlocoPrincipal . TFPAR BlocoPrincipal   (rule 5)
+
+    TFPAR	shift, and go to state 140
 
 
 
@@ -1768,17 +1778,19 @@ state 138
 
 state 139
 
-    Funcao  ->  TipoRetorno TID TAPAR DeclParametros TFPAR BlocoPrincipal .   (rule 5)
+    DeclParametros  ->  DeclParametros TV Parametro .   (rule 9)
 
-    $default	reduce using rule 5 (Funcao)
+    $default	reduce using rule 9 (DeclParametros)
 
 
 
 state 140
 
-    DeclParametros  ->  DeclParametros TV Parametro .   (rule 9)
+    Funcao  ->  TipoRetorno TID TAPAR DeclParametros BlocoPrincipal TFPAR . BlocoPrincipal   (rule 5)
 
-    $default	reduce using rule 9 (DeclParametros)
+    TACHA	shift, and go to state 1
+
+    BlocoPrincipal	go to state 145
 
 
 
@@ -1789,7 +1801,7 @@ state 141
 
     TIF 	shift, and go to state 11
     TWHILE	shift, and go to state 12
-    TFCHA	shift, and go to state 145
+    TFCHA	shift, and go to state 146
     TID 	shift, and go to state 13
     TRET	shift, and go to state 14
     TPRINT	shift, and go to state 15
@@ -1813,7 +1825,7 @@ state 142
 
     TACHA	shift, and go to state 129
 
-    Bloco	go to state 146
+    Bloco	go to state 147
 
 
 
@@ -1821,7 +1833,7 @@ state 143
 
     CmdEscrita  ->  TPRINT TAPAR TASP ExpressaoAritimetica TASP TFPAR . TPV   (rule 39)
 
-    TPV 	shift, and go to state 147
+    TPV 	shift, and go to state 148
 
 
 
@@ -1835,13 +1847,21 @@ state 144
 
 state 145
 
+    Funcao  ->  TipoRetorno TID TAPAR DeclParametros BlocoPrincipal TFPAR BlocoPrincipal .   (rule 5)
+
+    $default	reduce using rule 5 (Funcao)
+
+
+
+state 146
+
     Bloco  ->  TACHA ListaCmd TFCHA .   (rule 22)
 
     $default	reduce using rule 22 (Bloco)
 
 
 
-state 146
+state 147
 
     CmdSe  ->  TIF TAPAR ExpressaoLogica TFPAR Bloco TELSE Bloco .   (rule 35)
 
@@ -1849,17 +1869,11 @@ state 146
 
 
 
-state 147
+state 148
 
     CmdEscrita  ->  TPRINT TAPAR TASP ExpressaoAritimetica TASP TFPAR TPV .   (rule 39)
 
     $default	reduce using rule 39 (CmdEscrita)
-
-
-
-state 148
-
-    $   	go to state 149
 
 
 
@@ -1870,5 +1884,11 @@ state 149
 
 
 state 150
+
+    $   	go to state 151
+
+
+
+state 151
 
     $default	accept
