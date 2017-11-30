@@ -5,6 +5,7 @@
 
 tArvore *tabelaSimbolos;
 FILE *arq_saida;
+tAST *raiz;
 
 
 typedef struct Atributo{
@@ -26,7 +27,7 @@ int __linha__ = 1;
 
 %%
 Programa: ListaFuncoes BlocoPrincipal
-    | BlocoPrincipal  ;
+    | BlocoPrincipal  {$$.ast = $1.ast; raiz = $$.ast;};
 
 ListaFuncoes: ListaFuncoes Funcao
     | Funcao;
@@ -42,7 +43,7 @@ DeclParametros: DeclParametros TV Parametro
 
 Parametro: Tipo TID;
 
-BlocoPrincipal: TACHA Declaracoes ListaCmd TFCHA {$$.ast = $3.ast; printa_op_code($$.ast, tabelaSimbolos, arq_saida);}
+BlocoPrincipal: TACHA Declaracoes ListaCmd TFCHA {$$.ast = $3.ast;}
     | TACHA ListaCmd TFCHA {$$.ast = $2.ast;};
 
 Declaracoes: Declaracoes Declaracao

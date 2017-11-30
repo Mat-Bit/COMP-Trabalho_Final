@@ -1,6 +1,7 @@
 {
   int a, b, m;
   float n, p;
+  int c;
   String str;
 
   a = 13;

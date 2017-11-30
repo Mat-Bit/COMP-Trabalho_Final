@@ -114,6 +114,7 @@ tNo * criaNo(tLista *lista, int posicao, TIPO tipo){
     elem->tipo = tipo;
     elem->pos = posicao;
     elem->atrib = NATRIBUIDO;
+    elem->atr_ch = "N_ATR";
     elem->direita = NULL;
     elem->esquerda = NULL;
     return elem;
@@ -147,7 +148,8 @@ void printNos(tNo *no, int nivel){
     if(no->tipo == T_STRING) printf("\tString");
 
     if(no->tipo == T_INT) printf("\t%d\t%d\n", no->pos, (int)no->atrib);
-    else printf("\t%d\t%.2f\n", no->pos, no->atrib);
+    if(no->tipo == T_FLOAT) printf("\t%d\t%.2f\n", no->pos, no->atrib);
+    if(no->tipo == T_STRING) printf("\t%d\t%s\n", no->pos, no->atr_ch);
 }
 
 void insereListaNaArvore(tLista *lista, tArvore *arv){

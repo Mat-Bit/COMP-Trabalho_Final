@@ -55,6 +55,7 @@ typedef struct no{
     TIPO tipo;
     int pos;
     float atrib;
+    char *atr_ch;
     struct no *direita;
     struct no *esquerda;
 } tNo;
@@ -68,6 +69,7 @@ typedef struct AST{
     int cod;
     char *id;
     float atrib;
+    char *atr_ch;
     TIPO tipo;
     int ConstInt;
     float ConstFloat;
