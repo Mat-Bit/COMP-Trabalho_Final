@@ -79,6 +79,7 @@ typedef struct AST{
 void printLista(tLista *cabeca);
 tLista *criarLista (char *id);
 void insereLista (tLista *head, char *id);
+void insereTipo(tLista *head, TIPO tipo);
 
 tArvore * criarArvore();
 void insereArvore(tArvore *arv, tLista *lista);

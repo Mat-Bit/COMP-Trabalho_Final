@@ -1,90 +1,119 @@
-
-
-Terminals which are not used:
+Terminais sem uso na gramática
 
    T_FIM
 
 
+Gramática
 
-Grammar
-rule 1    Programa -> ListaFuncoes BlocoPrincipal
-rule 2    Programa -> BlocoPrincipal
-rule 3    ListaFuncoes -> ListaFuncoes Funcao
-rule 4    ListaFuncoes -> Funcao
-rule 5    Funcao -> TipoRetorno TID TAPAR DeclParametros BlocoPrincipal TFPAR BlocoPrincipal
-rule 6    Funcao -> TipoRetorno TID TAPAR TFPAR BlocoPrincipal
-rule 7    TipoRetorno -> Tipo
-rule 8    TipoRetorno -> TVOID
-rule 9    DeclParametros -> DeclParametros TV Parametro
-rule 10   DeclParametros -> Parametro
-rule 11   Parametro -> Tipo TID
-rule 12   BlocoPrincipal -> TACHA Declaracoes ListaCmd TFCHA
-rule 13   BlocoPrincipal -> TACHA ListaCmd TFCHA
-rule 14   Declaracoes -> Declaracoes Declaracao
-rule 15   Declaracoes -> Declaracao
-rule 16   Declaracao -> Tipo ListaId TPV
-rule 17   Tipo -> TINT
-rule 18   Tipo -> TSTRING
-rule 19   Tipo -> TFLOAT
-rule 20   ListaId -> ListaId TV TID
-rule 21   ListaId -> TID
-rule 22   Bloco -> TACHA ListaCmd TFCHA
-rule 23   ListaCmd -> ListaCmd Comando
-rule 24   ListaCmd -> Comando
-rule 25   Comando -> CmdSe
-rule 26   Comando -> CmdEnquanto
-rule 27   Comando -> CmdAtrib
-rule 28   Comando -> CmdEscrita
-rule 29   Comando -> CmdLeitura
-rule 30   Comando -> ChamadaProc
-rule 31   Comando -> Retorno
-rule 32   Retorno -> TRET ExpressaoAritimetica TPV
-rule 33   Retorno -> TRET TLITERAL TPV
-rule 34   CmdSe -> TIF TAPAR ExpressaoLogica TFPAR Bloco
-rule 35   CmdSe -> TIF TAPAR ExpressaoLogica TFPAR Bloco TELSE Bloco
-rule 36   CmdEnquanto -> TWHILE TAPAR ExpressaoLogica TFPAR Bloco
-rule 37   CmdAtrib -> TID TATB ExpressaoAritimetica TPV
-rule 38   CmdAtrib -> TID TATB TLITERAL
-rule 39   CmdEscrita -> TPRINT TAPAR TASP ExpressaoAritimetica TASP TFPAR TPV
-rule 40   CmdEscrita -> TPRINT TAPAR ExpressaoAritimetica TFPAR TPV
-rule 41   CmdEscrita -> TPRINT TAPAR TLITERAL TFPAR TPV
-rule 42   CmdLeitura -> TREAD TAPAR TID TFPAR TPV
-rule 43   CmdLeitura -> TREAD TAPAR TEND TID TFPAR TPV
-rule 44   ChamadaProc -> ChamadaFuncao TPV
-rule 45   ChamadaFuncao -> TID TAPAR ListaParametros TFPAR
-rule 46   ChamadaFuncao -> TID TAPAR TFPAR
-rule 47   ListaParametros -> ListaParametros TV ExpressaoAritimetica
-rule 48   ListaParametros -> ListaParametros TV TLITERAL
-rule 49   ListaParametros -> ExpressaoAritimetica
-rule 50   ListaParametros -> TLITERAL
-rule 51   ExpressaoAritimetica -> ExpressaoAritimetica TADD TExpressaoAritimetica
-rule 52   ExpressaoAritimetica -> ExpressaoAritimetica TSUB TExpressaoAritimetica
-rule 53   ExpressaoAritimetica -> TExpressaoAritimetica
-rule 54   TExpressaoAritimetica -> TExpressaoAritimetica TMUL FExpressaoAritmetica
-rule 55   TExpressaoAritimetica -> TExpressaoAritimetica TDIV FExpressaoAritmetica
-rule 56   TExpressaoAritimetica -> FExpressaoAritmetica
-rule 57   FExpressaoAritmetica -> TAPAR ExpressaoAritimetica TFPAR
-rule 58   FExpressaoAritmetica -> TFLOAT
-rule 59   FExpressaoAritmetica -> TINT
-rule 60   FExpressaoAritmetica -> TID
-rule 61   ExpressaoLogica -> ExpressaoLogica TCEE FExpressaoLogica
-rule 62   ExpressaoLogica -> ExpressaoLogica TCOU FExpressaoLogica
-rule 63   ExpressaoLogica -> FExpressaoLogica
-rule 64   FExpressaoLogica -> TNEG FExpressaoLogica
-rule 65   FExpressaoLogica -> TAPAR FExpressaoLogica TFPAR
-rule 66   FExpressaoLogica -> TRUE
-rule 67   FExpressaoLogica -> FALSE
-rule 68   FExpressaoLogica -> ExpressaoRelacional
-rule 69   ExpressaoRelacional -> ExpressaoAritimetica TMAIOR ExpressaoAritimetica
-rule 70   ExpressaoRelacional -> ExpressaoAritimetica TMAIORIG ExpressaoAritimetica
-rule 71   ExpressaoRelacional -> ExpressaoAritimetica TMENOR ExpressaoAritimetica
-rule 72   ExpressaoRelacional -> ExpressaoAritimetica TMENORIG ExpressaoAritimetica
-rule 73   ExpressaoRelacional -> ExpressaoAritimetica TCOM ExpressaoAritimetica
-rule 74   ExpressaoRelacional -> ExpressaoAritimetica TDIF ExpressaoAritimetica
+    0 $accept: Programa $end
 
-Terminals, with rules where they appear
+    1 Programa: ListaFuncoes BlocoPrincipal
+    2         | BlocoPrincipal
 
-$ (-1)
+    3 ListaFuncoes: ListaFuncoes Funcao
+    4             | Funcao
+
+    5 Funcao: TipoRetorno TID TAPAR DeclParametros BlocoPrincipal TFPAR BlocoPrincipal
+    6       | TipoRetorno TID TAPAR TFPAR BlocoPrincipal
+
+    7 TipoRetorno: Tipo
+    8            | TVOID
+
+    9 DeclParametros: DeclParametros TV Parametro
+   10               | Parametro
+
+   11 Parametro: Tipo TID
+
+   12 BlocoPrincipal: TACHA Declaracoes ListaCmd TFCHA
+   13               | TACHA ListaCmd TFCHA
+
+   14 Declaracoes: Declaracoes Declaracao
+   15            | Declaracao
+
+   16 Declaracao: Tipo ListaId TPV
+
+   17 Tipo: TINT
+   18     | TSTRING
+   19     | TFLOAT
+
+   20 ListaId: ListaId TV TID
+   21        | TID
+
+   22 Bloco: TACHA ListaCmd TFCHA
+
+   23 ListaCmd: ListaCmd Comando
+   24         | Comando
+
+   25 Comando: CmdSe
+   26        | CmdEnquanto
+   27        | CmdAtrib
+   28        | CmdEscrita
+   29        | CmdLeitura
+   30        | ChamadaProc
+   31        | Retorno
+
+   32 Retorno: TRET ExpressaoAritimetica TPV
+   33        | TRET TLITERAL TPV
+
+   34 CmdSe: TIF TAPAR ExpressaoLogica TFPAR Bloco
+   35      | TIF TAPAR ExpressaoLogica TFPAR Bloco TELSE Bloco
+
+   36 CmdEnquanto: TWHILE TAPAR ExpressaoLogica TFPAR Bloco
+
+   37 CmdAtrib: TID TATB ExpressaoAritimetica TPV
+   38         | TID TATB TLITERAL
+
+   39 CmdEscrita: TPRINT TAPAR TASP ExpressaoAritimetica TASP TFPAR TPV
+   40           | TPRINT TAPAR ExpressaoAritimetica TFPAR TPV
+   41           | TPRINT TAPAR TLITERAL TFPAR TPV
+
+   42 CmdLeitura: TREAD TAPAR TID TFPAR TPV
+   43           | TREAD TAPAR TEND TID TFPAR TPV
+
+   44 ChamadaProc: ChamadaFuncao TPV
+
+   45 ChamadaFuncao: TID TAPAR ListaParametros TFPAR
+   46              | TID TAPAR TFPAR
+
+   47 ListaParametros: ListaParametros TV ExpressaoAritimetica
+   48                | ListaParametros TV TLITERAL
+   49                | ExpressaoAritimetica
+   50                | TLITERAL
+
+   51 ExpressaoAritimetica: ExpressaoAritimetica TADD TExpressaoAritimetica
+   52                     | ExpressaoAritimetica TSUB TExpressaoAritimetica
+   53                     | TExpressaoAritimetica
+
+   54 TExpressaoAritimetica: TExpressaoAritimetica TMUL FExpressaoAritmetica
+   55                      | TExpressaoAritimetica TDIV FExpressaoAritmetica
+   56                      | FExpressaoAritmetica
+
+   57 FExpressaoAritmetica: TAPAR ExpressaoAritimetica TFPAR
+   58                     | TFLOAT
+   59                     | TINT
+   60                     | TID
+
+   61 ExpressaoLogica: ExpressaoLogica TCEE FExpressaoLogica
+   62                | ExpressaoLogica TCOU FExpressaoLogica
+   63                | FExpressaoLogica
+
+   64 FExpressaoLogica: TNEG FExpressaoLogica
+   65                 | TAPAR FExpressaoLogica TFPAR
+   66                 | TRUE
+   67                 | FALSE
+   68                 | ExpressaoRelacional
+
+   69 ExpressaoRelacional: ExpressaoAritimetica TMAIOR ExpressaoAritimetica
+   70                    | ExpressaoAritimetica TMAIORIG ExpressaoAritimetica
+   71                    | ExpressaoAritimetica TMENOR ExpressaoAritimetica
+   72                    | ExpressaoAritimetica TMENORIG ExpressaoAritimetica
+   73                    | ExpressaoAritimetica TCOM ExpressaoAritimetica
+   74                    | ExpressaoAritimetica TDIF ExpressaoAritimetica
+
+
+Terminais, com as regras onde eles aparecem
+
+$end (0) 0
 error (256)
 TADD (258) 51
 TSUB (259) 52
@@ -124,1771 +153,1624 @@ FALSE (292) 67
 TEND (293) 43
 T_FIM (294)
 
-Nonterminals, with rules where they appear
-
-Programa (40)
-    on left: 1 2
-ListaFuncoes (41)
-    on left: 3 4, on right: 1 3
-Funcao (42)
-    on left: 5 6, on right: 3 4
-TipoRetorno (43)
-    on left: 7 8, on right: 5 6
-DeclParametros (44)
-    on left: 9 10, on right: 5 9
-Parametro (45)
-    on left: 11, on right: 9 10
-BlocoPrincipal (46)
-    on left: 12 13, on right: 1 2 5 6
-Declaracoes (47)
-    on left: 14 15, on right: 12 14
-Declaracao (48)
-    on left: 16, on right: 14 15
-Tipo (49)
-    on left: 17 18 19, on right: 7 11 16
-ListaId (50)
-    on left: 20 21, on right: 16 20
-Bloco (51)
-    on left: 22, on right: 34 35 36
-ListaCmd (52)
-    on left: 23 24, on right: 12 13 22 23
-Comando (53)
-    on left: 25 26 27 28 29 30 31, on right: 23 24
-Retorno (54)
-    on left: 32 33, on right: 31
-CmdSe (55)
-    on left: 34 35, on right: 25
-CmdEnquanto (56)
-    on left: 36, on right: 26
-CmdAtrib (57)
-    on left: 37 38, on right: 27
-CmdEscrita (58)
-    on left: 39 40 41, on right: 28
-CmdLeitura (59)
-    on left: 42 43, on right: 29
-ChamadaProc (60)
-    on left: 44, on right: 30
-ChamadaFuncao (61)
-    on left: 45 46, on right: 44
-ListaParametros (62)
-    on left: 47 48 49 50, on right: 45 47 48
-ExpressaoAritimetica (63)
-    on left: 51 52 53, on right: 32 37 39 40 47 49 51 52 57 69 70 71
-    72 73 74
-TExpressaoAritimetica (64)
-    on left: 54 55 56, on right: 51 52 53 54 55
-FExpressaoAritmetica (65)
-    on left: 57 58 59 60, on right: 54 55 56
-ExpressaoLogica (66)
-    on left: 61 62 63, on right: 34 35 36 61 62
-FExpressaoLogica (67)
-    on left: 64 65 66 67 68, on right: 61 62 63 64 65
-ExpressaoRelacional (68)
-    on left: 69 70 71 72 73 74, on right: 68
-
-
-state 0
 
-    TACHA	shift, and go to state 1
-    TINT	shift, and go to state 2
-    TFLOAT	shift, and go to state 3
-    TSTRING	shift, and go to state 4
-    TVOID	shift, and go to state 5
+Não terminais com as regras onde eles aparecem
+
+$accept (40)
+    à esquerda: 0
+Programa (41)
+    à esquerda: 1 2, à direita: 0
+ListaFuncoes (42)
+    à esquerda: 3 4, à direita: 1 3
+Funcao (43)
+    à esquerda: 5 6, à direita: 3 4
+TipoRetorno (44)
+    à esquerda: 7 8, à direita: 5 6
+DeclParametros (45)
+    à esquerda: 9 10, à direita: 5 9
+Parametro (46)
+    à esquerda: 11, à direita: 9 10
+BlocoPrincipal (47)
+    à esquerda: 12 13, à direita: 1 2 5 6
+Declaracoes (48)
+    à esquerda: 14 15, à direita: 12 14
+Declaracao (49)
+    à esquerda: 16, à direita: 14 15
+Tipo (50)
+    à esquerda: 17 18 19, à direita: 7 11 16
+ListaId (51)
+    à esquerda: 20 21, à direita: 16 20
+Bloco (52)
+    à esquerda: 22, à direita: 34 35 36
+ListaCmd (53)
+    à esquerda: 23 24, à direita: 12 13 22 23
+Comando (54)
+    à esquerda: 25 26 27 28 29 30 31, à direita: 23 24
+Retorno (55)
+    à esquerda: 32 33, à direita: 31
+CmdSe (56)
+    à esquerda: 34 35, à direita: 25
+CmdEnquanto (57)
+    à esquerda: 36, à direita: 26
+CmdAtrib (58)
+    à esquerda: 37 38, à direita: 27
+CmdEscrita (59)
+    à esquerda: 39 40 41, à direita: 28
+CmdLeitura (60)
+    à esquerda: 42 43, à direita: 29
+ChamadaProc (61)
+    à esquerda: 44, à direita: 30
+ChamadaFuncao (62)
+    à esquerda: 45 46, à direita: 44
+ListaParametros (63)
+    à esquerda: 47 48 49 50, à direita: 45 47 48
+ExpressaoAritimetica (64)
+    à esquerda: 51 52 53, à direita: 32 37 39 40 47 49 51 52 57 69
+    70 71 72 73 74
+TExpressaoAritimetica (65)
+    à esquerda: 54 55 56, à direita: 51 52 53 54 55
+FExpressaoAritmetica (66)
+    à esquerda: 57 58 59 60, à direita: 54 55 56
+ExpressaoLogica (67)
+    à esquerda: 61 62 63, à direita: 34 35 36 61 62
+FExpressaoLogica (68)
+    à esquerda: 64 65 66 67 68, à direita: 61 62 63 64 65
+ExpressaoRelacional (69)
+    à esquerda: 69 70 71 72 73 74, à direita: 68
+
+
+Estado 0
+
+    0 $accept: . Programa $end
+
+    TACHA    deslocar, e ir ao estado 1
+    TINT     deslocar, e ir ao estado 2
+    TFLOAT   deslocar, e ir ao estado 3
+    TSTRING  deslocar, e ir ao estado 4
+    TVOID    deslocar, e ir ao estado 5
 
-    Programa	go to state 149
-    ListaFuncoes	go to state 6
-    Funcao	go to state 7
-    TipoRetorno	go to state 8
-    BlocoPrincipal	go to state 9
-    Tipo	go to state 10
+    Programa        ir ao estado 6
+    ListaFuncoes    ir ao estado 7
+    Funcao          ir ao estado 8
+    TipoRetorno     ir ao estado 9
+    BlocoPrincipal  ir ao estado 10
+    Tipo            ir ao estado 11
 
 
+Estado 1
 
-state 1
+   12 BlocoPrincipal: TACHA . Declaracoes ListaCmd TFCHA
+   13               | TACHA . ListaCmd TFCHA
 
-    BlocoPrincipal  ->  TACHA . Declaracoes ListaCmd TFCHA   (rule 12)
-    BlocoPrincipal  ->  TACHA . ListaCmd TFCHA   (rule 13)
+    TIF      deslocar, e ir ao estado 12
+    TWHILE   deslocar, e ir ao estado 13
+    TINT     deslocar, e ir ao estado 2
+    TFLOAT   deslocar, e ir ao estado 3
+    TSTRING  deslocar, e ir ao estado 4
+    TID      deslocar, e ir ao estado 14
+    TRET     deslocar, e ir ao estado 15
+    TPRINT   deslocar, e ir ao estado 16
+    TREAD    deslocar, e ir ao estado 17
 
-    TIF 	shift, and go to state 11
-    TWHILE	shift, and go to state 12
-    TINT	shift, and go to state 2
-    TFLOAT	shift, and go to state 3
-    TSTRING	shift, and go to state 4
-    TID 	shift, and go to state 13
-    TRET	shift, and go to state 14
-    TPRINT	shift, and go to state 15
-    TREAD	shift, and go to state 16
+    Declaracoes    ir ao estado 18
+    Declaracao     ir ao estado 19
+    Tipo           ir ao estado 20
+    ListaCmd       ir ao estado 21
+    Comando        ir ao estado 22
+    Retorno        ir ao estado 23
+    CmdSe          ir ao estado 24
+    CmdEnquanto    ir ao estado 25
+    CmdAtrib       ir ao estado 26
+    CmdEscrita     ir ao estado 27
+    CmdLeitura     ir ao estado 28
+    ChamadaProc    ir ao estado 29
+    ChamadaFuncao  ir ao estado 30
 
-    Declaracoes	go to state 17
-    Declaracao	go to state 18
-    Tipo	go to state 19
-    ListaCmd	go to state 20
-    Comando	go to state 21
-    Retorno	go to state 22
-    CmdSe	go to state 23
-    CmdEnquanto	go to state 24
-    CmdAtrib	go to state 25
-    CmdEscrita	go to state 26
-    CmdLeitura	go to state 27
-    ChamadaProc	go to state 28
-    ChamadaFuncao	go to state 29
 
+Estado 2
 
+   17 Tipo: TINT .
 
-state 2
+    $padrão  reduzir usando a regra 17 (Tipo)
 
-    Tipo  ->  TINT .   (rule 17)
 
-    $default	reduce using rule 17 (Tipo)
+Estado 3
 
+   19 Tipo: TFLOAT .
 
+    $padrão  reduzir usando a regra 19 (Tipo)
 
-state 3
 
-    Tipo  ->  TFLOAT .   (rule 19)
+Estado 4
 
-    $default	reduce using rule 19 (Tipo)
+   18 Tipo: TSTRING .
 
+    $padrão  reduzir usando a regra 18 (Tipo)
 
 
-state 4
+Estado 5
 
-    Tipo  ->  TSTRING .   (rule 18)
+    8 TipoRetorno: TVOID .
 
-    $default	reduce using rule 18 (Tipo)
+    $padrão  reduzir usando a regra 8 (TipoRetorno)
 
 
+Estado 6
 
-state 5
+    0 $accept: Programa . $end
 
-    TipoRetorno  ->  TVOID .   (rule 8)
+    $end  deslocar, e ir ao estado 31
 
-    $default	reduce using rule 8 (TipoRetorno)
 
+Estado 7
 
+    1 Programa: ListaFuncoes . BlocoPrincipal
+    3 ListaFuncoes: ListaFuncoes . Funcao
 
-state 6
+    TACHA    deslocar, e ir ao estado 1
+    TINT     deslocar, e ir ao estado 2
+    TFLOAT   deslocar, e ir ao estado 3
+    TSTRING  deslocar, e ir ao estado 4
+    TVOID    deslocar, e ir ao estado 5
 
-    Programa  ->  ListaFuncoes . BlocoPrincipal   (rule 1)
-    ListaFuncoes  ->  ListaFuncoes . Funcao   (rule 3)
+    Funcao          ir ao estado 32
+    TipoRetorno     ir ao estado 9
+    BlocoPrincipal  ir ao estado 33
+    Tipo            ir ao estado 11
 
-    TACHA	shift, and go to state 1
-    TINT	shift, and go to state 2
-    TFLOAT	shift, and go to state 3
-    TSTRING	shift, and go to state 4
-    TVOID	shift, and go to state 5
 
-    Funcao	go to state 30
-    TipoRetorno	go to state 8
-    BlocoPrincipal	go to state 31
-    Tipo	go to state 10
+Estado 8
 
+    4 ListaFuncoes: Funcao .
 
+    $padrão  reduzir usando a regra 4 (ListaFuncoes)
 
-state 7
 
-    ListaFuncoes  ->  Funcao .   (rule 4)
+Estado 9
 
-    $default	reduce using rule 4 (ListaFuncoes)
+    5 Funcao: TipoRetorno . TID TAPAR DeclParametros BlocoPrincipal TFPAR BlocoPrincipal
+    6       | TipoRetorno . TID TAPAR TFPAR BlocoPrincipal
 
+    TID  deslocar, e ir ao estado 34
 
 
-state 8
+Estado 10
 
-    Funcao  ->  TipoRetorno . TID TAPAR DeclParametros BlocoPrincipal TFPAR BlocoPrincipal   (rule 5)
-    Funcao  ->  TipoRetorno . TID TAPAR TFPAR BlocoPrincipal   (rule 6)
+    2 Programa: BlocoPrincipal .
 
-    TID 	shift, and go to state 32
+    $padrão  reduzir usando a regra 2 (Programa)
 
 
+Estado 11
 
-state 9
+    7 TipoRetorno: Tipo .
 
-    Programa  ->  BlocoPrincipal .   (rule 2)
+    $padrão  reduzir usando a regra 7 (TipoRetorno)
 
-    $default	reduce using rule 2 (Programa)
 
+Estado 12
 
+   34 CmdSe: TIF . TAPAR ExpressaoLogica TFPAR Bloco
+   35      | TIF . TAPAR ExpressaoLogica TFPAR Bloco TELSE Bloco
 
-state 10
+    TAPAR  deslocar, e ir ao estado 35
 
-    TipoRetorno  ->  Tipo .   (rule 7)
 
-    $default	reduce using rule 7 (TipoRetorno)
+Estado 13
 
+   36 CmdEnquanto: TWHILE . TAPAR ExpressaoLogica TFPAR Bloco
 
+    TAPAR  deslocar, e ir ao estado 36
 
-state 11
 
-    CmdSe  ->  TIF . TAPAR ExpressaoLogica TFPAR Bloco   (rule 34)
-    CmdSe  ->  TIF . TAPAR ExpressaoLogica TFPAR Bloco TELSE Bloco   (rule 35)
+Estado 14
 
-    TAPAR	shift, and go to state 33
+   37 CmdAtrib: TID . TATB ExpressaoAritimetica TPV
+   38         | TID . TATB TLITERAL
+   45 ChamadaFuncao: TID . TAPAR ListaParametros TFPAR
+   46              | TID . TAPAR TFPAR
 
+    TATB   deslocar, e ir ao estado 37
+    TAPAR  deslocar, e ir ao estado 38
 
 
-state 12
+Estado 15
 
-    CmdEnquanto  ->  TWHILE . TAPAR ExpressaoLogica TFPAR Bloco   (rule 36)
+   32 Retorno: TRET . ExpressaoAritimetica TPV
+   33        | TRET . TLITERAL TPV
 
-    TAPAR	shift, and go to state 34
+    TAPAR     deslocar, e ir ao estado 39
+    TINT      deslocar, e ir ao estado 40
+    TFLOAT    deslocar, e ir ao estado 41
+    TID       deslocar, e ir ao estado 42
+    TLITERAL  deslocar, e ir ao estado 43
 
+    ExpressaoAritimetica   ir ao estado 44
+    TExpressaoAritimetica  ir ao estado 45
+    FExpressaoAritmetica   ir ao estado 46
 
 
-state 13
+Estado 16
 
-    CmdAtrib  ->  TID . TATB ExpressaoAritimetica TPV   (rule 37)
-    CmdAtrib  ->  TID . TATB TLITERAL   (rule 38)
-    ChamadaFuncao  ->  TID . TAPAR ListaParametros TFPAR   (rule 45)
-    ChamadaFuncao  ->  TID . TAPAR TFPAR   (rule 46)
+   39 CmdEscrita: TPRINT . TAPAR TASP ExpressaoAritimetica TASP TFPAR TPV
+   40           | TPRINT . TAPAR ExpressaoAritimetica TFPAR TPV
+   41           | TPRINT . TAPAR TLITERAL TFPAR TPV
 
-    TATB	shift, and go to state 35
-    TAPAR	shift, and go to state 36
+    TAPAR  deslocar, e ir ao estado 47
 
 
+Estado 17
 
-state 14
+   42 CmdLeitura: TREAD . TAPAR TID TFPAR TPV
+   43           | TREAD . TAPAR TEND TID TFPAR TPV
 
-    Retorno  ->  TRET . ExpressaoAritimetica TPV   (rule 32)
-    Retorno  ->  TRET . TLITERAL TPV   (rule 33)
+    TAPAR  deslocar, e ir ao estado 48
 
-    TAPAR	shift, and go to state 37
-    TINT	shift, and go to state 38
-    TFLOAT	shift, and go to state 39
-    TID 	shift, and go to state 40
-    TLITERAL	shift, and go to state 41
 
-    ExpressaoAritimetica	go to state 42
-    TExpressaoAritimetica	go to state 43
-    FExpressaoAritmetica	go to state 44
+Estado 18
 
+   12 BlocoPrincipal: TACHA Declaracoes . ListaCmd TFCHA
+   14 Declaracoes: Declaracoes . Declaracao
 
+    TIF      deslocar, e ir ao estado 12
+    TWHILE   deslocar, e ir ao estado 13
+    TINT     deslocar, e ir ao estado 2
+    TFLOAT   deslocar, e ir ao estado 3
+    TSTRING  deslocar, e ir ao estado 4
+    TID      deslocar, e ir ao estado 14
+    TRET     deslocar, e ir ao estado 15
+    TPRINT   deslocar, e ir ao estado 16
+    TREAD    deslocar, e ir ao estado 17
 
-state 15
+    Declaracao     ir ao estado 49
+    Tipo           ir ao estado 20
+    ListaCmd       ir ao estado 50
+    Comando        ir ao estado 22
+    Retorno        ir ao estado 23
+    CmdSe          ir ao estado 24
+    CmdEnquanto    ir ao estado 25
+    CmdAtrib       ir ao estado 26
+    CmdEscrita     ir ao estado 27
+    CmdLeitura     ir ao estado 28
+    ChamadaProc    ir ao estado 29
+    ChamadaFuncao  ir ao estado 30
 
-    CmdEscrita  ->  TPRINT . TAPAR TASP ExpressaoAritimetica TASP TFPAR TPV   (rule 39)
-    CmdEscrita  ->  TPRINT . TAPAR ExpressaoAritimetica TFPAR TPV   (rule 40)
-    CmdEscrita  ->  TPRINT . TAPAR TLITERAL TFPAR TPV   (rule 41)
 
-    TAPAR	shift, and go to state 45
+Estado 19
 
+   15 Declaracoes: Declaracao .
 
+    $padrão  reduzir usando a regra 15 (Declaracoes)
 
-state 16
 
-    CmdLeitura  ->  TREAD . TAPAR TID TFPAR TPV   (rule 42)
-    CmdLeitura  ->  TREAD . TAPAR TEND TID TFPAR TPV   (rule 43)
+Estado 20
 
-    TAPAR	shift, and go to state 46
+   16 Declaracao: Tipo . ListaId TPV
 
+    TID  deslocar, e ir ao estado 51
 
+    ListaId  ir ao estado 52
 
-state 17
 
-    BlocoPrincipal  ->  TACHA Declaracoes . ListaCmd TFCHA   (rule 12)
-    Declaracoes  ->  Declaracoes . Declaracao   (rule 14)
+Estado 21
 
-    TIF 	shift, and go to state 11
-    TWHILE	shift, and go to state 12
-    TINT	shift, and go to state 2
-    TFLOAT	shift, and go to state 3
-    TSTRING	shift, and go to state 4
-    TID 	shift, and go to state 13
-    TRET	shift, and go to state 14
-    TPRINT	shift, and go to state 15
-    TREAD	shift, and go to state 16
+   13 BlocoPrincipal: TACHA ListaCmd . TFCHA
+   23 ListaCmd: ListaCmd . Comando
 
-    Declaracao	go to state 47
-    Tipo	go to state 19
-    ListaCmd	go to state 48
-    Comando	go to state 21
-    Retorno	go to state 22
-    CmdSe	go to state 23
-    CmdEnquanto	go to state 24
-    CmdAtrib	go to state 25
-    CmdEscrita	go to state 26
-    CmdLeitura	go to state 27
-    ChamadaProc	go to state 28
-    ChamadaFuncao	go to state 29
+    TIF     deslocar, e ir ao estado 12
+    TWHILE  deslocar, e ir ao estado 13
+    TFCHA   deslocar, e ir ao estado 53
+    TID     deslocar, e ir ao estado 14
+    TRET    deslocar, e ir ao estado 15
+    TPRINT  deslocar, e ir ao estado 16
+    TREAD   deslocar, e ir ao estado 17
 
+    Comando        ir ao estado 54
+    Retorno        ir ao estado 23
+    CmdSe          ir ao estado 24
+    CmdEnquanto    ir ao estado 25
+    CmdAtrib       ir ao estado 26
+    CmdEscrita     ir ao estado 27
+    CmdLeitura     ir ao estado 28
+    ChamadaProc    ir ao estado 29
+    ChamadaFuncao  ir ao estado 30
 
 
-state 18
+Estado 22
 
-    Declaracoes  ->  Declaracao .   (rule 15)
+   24 ListaCmd: Comando .
 
-    $default	reduce using rule 15 (Declaracoes)
+    $padrão  reduzir usando a regra 24 (ListaCmd)
 
 
+Estado 23
 
-state 19
+   31 Comando: Retorno .
 
-    Declaracao  ->  Tipo . ListaId TPV   (rule 16)
+    $padrão  reduzir usando a regra 31 (Comando)
 
-    TID 	shift, and go to state 49
 
-    ListaId	go to state 50
+Estado 24
 
+   25 Comando: CmdSe .
 
+    $padrão  reduzir usando a regra 25 (Comando)
 
-state 20
 
-    BlocoPrincipal  ->  TACHA ListaCmd . TFCHA   (rule 13)
-    ListaCmd  ->  ListaCmd . Comando   (rule 23)
+Estado 25
 
-    TIF 	shift, and go to state 11
-    TWHILE	shift, and go to state 12
-    TFCHA	shift, and go to state 51
-    TID 	shift, and go to state 13
-    TRET	shift, and go to state 14
-    TPRINT	shift, and go to state 15
-    TREAD	shift, and go to state 16
+   26 Comando: CmdEnquanto .
 
-    Comando	go to state 52
-    Retorno	go to state 22
-    CmdSe	go to state 23
-    CmdEnquanto	go to state 24
-    CmdAtrib	go to state 25
-    CmdEscrita	go to state 26
-    CmdLeitura	go to state 27
-    ChamadaProc	go to state 28
-    ChamadaFuncao	go to state 29
+    $padrão  reduzir usando a regra 26 (Comando)
 
 
+Estado 26
 
-state 21
+   27 Comando: CmdAtrib .
 
-    ListaCmd  ->  Comando .   (rule 24)
+    $padrão  reduzir usando a regra 27 (Comando)
 
-    $default	reduce using rule 24 (ListaCmd)
 
+Estado 27
 
+   28 Comando: CmdEscrita .
 
-state 22
+    $padrão  reduzir usando a regra 28 (Comando)
 
-    Comando  ->  Retorno .   (rule 31)
 
-    $default	reduce using rule 31 (Comando)
+Estado 28
 
+   29 Comando: CmdLeitura .
 
+    $padrão  reduzir usando a regra 29 (Comando)
 
-state 23
 
-    Comando  ->  CmdSe .   (rule 25)
+Estado 29
 
-    $default	reduce using rule 25 (Comando)
+   30 Comando: ChamadaProc .
 
+    $padrão  reduzir usando a regra 30 (Comando)
 
 
-state 24
+Estado 30
 
-    Comando  ->  CmdEnquanto .   (rule 26)
+   44 ChamadaProc: ChamadaFuncao . TPV
 
-    $default	reduce using rule 26 (Comando)
+    TPV  deslocar, e ir ao estado 55
 
 
+Estado 31
 
-state 25
+    0 $accept: Programa $end .
 
-    Comando  ->  CmdAtrib .   (rule 27)
+    $padrão  aceitar
 
-    $default	reduce using rule 27 (Comando)
 
+Estado 32
 
+    3 ListaFuncoes: ListaFuncoes Funcao .
 
-state 26
+    $padrão  reduzir usando a regra 3 (ListaFuncoes)
 
-    Comando  ->  CmdEscrita .   (rule 28)
 
-    $default	reduce using rule 28 (Comando)
+Estado 33
 
+    1 Programa: ListaFuncoes BlocoPrincipal .
 
+    $padrão  reduzir usando a regra 1 (Programa)
 
-state 27
 
-    Comando  ->  CmdLeitura .   (rule 29)
+Estado 34
 
-    $default	reduce using rule 29 (Comando)
+    5 Funcao: TipoRetorno TID . TAPAR DeclParametros BlocoPrincipal TFPAR BlocoPrincipal
+    6       | TipoRetorno TID . TAPAR TFPAR BlocoPrincipal
 
+    TAPAR  deslocar, e ir ao estado 56
 
 
-state 28
+Estado 35
 
-    Comando  ->  ChamadaProc .   (rule 30)
+   34 CmdSe: TIF TAPAR . ExpressaoLogica TFPAR Bloco
+   35      | TIF TAPAR . ExpressaoLogica TFPAR Bloco TELSE Bloco
 
-    $default	reduce using rule 30 (Comando)
+    TNEG    deslocar, e ir ao estado 57
+    TAPAR   deslocar, e ir ao estado 58
+    TINT    deslocar, e ir ao estado 40
+    TFLOAT  deslocar, e ir ao estado 41
+    TID     deslocar, e ir ao estado 42
+    TRUE    deslocar, e ir ao estado 59
+    FALSE   deslocar, e ir ao estado 60
 
+    ExpressaoAritimetica   ir ao estado 61
+    TExpressaoAritimetica  ir ao estado 45
+    FExpressaoAritmetica   ir ao estado 46
+    ExpressaoLogica        ir ao estado 62
+    FExpressaoLogica       ir ao estado 63
+    ExpressaoRelacional    ir ao estado 64
 
 
-state 29
+Estado 36
 
-    ChamadaProc  ->  ChamadaFuncao . TPV   (rule 44)
+   36 CmdEnquanto: TWHILE TAPAR . ExpressaoLogica TFPAR Bloco
 
-    TPV 	shift, and go to state 53
+    TNEG    deslocar, e ir ao estado 57
+    TAPAR   deslocar, e ir ao estado 58
+    TINT    deslocar, e ir ao estado 40
+    TFLOAT  deslocar, e ir ao estado 41
+    TID     deslocar, e ir ao estado 42
+    TRUE    deslocar, e ir ao estado 59
+    FALSE   deslocar, e ir ao estado 60
 
+    ExpressaoAritimetica   ir ao estado 61
+    TExpressaoAritimetica  ir ao estado 45
+    FExpressaoAritmetica   ir ao estado 46
+    ExpressaoLogica        ir ao estado 65
+    FExpressaoLogica       ir ao estado 63
+    ExpressaoRelacional    ir ao estado 64
 
 
-state 30
+Estado 37
 
-    ListaFuncoes  ->  ListaFuncoes Funcao .   (rule 3)
+   37 CmdAtrib: TID TATB . ExpressaoAritimetica TPV
+   38         | TID TATB . TLITERAL
 
-    $default	reduce using rule 3 (ListaFuncoes)
+    TAPAR     deslocar, e ir ao estado 39
+    TINT      deslocar, e ir ao estado 40
+    TFLOAT    deslocar, e ir ao estado 41
+    TID       deslocar, e ir ao estado 42
+    TLITERAL  deslocar, e ir ao estado 66
 
+    ExpressaoAritimetica   ir ao estado 67
+    TExpressaoAritimetica  ir ao estado 45
+    FExpressaoAritmetica   ir ao estado 46
 
 
-state 31
+Estado 38
 
-    Programa  ->  ListaFuncoes BlocoPrincipal .   (rule 1)
+   45 ChamadaFuncao: TID TAPAR . ListaParametros TFPAR
+   46              | TID TAPAR . TFPAR
 
-    $default	reduce using rule 1 (Programa)
+    TAPAR     deslocar, e ir ao estado 39
+    TFPAR     deslocar, e ir ao estado 68
+    TINT      deslocar, e ir ao estado 40
+    TFLOAT    deslocar, e ir ao estado 41
+    TID       deslocar, e ir ao estado 42
+    TLITERAL  deslocar, e ir ao estado 69
 
+    ListaParametros        ir ao estado 70
+    ExpressaoAritimetica   ir ao estado 71
+    TExpressaoAritimetica  ir ao estado 45
+    FExpressaoAritmetica   ir ao estado 46
 
 
-state 32
+Estado 39
 
-    Funcao  ->  TipoRetorno TID . TAPAR DeclParametros BlocoPrincipal TFPAR BlocoPrincipal   (rule 5)
-    Funcao  ->  TipoRetorno TID . TAPAR TFPAR BlocoPrincipal   (rule 6)
+   57 FExpressaoAritmetica: TAPAR . ExpressaoAritimetica TFPAR
 
-    TAPAR	shift, and go to state 54
+    TAPAR   deslocar, e ir ao estado 39
+    TINT    deslocar, e ir ao estado 40
+    TFLOAT  deslocar, e ir ao estado 41
+    TID     deslocar, e ir ao estado 42
 
+    ExpressaoAritimetica   ir ao estado 72
+    TExpressaoAritimetica  ir ao estado 45
+    FExpressaoAritmetica   ir ao estado 46
 
 
-state 33
+Estado 40
 
-    CmdSe  ->  TIF TAPAR . ExpressaoLogica TFPAR Bloco   (rule 34)
-    CmdSe  ->  TIF TAPAR . ExpressaoLogica TFPAR Bloco TELSE Bloco   (rule 35)
+   59 FExpressaoAritmetica: TINT .
 
-    TNEG	shift, and go to state 55
-    TAPAR	shift, and go to state 56
-    TINT	shift, and go to state 38
-    TFLOAT	shift, and go to state 39
-    TID 	shift, and go to state 40
-    TRUE	shift, and go to state 57
-    FALSE	shift, and go to state 58
+    $padrão  reduzir usando a regra 59 (FExpressaoAritmetica)
 
-    ExpressaoAritimetica	go to state 59
-    TExpressaoAritimetica	go to state 43
-    FExpressaoAritmetica	go to state 44
-    ExpressaoLogica	go to state 60
-    FExpressaoLogica	go to state 61
-    ExpressaoRelacional	go to state 62
 
+Estado 41
 
+   58 FExpressaoAritmetica: TFLOAT .
 
-state 34
+    $padrão  reduzir usando a regra 58 (FExpressaoAritmetica)
 
-    CmdEnquanto  ->  TWHILE TAPAR . ExpressaoLogica TFPAR Bloco   (rule 36)
 
-    TNEG	shift, and go to state 55
-    TAPAR	shift, and go to state 56
-    TINT	shift, and go to state 38
-    TFLOAT	shift, and go to state 39
-    TID 	shift, and go to state 40
-    TRUE	shift, and go to state 57
-    FALSE	shift, and go to state 58
+Estado 42
 
-    ExpressaoAritimetica	go to state 59
-    TExpressaoAritimetica	go to state 43
-    FExpressaoAritmetica	go to state 44
-    ExpressaoLogica	go to state 63
-    FExpressaoLogica	go to state 61
-    ExpressaoRelacional	go to state 62
+   60 FExpressaoAritmetica: TID .
 
+    $padrão  reduzir usando a regra 60 (FExpressaoAritmetica)
 
 
-state 35
+Estado 43
 
-    CmdAtrib  ->  TID TATB . ExpressaoAritimetica TPV   (rule 37)
-    CmdAtrib  ->  TID TATB . TLITERAL   (rule 38)
+   33 Retorno: TRET TLITERAL . TPV
 
-    TAPAR	shift, and go to state 37
-    TINT	shift, and go to state 38
-    TFLOAT	shift, and go to state 39
-    TID 	shift, and go to state 40
-    TLITERAL	shift, and go to state 64
+    TPV  deslocar, e ir ao estado 73
 
-    ExpressaoAritimetica	go to state 65
-    TExpressaoAritimetica	go to state 43
-    FExpressaoAritmetica	go to state 44
 
+Estado 44
 
+   32 Retorno: TRET ExpressaoAritimetica . TPV
+   51 ExpressaoAritimetica: ExpressaoAritimetica . TADD TExpressaoAritimetica
+   52                     | ExpressaoAritimetica . TSUB TExpressaoAritimetica
 
-state 36
+    TADD  deslocar, e ir ao estado 74
+    TSUB  deslocar, e ir ao estado 75
+    TPV   deslocar, e ir ao estado 76
 
-    ChamadaFuncao  ->  TID TAPAR . ListaParametros TFPAR   (rule 45)
-    ChamadaFuncao  ->  TID TAPAR . TFPAR   (rule 46)
 
-    TAPAR	shift, and go to state 37
-    TFPAR	shift, and go to state 66
-    TINT	shift, and go to state 38
-    TFLOAT	shift, and go to state 39
-    TID 	shift, and go to state 40
-    TLITERAL	shift, and go to state 67
+Estado 45
 
-    ListaParametros	go to state 68
-    ExpressaoAritimetica	go to state 69
-    TExpressaoAritimetica	go to state 43
-    FExpressaoAritmetica	go to state 44
+   53 ExpressaoAritimetica: TExpressaoAritimetica .
+   54 TExpressaoAritimetica: TExpressaoAritimetica . TMUL FExpressaoAritmetica
+   55                      | TExpressaoAritimetica . TDIV FExpressaoAritmetica
 
+    TMUL  deslocar, e ir ao estado 77
+    TDIV  deslocar, e ir ao estado 78
 
+    $padrão  reduzir usando a regra 53 (ExpressaoAritimetica)
 
-state 37
 
-    FExpressaoAritmetica  ->  TAPAR . ExpressaoAritimetica TFPAR   (rule 57)
+Estado 46
 
-    TAPAR	shift, and go to state 37
-    TINT	shift, and go to state 38
-    TFLOAT	shift, and go to state 39
-    TID 	shift, and go to state 40
+   56 TExpressaoAritimetica: FExpressaoAritmetica .
 
-    ExpressaoAritimetica	go to state 70
-    TExpressaoAritimetica	go to state 43
-    FExpressaoAritmetica	go to state 44
+    $padrão  reduzir usando a regra 56 (TExpressaoAritimetica)
 
 
+Estado 47
 
-state 38
+   39 CmdEscrita: TPRINT TAPAR . TASP ExpressaoAritimetica TASP TFPAR TPV
+   40           | TPRINT TAPAR . ExpressaoAritimetica TFPAR TPV
+   41           | TPRINT TAPAR . TLITERAL TFPAR TPV
 
-    FExpressaoAritmetica  ->  TINT .   (rule 59)
+    TAPAR     deslocar, e ir ao estado 39
+    TASP      deslocar, e ir ao estado 79
+    TINT      deslocar, e ir ao estado 40
+    TFLOAT    deslocar, e ir ao estado 41
+    TID       deslocar, e ir ao estado 42
+    TLITERAL  deslocar, e ir ao estado 80
 
-    $default	reduce using rule 59 (FExpressaoAritmetica)
+    ExpressaoAritimetica   ir ao estado 81
+    TExpressaoAritimetica  ir ao estado 45
+    FExpressaoAritmetica   ir ao estado 46
 
 
+Estado 48
 
-state 39
+   42 CmdLeitura: TREAD TAPAR . TID TFPAR TPV
+   43           | TREAD TAPAR . TEND TID TFPAR TPV
 
-    FExpressaoAritmetica  ->  TFLOAT .   (rule 58)
+    TID   deslocar, e ir ao estado 82
+    TEND  deslocar, e ir ao estado 83
 
-    $default	reduce using rule 58 (FExpressaoAritmetica)
 
+Estado 49
 
+   14 Declaracoes: Declaracoes Declaracao .
 
-state 40
+    $padrão  reduzir usando a regra 14 (Declaracoes)
 
-    FExpressaoAritmetica  ->  TID .   (rule 60)
 
-    $default	reduce using rule 60 (FExpressaoAritmetica)
+Estado 50
 
+   12 BlocoPrincipal: TACHA Declaracoes ListaCmd . TFCHA
+   23 ListaCmd: ListaCmd . Comando
 
+    TIF     deslocar, e ir ao estado 12
+    TWHILE  deslocar, e ir ao estado 13
+    TFCHA   deslocar, e ir ao estado 84
+    TID     deslocar, e ir ao estado 14
+    TRET    deslocar, e ir ao estado 15
+    TPRINT  deslocar, e ir ao estado 16
+    TREAD   deslocar, e ir ao estado 17
 
-state 41
+    Comando        ir ao estado 54
+    Retorno        ir ao estado 23
+    CmdSe          ir ao estado 24
+    CmdEnquanto    ir ao estado 25
+    CmdAtrib       ir ao estado 26
+    CmdEscrita     ir ao estado 27
+    CmdLeitura     ir ao estado 28
+    ChamadaProc    ir ao estado 29
+    ChamadaFuncao  ir ao estado 30
 
-    Retorno  ->  TRET TLITERAL . TPV   (rule 33)
 
-    TPV 	shift, and go to state 71
+Estado 51
 
+   21 ListaId: TID .
 
+    $padrão  reduzir usando a regra 21 (ListaId)
 
-state 42
 
-    Retorno  ->  TRET ExpressaoAritimetica . TPV   (rule 32)
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TADD TExpressaoAritimetica   (rule 51)
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TSUB TExpressaoAritimetica   (rule 52)
+Estado 52
 
-    TADD	shift, and go to state 72
-    TSUB	shift, and go to state 73
-    TPV 	shift, and go to state 74
+   16 Declaracao: Tipo ListaId . TPV
+   20 ListaId: ListaId . TV TID
 
+    TPV  deslocar, e ir ao estado 85
+    TV   deslocar, e ir ao estado 86
 
 
-state 43
+Estado 53
 
-    ExpressaoAritimetica  ->  TExpressaoAritimetica .   (rule 53)
-    TExpressaoAritimetica  ->  TExpressaoAritimetica . TMUL FExpressaoAritmetica   (rule 54)
-    TExpressaoAritimetica  ->  TExpressaoAritimetica . TDIV FExpressaoAritmetica   (rule 55)
+   13 BlocoPrincipal: TACHA ListaCmd TFCHA .
 
-    TMUL	shift, and go to state 75
-    TDIV	shift, and go to state 76
+    $padrão  reduzir usando a regra 13 (BlocoPrincipal)
 
-    $default	reduce using rule 53 (ExpressaoAritimetica)
 
+Estado 54
 
+   23 ListaCmd: ListaCmd Comando .
 
-state 44
+    $padrão  reduzir usando a regra 23 (ListaCmd)
 
-    TExpressaoAritimetica  ->  FExpressaoAritmetica .   (rule 56)
 
-    $default	reduce using rule 56 (TExpressaoAritimetica)
+Estado 55
 
+   44 ChamadaProc: ChamadaFuncao TPV .
 
+    $padrão  reduzir usando a regra 44 (ChamadaProc)
 
-state 45
 
-    CmdEscrita  ->  TPRINT TAPAR . TASP ExpressaoAritimetica TASP TFPAR TPV   (rule 39)
-    CmdEscrita  ->  TPRINT TAPAR . ExpressaoAritimetica TFPAR TPV   (rule 40)
-    CmdEscrita  ->  TPRINT TAPAR . TLITERAL TFPAR TPV   (rule 41)
+Estado 56
 
-    TAPAR	shift, and go to state 37
-    TASP	shift, and go to state 77
-    TINT	shift, and go to state 38
-    TFLOAT	shift, and go to state 39
-    TID 	shift, and go to state 40
-    TLITERAL	shift, and go to state 78
+    5 Funcao: TipoRetorno TID TAPAR . DeclParametros BlocoPrincipal TFPAR BlocoPrincipal
+    6       | TipoRetorno TID TAPAR . TFPAR BlocoPrincipal
 
-    ExpressaoAritimetica	go to state 79
-    TExpressaoAritimetica	go to state 43
-    FExpressaoAritmetica	go to state 44
+    TFPAR    deslocar, e ir ao estado 87
+    TINT     deslocar, e ir ao estado 2
+    TFLOAT   deslocar, e ir ao estado 3
+    TSTRING  deslocar, e ir ao estado 4
 
+    DeclParametros  ir ao estado 88
+    Parametro       ir ao estado 89
+    Tipo            ir ao estado 90
 
 
-state 46
+Estado 57
 
-    CmdLeitura  ->  TREAD TAPAR . TID TFPAR TPV   (rule 42)
-    CmdLeitura  ->  TREAD TAPAR . TEND TID TFPAR TPV   (rule 43)
+   64 FExpressaoLogica: TNEG . FExpressaoLogica
 
-    TID 	shift, and go to state 80
-    TEND	shift, and go to state 81
+    TNEG    deslocar, e ir ao estado 57
+    TAPAR   deslocar, e ir ao estado 58
+    TINT    deslocar, e ir ao estado 40
+    TFLOAT  deslocar, e ir ao estado 41
+    TID     deslocar, e ir ao estado 42
+    TRUE    deslocar, e ir ao estado 59
+    FALSE   deslocar, e ir ao estado 60
 
+    ExpressaoAritimetica   ir ao estado 61
+    TExpressaoAritimetica  ir ao estado 45
+    FExpressaoAritmetica   ir ao estado 46
+    FExpressaoLogica       ir ao estado 91
+    ExpressaoRelacional    ir ao estado 64
 
 
-state 47
+Estado 58
 
-    Declaracoes  ->  Declaracoes Declaracao .   (rule 14)
+   57 FExpressaoAritmetica: TAPAR . ExpressaoAritimetica TFPAR
+   65 FExpressaoLogica: TAPAR . FExpressaoLogica TFPAR
 
-    $default	reduce using rule 14 (Declaracoes)
+    TNEG    deslocar, e ir ao estado 57
+    TAPAR   deslocar, e ir ao estado 58
+    TINT    deslocar, e ir ao estado 40
+    TFLOAT  deslocar, e ir ao estado 41
+    TID     deslocar, e ir ao estado 42
+    TRUE    deslocar, e ir ao estado 59
+    FALSE   deslocar, e ir ao estado 60
 
+    ExpressaoAritimetica   ir ao estado 92
+    TExpressaoAritimetica  ir ao estado 45
+    FExpressaoAritmetica   ir ao estado 46
+    FExpressaoLogica       ir ao estado 93
+    ExpressaoRelacional    ir ao estado 64
 
 
-state 48
+Estado 59
 
-    BlocoPrincipal  ->  TACHA Declaracoes ListaCmd . TFCHA   (rule 12)
-    ListaCmd  ->  ListaCmd . Comando   (rule 23)
+   66 FExpressaoLogica: TRUE .
 
-    TIF 	shift, and go to state 11
-    TWHILE	shift, and go to state 12
-    TFCHA	shift, and go to state 82
-    TID 	shift, and go to state 13
-    TRET	shift, and go to state 14
-    TPRINT	shift, and go to state 15
-    TREAD	shift, and go to state 16
+    $padrão  reduzir usando a regra 66 (FExpressaoLogica)
 
-    Comando	go to state 52
-    Retorno	go to state 22
-    CmdSe	go to state 23
-    CmdEnquanto	go to state 24
-    CmdAtrib	go to state 25
-    CmdEscrita	go to state 26
-    CmdLeitura	go to state 27
-    ChamadaProc	go to state 28
-    ChamadaFuncao	go to state 29
 
+Estado 60
 
+   67 FExpressaoLogica: FALSE .
 
-state 49
+    $padrão  reduzir usando a regra 67 (FExpressaoLogica)
 
-    ListaId  ->  TID .   (rule 21)
 
-    $default	reduce using rule 21 (ListaId)
+Estado 61
 
+   51 ExpressaoAritimetica: ExpressaoAritimetica . TADD TExpressaoAritimetica
+   52                     | ExpressaoAritimetica . TSUB TExpressaoAritimetica
+   69 ExpressaoRelacional: ExpressaoAritimetica . TMAIOR ExpressaoAritimetica
+   70                    | ExpressaoAritimetica . TMAIORIG ExpressaoAritimetica
+   71                    | ExpressaoAritimetica . TMENOR ExpressaoAritimetica
+   72                    | ExpressaoAritimetica . TMENORIG ExpressaoAritimetica
+   73                    | ExpressaoAritimetica . TCOM ExpressaoAritimetica
+   74                    | ExpressaoAritimetica . TDIF ExpressaoAritimetica
 
+    TADD      deslocar, e ir ao estado 74
+    TSUB      deslocar, e ir ao estado 75
+    TMENOR    deslocar, e ir ao estado 94
+    TMAIOR    deslocar, e ir ao estado 95
+    TMENORIG  deslocar, e ir ao estado 96
+    TMAIORIG  deslocar, e ir ao estado 97
+    TCOM      deslocar, e ir ao estado 98
+    TDIF      deslocar, e ir ao estado 99
 
-state 50
 
-    Declaracao  ->  Tipo ListaId . TPV   (rule 16)
-    ListaId  ->  ListaId . TV TID   (rule 20)
+Estado 62
 
-    TPV 	shift, and go to state 83
-    TV  	shift, and go to state 84
+   34 CmdSe: TIF TAPAR ExpressaoLogica . TFPAR Bloco
+   35      | TIF TAPAR ExpressaoLogica . TFPAR Bloco TELSE Bloco
+   61 ExpressaoLogica: ExpressaoLogica . TCEE FExpressaoLogica
+   62                | ExpressaoLogica . TCOU FExpressaoLogica
 
+    TCEE   deslocar, e ir ao estado 100
+    TCOU   deslocar, e ir ao estado 101
+    TFPAR  deslocar, e ir ao estado 102
 
 
-state 51
+Estado 63
 
-    BlocoPrincipal  ->  TACHA ListaCmd TFCHA .   (rule 13)
+   63 ExpressaoLogica: FExpressaoLogica .
 
-    $default	reduce using rule 13 (BlocoPrincipal)
+    $padrão  reduzir usando a regra 63 (ExpressaoLogica)
 
 
+Estado 64
 
-state 52
+   68 FExpressaoLogica: ExpressaoRelacional .
 
-    ListaCmd  ->  ListaCmd Comando .   (rule 23)
+    $padrão  reduzir usando a regra 68 (FExpressaoLogica)
 
-    $default	reduce using rule 23 (ListaCmd)
 
+Estado 65
 
+   36 CmdEnquanto: TWHILE TAPAR ExpressaoLogica . TFPAR Bloco
+   61 ExpressaoLogica: ExpressaoLogica . TCEE FExpressaoLogica
+   62                | ExpressaoLogica . TCOU FExpressaoLogica
 
-state 53
+    TCEE   deslocar, e ir ao estado 100
+    TCOU   deslocar, e ir ao estado 101
+    TFPAR  deslocar, e ir ao estado 103
 
-    ChamadaProc  ->  ChamadaFuncao TPV .   (rule 44)
 
-    $default	reduce using rule 44 (ChamadaProc)
+Estado 66
 
+   38 CmdAtrib: TID TATB TLITERAL .
 
+    $padrão  reduzir usando a regra 38 (CmdAtrib)
 
-state 54
 
-    Funcao  ->  TipoRetorno TID TAPAR . DeclParametros BlocoPrincipal TFPAR BlocoPrincipal   (rule 5)
-    Funcao  ->  TipoRetorno TID TAPAR . TFPAR BlocoPrincipal   (rule 6)
+Estado 67
 
-    TFPAR	shift, and go to state 85
-    TINT	shift, and go to state 2
-    TFLOAT	shift, and go to state 3
-    TSTRING	shift, and go to state 4
+   37 CmdAtrib: TID TATB ExpressaoAritimetica . TPV
+   51 ExpressaoAritimetica: ExpressaoAritimetica . TADD TExpressaoAritimetica
+   52                     | ExpressaoAritimetica . TSUB TExpressaoAritimetica
 
-    DeclParametros	go to state 86
-    Parametro	go to state 87
-    Tipo	go to state 88
+    TADD  deslocar, e ir ao estado 74
+    TSUB  deslocar, e ir ao estado 75
+    TPV   deslocar, e ir ao estado 104
 
 
+Estado 68
 
-state 55
+   46 ChamadaFuncao: TID TAPAR TFPAR .
 
-    FExpressaoLogica  ->  TNEG . FExpressaoLogica   (rule 64)
+    $padrão  reduzir usando a regra 46 (ChamadaFuncao)
 
-    TNEG	shift, and go to state 55
-    TAPAR	shift, and go to state 56
-    TINT	shift, and go to state 38
-    TFLOAT	shift, and go to state 39
-    TID 	shift, and go to state 40
-    TRUE	shift, and go to state 57
-    FALSE	shift, and go to state 58
 
-    ExpressaoAritimetica	go to state 59
-    TExpressaoAritimetica	go to state 43
-    FExpressaoAritmetica	go to state 44
-    FExpressaoLogica	go to state 89
-    ExpressaoRelacional	go to state 62
+Estado 69
 
+   50 ListaParametros: TLITERAL .
 
+    $padrão  reduzir usando a regra 50 (ListaParametros)
 
-state 56
 
-    FExpressaoAritmetica  ->  TAPAR . ExpressaoAritimetica TFPAR   (rule 57)
-    FExpressaoLogica  ->  TAPAR . FExpressaoLogica TFPAR   (rule 65)
+Estado 70
 
-    TNEG	shift, and go to state 55
-    TAPAR	shift, and go to state 56
-    TINT	shift, and go to state 38
-    TFLOAT	shift, and go to state 39
-    TID 	shift, and go to state 40
-    TRUE	shift, and go to state 57
-    FALSE	shift, and go to state 58
+   45 ChamadaFuncao: TID TAPAR ListaParametros . TFPAR
+   47 ListaParametros: ListaParametros . TV ExpressaoAritimetica
+   48                | ListaParametros . TV TLITERAL
 
-    ExpressaoAritimetica	go to state 90
-    TExpressaoAritimetica	go to state 43
-    FExpressaoAritmetica	go to state 44
-    FExpressaoLogica	go to state 91
-    ExpressaoRelacional	go to state 62
+    TFPAR  deslocar, e ir ao estado 105
+    TV     deslocar, e ir ao estado 106
 
 
+Estado 71
 
-state 57
+   49 ListaParametros: ExpressaoAritimetica .
+   51 ExpressaoAritimetica: ExpressaoAritimetica . TADD TExpressaoAritimetica
+   52                     | ExpressaoAritimetica . TSUB TExpressaoAritimetica
 
-    FExpressaoLogica  ->  TRUE .   (rule 66)
+    TADD  deslocar, e ir ao estado 74
+    TSUB  deslocar, e ir ao estado 75
 
-    $default	reduce using rule 66 (FExpressaoLogica)
+    $padrão  reduzir usando a regra 49 (ListaParametros)
 
 
+Estado 72
 
-state 58
+   51 ExpressaoAritimetica: ExpressaoAritimetica . TADD TExpressaoAritimetica
+   52                     | ExpressaoAritimetica . TSUB TExpressaoAritimetica
+   57 FExpressaoAritmetica: TAPAR ExpressaoAritimetica . TFPAR
 
-    FExpressaoLogica  ->  FALSE .   (rule 67)
+    TADD   deslocar, e ir ao estado 74
+    TSUB   deslocar, e ir ao estado 75
+    TFPAR  deslocar, e ir ao estado 107
 
-    $default	reduce using rule 67 (FExpressaoLogica)
 
+Estado 73
 
+   33 Retorno: TRET TLITERAL TPV .
 
-state 59
+    $padrão  reduzir usando a regra 33 (Retorno)
 
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TADD TExpressaoAritimetica   (rule 51)
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TSUB TExpressaoAritimetica   (rule 52)
-    ExpressaoRelacional  ->  ExpressaoAritimetica . TMAIOR ExpressaoAritimetica   (rule 69)
-    ExpressaoRelacional  ->  ExpressaoAritimetica . TMAIORIG ExpressaoAritimetica   (rule 70)
-    ExpressaoRelacional  ->  ExpressaoAritimetica . TMENOR ExpressaoAritimetica   (rule 71)
-    ExpressaoRelacional  ->  ExpressaoAritimetica . TMENORIG ExpressaoAritimetica   (rule 72)
-    ExpressaoRelacional  ->  ExpressaoAritimetica . TCOM ExpressaoAritimetica   (rule 73)
-    ExpressaoRelacional  ->  ExpressaoAritimetica . TDIF ExpressaoAritimetica   (rule 74)
 
-    TADD	shift, and go to state 72
-    TSUB	shift, and go to state 73
-    TMENOR	shift, and go to state 92
-    TMAIOR	shift, and go to state 93
-    TMENORIG	shift, and go to state 94
-    TMAIORIG	shift, and go to state 95
-    TCOM	shift, and go to state 96
-    TDIF	shift, and go to state 97
+Estado 74
 
+   51 ExpressaoAritimetica: ExpressaoAritimetica TADD . TExpressaoAritimetica
 
+    TAPAR   deslocar, e ir ao estado 39
+    TINT    deslocar, e ir ao estado 40
+    TFLOAT  deslocar, e ir ao estado 41
+    TID     deslocar, e ir ao estado 42
 
-state 60
+    TExpressaoAritimetica  ir ao estado 108
+    FExpressaoAritmetica   ir ao estado 46
 
-    CmdSe  ->  TIF TAPAR ExpressaoLogica . TFPAR Bloco   (rule 34)
-    CmdSe  ->  TIF TAPAR ExpressaoLogica . TFPAR Bloco TELSE Bloco   (rule 35)
-    ExpressaoLogica  ->  ExpressaoLogica . TCEE FExpressaoLogica   (rule 61)
-    ExpressaoLogica  ->  ExpressaoLogica . TCOU FExpressaoLogica   (rule 62)
 
-    TCEE	shift, and go to state 98
-    TCOU	shift, and go to state 99
-    TFPAR	shift, and go to state 100
+Estado 75
 
+   52 ExpressaoAritimetica: ExpressaoAritimetica TSUB . TExpressaoAritimetica
 
+    TAPAR   deslocar, e ir ao estado 39
+    TINT    deslocar, e ir ao estado 40
+    TFLOAT  deslocar, e ir ao estado 41
+    TID     deslocar, e ir ao estado 42
 
-state 61
+    TExpressaoAritimetica  ir ao estado 109
+    FExpressaoAritmetica   ir ao estado 46
 
-    ExpressaoLogica  ->  FExpressaoLogica .   (rule 63)
 
-    $default	reduce using rule 63 (ExpressaoLogica)
+Estado 76
 
+   32 Retorno: TRET ExpressaoAritimetica TPV .
 
+    $padrão  reduzir usando a regra 32 (Retorno)
 
-state 62
 
-    FExpressaoLogica  ->  ExpressaoRelacional .   (rule 68)
+Estado 77
 
-    $default	reduce using rule 68 (FExpressaoLogica)
+   54 TExpressaoAritimetica: TExpressaoAritimetica TMUL . FExpressaoAritmetica
 
+    TAPAR   deslocar, e ir ao estado 39
+    TINT    deslocar, e ir ao estado 40
+    TFLOAT  deslocar, e ir ao estado 41
+    TID     deslocar, e ir ao estado 42
 
+    FExpressaoAritmetica  ir ao estado 110
 
-state 63
 
-    CmdEnquanto  ->  TWHILE TAPAR ExpressaoLogica . TFPAR Bloco   (rule 36)
-    ExpressaoLogica  ->  ExpressaoLogica . TCEE FExpressaoLogica   (rule 61)
-    ExpressaoLogica  ->  ExpressaoLogica . TCOU FExpressaoLogica   (rule 62)
+Estado 78
 
-    TCEE	shift, and go to state 98
-    TCOU	shift, and go to state 99
-    TFPAR	shift, and go to state 101
+   55 TExpressaoAritimetica: TExpressaoAritimetica TDIV . FExpressaoAritmetica
 
+    TAPAR   deslocar, e ir ao estado 39
+    TINT    deslocar, e ir ao estado 40
+    TFLOAT  deslocar, e ir ao estado 41
+    TID     deslocar, e ir ao estado 42
 
+    FExpressaoAritmetica  ir ao estado 111
 
-state 64
 
-    CmdAtrib  ->  TID TATB TLITERAL .   (rule 38)
+Estado 79
 
-    $default	reduce using rule 38 (CmdAtrib)
+   39 CmdEscrita: TPRINT TAPAR TASP . ExpressaoAritimetica TASP TFPAR TPV
 
+    TAPAR   deslocar, e ir ao estado 39
+    TINT    deslocar, e ir ao estado 40
+    TFLOAT  deslocar, e ir ao estado 41
+    TID     deslocar, e ir ao estado 42
 
+    ExpressaoAritimetica   ir ao estado 112
+    TExpressaoAritimetica  ir ao estado 45
+    FExpressaoAritmetica   ir ao estado 46
 
-state 65
 
-    CmdAtrib  ->  TID TATB ExpressaoAritimetica . TPV   (rule 37)
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TADD TExpressaoAritimetica   (rule 51)
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TSUB TExpressaoAritimetica   (rule 52)
+Estado 80
 
-    TADD	shift, and go to state 72
-    TSUB	shift, and go to state 73
-    TPV 	shift, and go to state 102
+   41 CmdEscrita: TPRINT TAPAR TLITERAL . TFPAR TPV
 
+    TFPAR  deslocar, e ir ao estado 113
 
 
-state 66
+Estado 81
 
-    ChamadaFuncao  ->  TID TAPAR TFPAR .   (rule 46)
+   40 CmdEscrita: TPRINT TAPAR ExpressaoAritimetica . TFPAR TPV
+   51 ExpressaoAritimetica: ExpressaoAritimetica . TADD TExpressaoAritimetica
+   52                     | ExpressaoAritimetica . TSUB TExpressaoAritimetica
 
-    $default	reduce using rule 46 (ChamadaFuncao)
+    TADD   deslocar, e ir ao estado 74
+    TSUB   deslocar, e ir ao estado 75
+    TFPAR  deslocar, e ir ao estado 114
 
 
+Estado 82
 
-state 67
+   42 CmdLeitura: TREAD TAPAR TID . TFPAR TPV
 
-    ListaParametros  ->  TLITERAL .   (rule 50)
+    TFPAR  deslocar, e ir ao estado 115
 
-    $default	reduce using rule 50 (ListaParametros)
 
+Estado 83
 
+   43 CmdLeitura: TREAD TAPAR TEND . TID TFPAR TPV
 
-state 68
+    TID  deslocar, e ir ao estado 116
 
-    ChamadaFuncao  ->  TID TAPAR ListaParametros . TFPAR   (rule 45)
-    ListaParametros  ->  ListaParametros . TV ExpressaoAritimetica   (rule 47)
-    ListaParametros  ->  ListaParametros . TV TLITERAL   (rule 48)
 
-    TFPAR	shift, and go to state 103
-    TV  	shift, and go to state 104
+Estado 84
 
+   12 BlocoPrincipal: TACHA Declaracoes ListaCmd TFCHA .
 
+    $padrão  reduzir usando a regra 12 (BlocoPrincipal)
 
-state 69
 
-    ListaParametros  ->  ExpressaoAritimetica .   (rule 49)
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TADD TExpressaoAritimetica   (rule 51)
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TSUB TExpressaoAritimetica   (rule 52)
+Estado 85
 
-    TADD	shift, and go to state 72
-    TSUB	shift, and go to state 73
+   16 Declaracao: Tipo ListaId TPV .
 
-    $default	reduce using rule 49 (ListaParametros)
+    $padrão  reduzir usando a regra 16 (Declaracao)
 
 
+Estado 86
 
-state 70
+   20 ListaId: ListaId TV . TID
 
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TADD TExpressaoAritimetica   (rule 51)
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TSUB TExpressaoAritimetica   (rule 52)
-    FExpressaoAritmetica  ->  TAPAR ExpressaoAritimetica . TFPAR   (rule 57)
+    TID  deslocar, e ir ao estado 117
 
-    TADD	shift, and go to state 72
-    TSUB	shift, and go to state 73
-    TFPAR	shift, and go to state 105
 
+Estado 87
 
+    6 Funcao: TipoRetorno TID TAPAR TFPAR . BlocoPrincipal
 
-state 71
+    TACHA  deslocar, e ir ao estado 1
 
-    Retorno  ->  TRET TLITERAL TPV .   (rule 33)
+    BlocoPrincipal  ir ao estado 118
 
-    $default	reduce using rule 33 (Retorno)
 
+Estado 88
 
+    5 Funcao: TipoRetorno TID TAPAR DeclParametros . BlocoPrincipal TFPAR BlocoPrincipal
+    9 DeclParametros: DeclParametros . TV Parametro
 
-state 72
+    TACHA  deslocar, e ir ao estado 1
+    TV     deslocar, e ir ao estado 119
 
-    ExpressaoAritimetica  ->  ExpressaoAritimetica TADD . TExpressaoAritimetica   (rule 51)
+    BlocoPrincipal  ir ao estado 120
 
-    TAPAR	shift, and go to state 37
-    TINT	shift, and go to state 38
-    TFLOAT	shift, and go to state 39
-    TID 	shift, and go to state 40
 
-    TExpressaoAritimetica	go to state 106
-    FExpressaoAritmetica	go to state 44
+Estado 89
 
+   10 DeclParametros: Parametro .
 
+    $padrão  reduzir usando a regra 10 (DeclParametros)
 
-state 73
 
-    ExpressaoAritimetica  ->  ExpressaoAritimetica TSUB . TExpressaoAritimetica   (rule 52)
+Estado 90
 
-    TAPAR	shift, and go to state 37
-    TINT	shift, and go to state 38
-    TFLOAT	shift, and go to state 39
-    TID 	shift, and go to state 40
+   11 Parametro: Tipo . TID
 
-    TExpressaoAritimetica	go to state 107
-    FExpressaoAritmetica	go to state 44
+    TID  deslocar, e ir ao estado 121
 
 
+Estado 91
 
-state 74
+   64 FExpressaoLogica: TNEG FExpressaoLogica .
 
-    Retorno  ->  TRET ExpressaoAritimetica TPV .   (rule 32)
+    $padrão  reduzir usando a regra 64 (FExpressaoLogica)
 
-    $default	reduce using rule 32 (Retorno)
 
+Estado 92
 
+   51 ExpressaoAritimetica: ExpressaoAritimetica . TADD TExpressaoAritimetica
+   52                     | ExpressaoAritimetica . TSUB TExpressaoAritimetica
+   57 FExpressaoAritmetica: TAPAR ExpressaoAritimetica . TFPAR
+   69 ExpressaoRelacional: ExpressaoAritimetica . TMAIOR ExpressaoAritimetica
+   70                    | ExpressaoAritimetica . TMAIORIG ExpressaoAritimetica
+   71                    | ExpressaoAritimetica . TMENOR ExpressaoAritimetica
+   72                    | ExpressaoAritimetica . TMENORIG ExpressaoAritimetica
+   73                    | ExpressaoAritimetica . TCOM ExpressaoAritimetica
+   74                    | ExpressaoAritimetica . TDIF ExpressaoAritimetica
 
-state 75
+    TADD      deslocar, e ir ao estado 74
+    TSUB      deslocar, e ir ao estado 75
+    TMENOR    deslocar, e ir ao estado 94
+    TMAIOR    deslocar, e ir ao estado 95
+    TMENORIG  deslocar, e ir ao estado 96
+    TMAIORIG  deslocar, e ir ao estado 97
+    TCOM      deslocar, e ir ao estado 98
+    TDIF      deslocar, e ir ao estado 99
+    TFPAR     deslocar, e ir ao estado 107
 
-    TExpressaoAritimetica  ->  TExpressaoAritimetica TMUL . FExpressaoAritmetica   (rule 54)
 
-    TAPAR	shift, and go to state 37
-    TINT	shift, and go to state 38
-    TFLOAT	shift, and go to state 39
-    TID 	shift, and go to state 40
+Estado 93
 
-    FExpressaoAritmetica	go to state 108
+   65 FExpressaoLogica: TAPAR FExpressaoLogica . TFPAR
 
+    TFPAR  deslocar, e ir ao estado 122
 
 
-state 76
+Estado 94
 
-    TExpressaoAritimetica  ->  TExpressaoAritimetica TDIV . FExpressaoAritmetica   (rule 55)
+   71 ExpressaoRelacional: ExpressaoAritimetica TMENOR . ExpressaoAritimetica
 
-    TAPAR	shift, and go to state 37
-    TINT	shift, and go to state 38
-    TFLOAT	shift, and go to state 39
-    TID 	shift, and go to state 40
+    TAPAR   deslocar, e ir ao estado 39
+    TINT    deslocar, e ir ao estado 40
+    TFLOAT  deslocar, e ir ao estado 41
+    TID     deslocar, e ir ao estado 42
 
-    FExpressaoAritmetica	go to state 109
+    ExpressaoAritimetica   ir ao estado 123
+    TExpressaoAritimetica  ir ao estado 45
+    FExpressaoAritmetica   ir ao estado 46
 
 
+Estado 95
 
-state 77
+   69 ExpressaoRelacional: ExpressaoAritimetica TMAIOR . ExpressaoAritimetica
 
-    CmdEscrita  ->  TPRINT TAPAR TASP . ExpressaoAritimetica TASP TFPAR TPV   (rule 39)
+    TAPAR   deslocar, e ir ao estado 39
+    TINT    deslocar, e ir ao estado 40
+    TFLOAT  deslocar, e ir ao estado 41
+    TID     deslocar, e ir ao estado 42
 
-    TAPAR	shift, and go to state 37
-    TINT	shift, and go to state 38
-    TFLOAT	shift, and go to state 39
-    TID 	shift, and go to state 40
+    ExpressaoAritimetica   ir ao estado 124
+    TExpressaoAritimetica  ir ao estado 45
+    FExpressaoAritmetica   ir ao estado 46
 
-    ExpressaoAritimetica	go to state 110
-    TExpressaoAritimetica	go to state 43
-    FExpressaoAritmetica	go to state 44
 
+Estado 96
 
+   72 ExpressaoRelacional: ExpressaoAritimetica TMENORIG . ExpressaoAritimetica
 
-state 78
+    TAPAR   deslocar, e ir ao estado 39
+    TINT    deslocar, e ir ao estado 40
+    TFLOAT  deslocar, e ir ao estado 41
+    TID     deslocar, e ir ao estado 42
 
-    CmdEscrita  ->  TPRINT TAPAR TLITERAL . TFPAR TPV   (rule 41)
+    ExpressaoAritimetica   ir ao estado 125
+    TExpressaoAritimetica  ir ao estado 45
+    FExpressaoAritmetica   ir ao estado 46
 
-    TFPAR	shift, and go to state 111
 
+Estado 97
 
+   70 ExpressaoRelacional: ExpressaoAritimetica TMAIORIG . ExpressaoAritimetica
 
-state 79
+    TAPAR   deslocar, e ir ao estado 39
+    TINT    deslocar, e ir ao estado 40
+    TFLOAT  deslocar, e ir ao estado 41
+    TID     deslocar, e ir ao estado 42
 
-    CmdEscrita  ->  TPRINT TAPAR ExpressaoAritimetica . TFPAR TPV   (rule 40)
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TADD TExpressaoAritimetica   (rule 51)
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TSUB TExpressaoAritimetica   (rule 52)
+    ExpressaoAritimetica   ir ao estado 126
+    TExpressaoAritimetica  ir ao estado 45
+    FExpressaoAritmetica   ir ao estado 46
 
-    TADD	shift, and go to state 72
-    TSUB	shift, and go to state 73
-    TFPAR	shift, and go to state 112
 
+Estado 98
 
+   73 ExpressaoRelacional: ExpressaoAritimetica TCOM . ExpressaoAritimetica
 
-state 80
+    TAPAR   deslocar, e ir ao estado 39
+    TINT    deslocar, e ir ao estado 40
+    TFLOAT  deslocar, e ir ao estado 41
+    TID     deslocar, e ir ao estado 42
 
-    CmdLeitura  ->  TREAD TAPAR TID . TFPAR TPV   (rule 42)
+    ExpressaoAritimetica   ir ao estado 127
+    TExpressaoAritimetica  ir ao estado 45
+    FExpressaoAritmetica   ir ao estado 46
 
-    TFPAR	shift, and go to state 113
 
+Estado 99
 
+   74 ExpressaoRelacional: ExpressaoAritimetica TDIF . ExpressaoAritimetica
 
-state 81
+    TAPAR   deslocar, e ir ao estado 39
+    TINT    deslocar, e ir ao estado 40
+    TFLOAT  deslocar, e ir ao estado 41
+    TID     deslocar, e ir ao estado 42
 
-    CmdLeitura  ->  TREAD TAPAR TEND . TID TFPAR TPV   (rule 43)
+    ExpressaoAritimetica   ir ao estado 128
+    TExpressaoAritimetica  ir ao estado 45
+    FExpressaoAritmetica   ir ao estado 46
 
-    TID 	shift, and go to state 114
 
+Estado 100
 
+   61 ExpressaoLogica: ExpressaoLogica TCEE . FExpressaoLogica
 
-state 82
+    TNEG    deslocar, e ir ao estado 57
+    TAPAR   deslocar, e ir ao estado 58
+    TINT    deslocar, e ir ao estado 40
+    TFLOAT  deslocar, e ir ao estado 41
+    TID     deslocar, e ir ao estado 42
+    TRUE    deslocar, e ir ao estado 59
+    FALSE   deslocar, e ir ao estado 60
 
-    BlocoPrincipal  ->  TACHA Declaracoes ListaCmd TFCHA .   (rule 12)
+    ExpressaoAritimetica   ir ao estado 61
+    TExpressaoAritimetica  ir ao estado 45
+    FExpressaoAritmetica   ir ao estado 46
+    FExpressaoLogica       ir ao estado 129
+    ExpressaoRelacional    ir ao estado 64
 
-    $default	reduce using rule 12 (BlocoPrincipal)
 
+Estado 101
 
+   62 ExpressaoLogica: ExpressaoLogica TCOU . FExpressaoLogica
 
-state 83
+    TNEG    deslocar, e ir ao estado 57
+    TAPAR   deslocar, e ir ao estado 58
+    TINT    deslocar, e ir ao estado 40
+    TFLOAT  deslocar, e ir ao estado 41
+    TID     deslocar, e ir ao estado 42
+    TRUE    deslocar, e ir ao estado 59
+    FALSE   deslocar, e ir ao estado 60
 
-    Declaracao  ->  Tipo ListaId TPV .   (rule 16)
+    ExpressaoAritimetica   ir ao estado 61
+    TExpressaoAritimetica  ir ao estado 45
+    FExpressaoAritmetica   ir ao estado 46
+    FExpressaoLogica       ir ao estado 130
+    ExpressaoRelacional    ir ao estado 64
 
-    $default	reduce using rule 16 (Declaracao)
 
+Estado 102
 
+   34 CmdSe: TIF TAPAR ExpressaoLogica TFPAR . Bloco
+   35      | TIF TAPAR ExpressaoLogica TFPAR . Bloco TELSE Bloco
 
-state 84
+    TACHA  deslocar, e ir ao estado 131
 
-    ListaId  ->  ListaId TV . TID   (rule 20)
+    Bloco  ir ao estado 132
 
-    TID 	shift, and go to state 115
 
+Estado 103
 
+   36 CmdEnquanto: TWHILE TAPAR ExpressaoLogica TFPAR . Bloco
 
-state 85
+    TACHA  deslocar, e ir ao estado 131
 
-    Funcao  ->  TipoRetorno TID TAPAR TFPAR . BlocoPrincipal   (rule 6)
+    Bloco  ir ao estado 133
 
-    TACHA	shift, and go to state 1
 
-    BlocoPrincipal	go to state 116
+Estado 104
 
+   37 CmdAtrib: TID TATB ExpressaoAritimetica TPV .
 
+    $padrão  reduzir usando a regra 37 (CmdAtrib)
 
-state 86
 
-    Funcao  ->  TipoRetorno TID TAPAR DeclParametros . BlocoPrincipal TFPAR BlocoPrincipal   (rule 5)
-    DeclParametros  ->  DeclParametros . TV Parametro   (rule 9)
+Estado 105
 
-    TACHA	shift, and go to state 1
-    TV  	shift, and go to state 117
+   45 ChamadaFuncao: TID TAPAR ListaParametros TFPAR .
 
-    BlocoPrincipal	go to state 118
+    $padrão  reduzir usando a regra 45 (ChamadaFuncao)
 
 
+Estado 106
 
-state 87
+   47 ListaParametros: ListaParametros TV . ExpressaoAritimetica
+   48                | ListaParametros TV . TLITERAL
 
-    DeclParametros  ->  Parametro .   (rule 10)
+    TAPAR     deslocar, e ir ao estado 39
+    TINT      deslocar, e ir ao estado 40
+    TFLOAT    deslocar, e ir ao estado 41
+    TID       deslocar, e ir ao estado 42
+    TLITERAL  deslocar, e ir ao estado 134
 
-    $default	reduce using rule 10 (DeclParametros)
+    ExpressaoAritimetica   ir ao estado 135
+    TExpressaoAritimetica  ir ao estado 45
+    FExpressaoAritmetica   ir ao estado 46
 
 
+Estado 107
 
-state 88
+   57 FExpressaoAritmetica: TAPAR ExpressaoAritimetica TFPAR .
 
-    Parametro  ->  Tipo . TID   (rule 11)
+    $padrão  reduzir usando a regra 57 (FExpressaoAritmetica)
 
-    TID 	shift, and go to state 119
 
+Estado 108
 
+   51 ExpressaoAritimetica: ExpressaoAritimetica TADD TExpressaoAritimetica .
+   54 TExpressaoAritimetica: TExpressaoAritimetica . TMUL FExpressaoAritmetica
+   55                      | TExpressaoAritimetica . TDIV FExpressaoAritmetica
 
-state 89
+    TMUL  deslocar, e ir ao estado 77
+    TDIV  deslocar, e ir ao estado 78
 
-    FExpressaoLogica  ->  TNEG FExpressaoLogica .   (rule 64)
+    $padrão  reduzir usando a regra 51 (ExpressaoAritimetica)
 
-    $default	reduce using rule 64 (FExpressaoLogica)
 
+Estado 109
 
+   52 ExpressaoAritimetica: ExpressaoAritimetica TSUB TExpressaoAritimetica .
+   54 TExpressaoAritimetica: TExpressaoAritimetica . TMUL FExpressaoAritmetica
+   55                      | TExpressaoAritimetica . TDIV FExpressaoAritmetica
 
-state 90
+    TMUL  deslocar, e ir ao estado 77
+    TDIV  deslocar, e ir ao estado 78
 
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TADD TExpressaoAritimetica   (rule 51)
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TSUB TExpressaoAritimetica   (rule 52)
-    FExpressaoAritmetica  ->  TAPAR ExpressaoAritimetica . TFPAR   (rule 57)
-    ExpressaoRelacional  ->  ExpressaoAritimetica . TMAIOR ExpressaoAritimetica   (rule 69)
-    ExpressaoRelacional  ->  ExpressaoAritimetica . TMAIORIG ExpressaoAritimetica   (rule 70)
-    ExpressaoRelacional  ->  ExpressaoAritimetica . TMENOR ExpressaoAritimetica   (rule 71)
-    ExpressaoRelacional  ->  ExpressaoAritimetica . TMENORIG ExpressaoAritimetica   (rule 72)
-    ExpressaoRelacional  ->  ExpressaoAritimetica . TCOM ExpressaoAritimetica   (rule 73)
-    ExpressaoRelacional  ->  ExpressaoAritimetica . TDIF ExpressaoAritimetica   (rule 74)
+    $padrão  reduzir usando a regra 52 (ExpressaoAritimetica)
 
-    TADD	shift, and go to state 72
-    TSUB	shift, and go to state 73
-    TMENOR	shift, and go to state 92
-    TMAIOR	shift, and go to state 93
-    TMENORIG	shift, and go to state 94
-    TMAIORIG	shift, and go to state 95
-    TCOM	shift, and go to state 96
-    TDIF	shift, and go to state 97
-    TFPAR	shift, and go to state 105
 
+Estado 110
 
+   54 TExpressaoAritimetica: TExpressaoAritimetica TMUL FExpressaoAritmetica .
 
-state 91
+    $padrão  reduzir usando a regra 54 (TExpressaoAritimetica)
 
-    FExpressaoLogica  ->  TAPAR FExpressaoLogica . TFPAR   (rule 65)
 
-    TFPAR	shift, and go to state 120
+Estado 111
 
+   55 TExpressaoAritimetica: TExpressaoAritimetica TDIV FExpressaoAritmetica .
 
+    $padrão  reduzir usando a regra 55 (TExpressaoAritimetica)
 
-state 92
 
-    ExpressaoRelacional  ->  ExpressaoAritimetica TMENOR . ExpressaoAritimetica   (rule 71)
+Estado 112
 
-    TAPAR	shift, and go to state 37
-    TINT	shift, and go to state 38
-    TFLOAT	shift, and go to state 39
-    TID 	shift, and go to state 40
+   39 CmdEscrita: TPRINT TAPAR TASP ExpressaoAritimetica . TASP TFPAR TPV
+   51 ExpressaoAritimetica: ExpressaoAritimetica . TADD TExpressaoAritimetica
+   52                     | ExpressaoAritimetica . TSUB TExpressaoAritimetica
 
-    ExpressaoAritimetica	go to state 121
-    TExpressaoAritimetica	go to state 43
-    FExpressaoAritmetica	go to state 44
+    TADD  deslocar, e ir ao estado 74
+    TSUB  deslocar, e ir ao estado 75
+    TASP  deslocar, e ir ao estado 136
 
 
+Estado 113
 
-state 93
+   41 CmdEscrita: TPRINT TAPAR TLITERAL TFPAR . TPV
 
-    ExpressaoRelacional  ->  ExpressaoAritimetica TMAIOR . ExpressaoAritimetica   (rule 69)
+    TPV  deslocar, e ir ao estado 137
 
-    TAPAR	shift, and go to state 37
-    TINT	shift, and go to state 38
-    TFLOAT	shift, and go to state 39
-    TID 	shift, and go to state 40
 
-    ExpressaoAritimetica	go to state 122
-    TExpressaoAritimetica	go to state 43
-    FExpressaoAritmetica	go to state 44
+Estado 114
 
+   40 CmdEscrita: TPRINT TAPAR ExpressaoAritimetica TFPAR . TPV
 
+    TPV  deslocar, e ir ao estado 138
 
-state 94
 
-    ExpressaoRelacional  ->  ExpressaoAritimetica TMENORIG . ExpressaoAritimetica   (rule 72)
+Estado 115
 
-    TAPAR	shift, and go to state 37
-    TINT	shift, and go to state 38
-    TFLOAT	shift, and go to state 39
-    TID 	shift, and go to state 40
+   42 CmdLeitura: TREAD TAPAR TID TFPAR . TPV
 
-    ExpressaoAritimetica	go to state 123
-    TExpressaoAritimetica	go to state 43
-    FExpressaoAritmetica	go to state 44
+    TPV  deslocar, e ir ao estado 139
 
 
+Estado 116
 
-state 95
+   43 CmdLeitura: TREAD TAPAR TEND TID . TFPAR TPV
 
-    ExpressaoRelacional  ->  ExpressaoAritimetica TMAIORIG . ExpressaoAritimetica   (rule 70)
+    TFPAR  deslocar, e ir ao estado 140
 
-    TAPAR	shift, and go to state 37
-    TINT	shift, and go to state 38
-    TFLOAT	shift, and go to state 39
-    TID 	shift, and go to state 40
 
-    ExpressaoAritimetica	go to state 124
-    TExpressaoAritimetica	go to state 43
-    FExpressaoAritmetica	go to state 44
+Estado 117
 
+   20 ListaId: ListaId TV TID .
 
+    $padrão  reduzir usando a regra 20 (ListaId)
 
-state 96
 
-    ExpressaoRelacional  ->  ExpressaoAritimetica TCOM . ExpressaoAritimetica   (rule 73)
+Estado 118
 
-    TAPAR	shift, and go to state 37
-    TINT	shift, and go to state 38
-    TFLOAT	shift, and go to state 39
-    TID 	shift, and go to state 40
+    6 Funcao: TipoRetorno TID TAPAR TFPAR BlocoPrincipal .
 
-    ExpressaoAritimetica	go to state 125
-    TExpressaoAritimetica	go to state 43
-    FExpressaoAritmetica	go to state 44
+    $padrão  reduzir usando a regra 6 (Funcao)
 
 
+Estado 119
 
-state 97
+    9 DeclParametros: DeclParametros TV . Parametro
 
-    ExpressaoRelacional  ->  ExpressaoAritimetica TDIF . ExpressaoAritimetica   (rule 74)
+    TINT     deslocar, e ir ao estado 2
+    TFLOAT   deslocar, e ir ao estado 3
+    TSTRING  deslocar, e ir ao estado 4
 
-    TAPAR	shift, and go to state 37
-    TINT	shift, and go to state 38
-    TFLOAT	shift, and go to state 39
-    TID 	shift, and go to state 40
+    Parametro  ir ao estado 141
+    Tipo       ir ao estado 90
 
-    ExpressaoAritimetica	go to state 126
-    TExpressaoAritimetica	go to state 43
-    FExpressaoAritmetica	go to state 44
 
+Estado 120
 
+    5 Funcao: TipoRetorno TID TAPAR DeclParametros BlocoPrincipal . TFPAR BlocoPrincipal
 
-state 98
+    TFPAR  deslocar, e ir ao estado 142
 
-    ExpressaoLogica  ->  ExpressaoLogica TCEE . FExpressaoLogica   (rule 61)
 
-    TNEG	shift, and go to state 55
-    TAPAR	shift, and go to state 56
-    TINT	shift, and go to state 38
-    TFLOAT	shift, and go to state 39
-    TID 	shift, and go to state 40
-    TRUE	shift, and go to state 57
-    FALSE	shift, and go to state 58
+Estado 121
 
-    ExpressaoAritimetica	go to state 59
-    TExpressaoAritimetica	go to state 43
-    FExpressaoAritmetica	go to state 44
-    FExpressaoLogica	go to state 127
-    ExpressaoRelacional	go to state 62
+   11 Parametro: Tipo TID .
 
+    $padrão  reduzir usando a regra 11 (Parametro)
 
 
-state 99
+Estado 122
 
-    ExpressaoLogica  ->  ExpressaoLogica TCOU . FExpressaoLogica   (rule 62)
+   65 FExpressaoLogica: TAPAR FExpressaoLogica TFPAR .
 
-    TNEG	shift, and go to state 55
-    TAPAR	shift, and go to state 56
-    TINT	shift, and go to state 38
-    TFLOAT	shift, and go to state 39
-    TID 	shift, and go to state 40
-    TRUE	shift, and go to state 57
-    FALSE	shift, and go to state 58
+    $padrão  reduzir usando a regra 65 (FExpressaoLogica)
 
-    ExpressaoAritimetica	go to state 59
-    TExpressaoAritimetica	go to state 43
-    FExpressaoAritmetica	go to state 44
-    FExpressaoLogica	go to state 128
-    ExpressaoRelacional	go to state 62
 
+Estado 123
 
+   51 ExpressaoAritimetica: ExpressaoAritimetica . TADD TExpressaoAritimetica
+   52                     | ExpressaoAritimetica . TSUB TExpressaoAritimetica
+   71 ExpressaoRelacional: ExpressaoAritimetica TMENOR ExpressaoAritimetica .
 
-state 100
+    TADD  deslocar, e ir ao estado 74
+    TSUB  deslocar, e ir ao estado 75
 
-    CmdSe  ->  TIF TAPAR ExpressaoLogica TFPAR . Bloco   (rule 34)
-    CmdSe  ->  TIF TAPAR ExpressaoLogica TFPAR . Bloco TELSE Bloco   (rule 35)
+    $padrão  reduzir usando a regra 71 (ExpressaoRelacional)
 
-    TACHA	shift, and go to state 129
 
-    Bloco	go to state 130
+Estado 124
 
+   51 ExpressaoAritimetica: ExpressaoAritimetica . TADD TExpressaoAritimetica
+   52                     | ExpressaoAritimetica . TSUB TExpressaoAritimetica
+   69 ExpressaoRelacional: ExpressaoAritimetica TMAIOR ExpressaoAritimetica .
 
+    TADD  deslocar, e ir ao estado 74
+    TSUB  deslocar, e ir ao estado 75
 
-state 101
+    $padrão  reduzir usando a regra 69 (ExpressaoRelacional)
 
-    CmdEnquanto  ->  TWHILE TAPAR ExpressaoLogica TFPAR . Bloco   (rule 36)
 
-    TACHA	shift, and go to state 129
+Estado 125
 
-    Bloco	go to state 131
+   51 ExpressaoAritimetica: ExpressaoAritimetica . TADD TExpressaoAritimetica
+   52                     | ExpressaoAritimetica . TSUB TExpressaoAritimetica
+   72 ExpressaoRelacional: ExpressaoAritimetica TMENORIG ExpressaoAritimetica .
 
+    TADD  deslocar, e ir ao estado 74
+    TSUB  deslocar, e ir ao estado 75
 
+    $padrão  reduzir usando a regra 72 (ExpressaoRelacional)
 
-state 102
 
-    CmdAtrib  ->  TID TATB ExpressaoAritimetica TPV .   (rule 37)
+Estado 126
 
-    $default	reduce using rule 37 (CmdAtrib)
+   51 ExpressaoAritimetica: ExpressaoAritimetica . TADD TExpressaoAritimetica
+   52                     | ExpressaoAritimetica . TSUB TExpressaoAritimetica
+   70 ExpressaoRelacional: ExpressaoAritimetica TMAIORIG ExpressaoAritimetica .
 
+    TADD  deslocar, e ir ao estado 74
+    TSUB  deslocar, e ir ao estado 75
 
+    $padrão  reduzir usando a regra 70 (ExpressaoRelacional)
 
-state 103
 
-    ChamadaFuncao  ->  TID TAPAR ListaParametros TFPAR .   (rule 45)
+Estado 127
 
-    $default	reduce using rule 45 (ChamadaFuncao)
+   51 ExpressaoAritimetica: ExpressaoAritimetica . TADD TExpressaoAritimetica
+   52                     | ExpressaoAritimetica . TSUB TExpressaoAritimetica
+   73 ExpressaoRelacional: ExpressaoAritimetica TCOM ExpressaoAritimetica .
 
+    TADD  deslocar, e ir ao estado 74
+    TSUB  deslocar, e ir ao estado 75
 
+    $padrão  reduzir usando a regra 73 (ExpressaoRelacional)
 
-state 104
 
-    ListaParametros  ->  ListaParametros TV . ExpressaoAritimetica   (rule 47)
-    ListaParametros  ->  ListaParametros TV . TLITERAL   (rule 48)
+Estado 128
 
-    TAPAR	shift, and go to state 37
-    TINT	shift, and go to state 38
-    TFLOAT	shift, and go to state 39
-    TID 	shift, and go to state 40
-    TLITERAL	shift, and go to state 132
+   51 ExpressaoAritimetica: ExpressaoAritimetica . TADD TExpressaoAritimetica
+   52                     | ExpressaoAritimetica . TSUB TExpressaoAritimetica
+   74 ExpressaoRelacional: ExpressaoAritimetica TDIF ExpressaoAritimetica .
 
-    ExpressaoAritimetica	go to state 133
-    TExpressaoAritimetica	go to state 43
-    FExpressaoAritmetica	go to state 44
+    TADD  deslocar, e ir ao estado 74
+    TSUB  deslocar, e ir ao estado 75
 
+    $padrão  reduzir usando a regra 74 (ExpressaoRelacional)
 
 
-state 105
+Estado 129
 
-    FExpressaoAritmetica  ->  TAPAR ExpressaoAritimetica TFPAR .   (rule 57)
+   61 ExpressaoLogica: ExpressaoLogica TCEE FExpressaoLogica .
 
-    $default	reduce using rule 57 (FExpressaoAritmetica)
+    $padrão  reduzir usando a regra 61 (ExpressaoLogica)
 
 
+Estado 130
 
-state 106
+   62 ExpressaoLogica: ExpressaoLogica TCOU FExpressaoLogica .
 
-    ExpressaoAritimetica  ->  ExpressaoAritimetica TADD TExpressaoAritimetica .   (rule 51)
-    TExpressaoAritimetica  ->  TExpressaoAritimetica . TMUL FExpressaoAritmetica   (rule 54)
-    TExpressaoAritimetica  ->  TExpressaoAritimetica . TDIV FExpressaoAritmetica   (rule 55)
+    $padrão  reduzir usando a regra 62 (ExpressaoLogica)
 
-    TMUL	shift, and go to state 75
-    TDIV	shift, and go to state 76
 
-    $default	reduce using rule 51 (ExpressaoAritimetica)
+Estado 131
 
+   22 Bloco: TACHA . ListaCmd TFCHA
 
+    TIF     deslocar, e ir ao estado 12
+    TWHILE  deslocar, e ir ao estado 13
+    TID     deslocar, e ir ao estado 14
+    TRET    deslocar, e ir ao estado 15
+    TPRINT  deslocar, e ir ao estado 16
+    TREAD   deslocar, e ir ao estado 17
 
-state 107
+    ListaCmd       ir ao estado 143
+    Comando        ir ao estado 22
+    Retorno        ir ao estado 23
+    CmdSe          ir ao estado 24
+    CmdEnquanto    ir ao estado 25
+    CmdAtrib       ir ao estado 26
+    CmdEscrita     ir ao estado 27
+    CmdLeitura     ir ao estado 28
+    ChamadaProc    ir ao estado 29
+    ChamadaFuncao  ir ao estado 30
 
-    ExpressaoAritimetica  ->  ExpressaoAritimetica TSUB TExpressaoAritimetica .   (rule 52)
-    TExpressaoAritimetica  ->  TExpressaoAritimetica . TMUL FExpressaoAritmetica   (rule 54)
-    TExpressaoAritimetica  ->  TExpressaoAritimetica . TDIV FExpressaoAritmetica   (rule 55)
 
-    TMUL	shift, and go to state 75
-    TDIV	shift, and go to state 76
+Estado 132
 
-    $default	reduce using rule 52 (ExpressaoAritimetica)
+   34 CmdSe: TIF TAPAR ExpressaoLogica TFPAR Bloco .
+   35      | TIF TAPAR ExpressaoLogica TFPAR Bloco . TELSE Bloco
 
+    TELSE  deslocar, e ir ao estado 144
 
+    $padrão  reduzir usando a regra 34 (CmdSe)
 
-state 108
 
-    TExpressaoAritimetica  ->  TExpressaoAritimetica TMUL FExpressaoAritmetica .   (rule 54)
+Estado 133
 
-    $default	reduce using rule 54 (TExpressaoAritimetica)
+   36 CmdEnquanto: TWHILE TAPAR ExpressaoLogica TFPAR Bloco .
 
+    $padrão  reduzir usando a regra 36 (CmdEnquanto)
 
 
-state 109
+Estado 134
 
-    TExpressaoAritimetica  ->  TExpressaoAritimetica TDIV FExpressaoAritmetica .   (rule 55)
+   48 ListaParametros: ListaParametros TV TLITERAL .
 
-    $default	reduce using rule 55 (TExpressaoAritimetica)
+    $padrão  reduzir usando a regra 48 (ListaParametros)
 
 
+Estado 135
 
-state 110
+   47 ListaParametros: ListaParametros TV ExpressaoAritimetica .
+   51 ExpressaoAritimetica: ExpressaoAritimetica . TADD TExpressaoAritimetica
+   52                     | ExpressaoAritimetica . TSUB TExpressaoAritimetica
 
-    CmdEscrita  ->  TPRINT TAPAR TASP ExpressaoAritimetica . TASP TFPAR TPV   (rule 39)
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TADD TExpressaoAritimetica   (rule 51)
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TSUB TExpressaoAritimetica   (rule 52)
+    TADD  deslocar, e ir ao estado 74
+    TSUB  deslocar, e ir ao estado 75
 
-    TADD	shift, and go to state 72
-    TSUB	shift, and go to state 73
-    TASP	shift, and go to state 134
+    $padrão  reduzir usando a regra 47 (ListaParametros)
 
 
+Estado 136
 
-state 111
+   39 CmdEscrita: TPRINT TAPAR TASP ExpressaoAritimetica TASP . TFPAR TPV
 
-    CmdEscrita  ->  TPRINT TAPAR TLITERAL TFPAR . TPV   (rule 41)
+    TFPAR  deslocar, e ir ao estado 145
 
-    TPV 	shift, and go to state 135
 
+Estado 137
 
+   41 CmdEscrita: TPRINT TAPAR TLITERAL TFPAR TPV .
 
-state 112
+    $padrão  reduzir usando a regra 41 (CmdEscrita)
 
-    CmdEscrita  ->  TPRINT TAPAR ExpressaoAritimetica TFPAR . TPV   (rule 40)
 
-    TPV 	shift, and go to state 136
+Estado 138
 
+   40 CmdEscrita: TPRINT TAPAR ExpressaoAritimetica TFPAR TPV .
 
+    $padrão  reduzir usando a regra 40 (CmdEscrita)
 
-state 113
 
-    CmdLeitura  ->  TREAD TAPAR TID TFPAR . TPV   (rule 42)
+Estado 139
 
-    TPV 	shift, and go to state 137
+   42 CmdLeitura: TREAD TAPAR TID TFPAR TPV .
 
+    $padrão  reduzir usando a regra 42 (CmdLeitura)
 
 
-state 114
+Estado 140
 
-    CmdLeitura  ->  TREAD TAPAR TEND TID . TFPAR TPV   (rule 43)
+   43 CmdLeitura: TREAD TAPAR TEND TID TFPAR . TPV
 
-    TFPAR	shift, and go to state 138
+    TPV  deslocar, e ir ao estado 146
 
 
+Estado 141
 
-state 115
+    9 DeclParametros: DeclParametros TV Parametro .
 
-    ListaId  ->  ListaId TV TID .   (rule 20)
+    $padrão  reduzir usando a regra 9 (DeclParametros)
 
-    $default	reduce using rule 20 (ListaId)
 
+Estado 142
 
+    5 Funcao: TipoRetorno TID TAPAR DeclParametros BlocoPrincipal TFPAR . BlocoPrincipal
 
-state 116
+    TACHA  deslocar, e ir ao estado 1
 
-    Funcao  ->  TipoRetorno TID TAPAR TFPAR BlocoPrincipal .   (rule 6)
+    BlocoPrincipal  ir ao estado 147
 
-    $default	reduce using rule 6 (Funcao)
 
+Estado 143
 
+   22 Bloco: TACHA ListaCmd . TFCHA
+   23 ListaCmd: ListaCmd . Comando
 
-state 117
+    TIF     deslocar, e ir ao estado 12
+    TWHILE  deslocar, e ir ao estado 13
+    TFCHA   deslocar, e ir ao estado 148
+    TID     deslocar, e ir ao estado 14
+    TRET    deslocar, e ir ao estado 15
+    TPRINT  deslocar, e ir ao estado 16
+    TREAD   deslocar, e ir ao estado 17
 
-    DeclParametros  ->  DeclParametros TV . Parametro   (rule 9)
+    Comando        ir ao estado 54
+    Retorno        ir ao estado 23
+    CmdSe          ir ao estado 24
+    CmdEnquanto    ir ao estado 25
+    CmdAtrib       ir ao estado 26
+    CmdEscrita     ir ao estado 27
+    CmdLeitura     ir ao estado 28
+    ChamadaProc    ir ao estado 29
+    ChamadaFuncao  ir ao estado 30
 
-    TINT	shift, and go to state 2
-    TFLOAT	shift, and go to state 3
-    TSTRING	shift, and go to state 4
 
-    Parametro	go to state 139
-    Tipo	go to state 88
+Estado 144
 
+   35 CmdSe: TIF TAPAR ExpressaoLogica TFPAR Bloco TELSE . Bloco
 
+    TACHA  deslocar, e ir ao estado 131
 
-state 118
+    Bloco  ir ao estado 149
 
-    Funcao  ->  TipoRetorno TID TAPAR DeclParametros BlocoPrincipal . TFPAR BlocoPrincipal   (rule 5)
 
-    TFPAR	shift, and go to state 140
+Estado 145
 
+   39 CmdEscrita: TPRINT TAPAR TASP ExpressaoAritimetica TASP TFPAR . TPV
 
+    TPV  deslocar, e ir ao estado 150
 
-state 119
 
-    Parametro  ->  Tipo TID .   (rule 11)
+Estado 146
 
-    $default	reduce using rule 11 (Parametro)
+   43 CmdLeitura: TREAD TAPAR TEND TID TFPAR TPV .
 
+    $padrão  reduzir usando a regra 43 (CmdLeitura)
 
 
-state 120
+Estado 147
 
-    FExpressaoLogica  ->  TAPAR FExpressaoLogica TFPAR .   (rule 65)
+    5 Funcao: TipoRetorno TID TAPAR DeclParametros BlocoPrincipal TFPAR BlocoPrincipal .
 
-    $default	reduce using rule 65 (FExpressaoLogica)
+    $padrão  reduzir usando a regra 5 (Funcao)
 
 
+Estado 148
 
-state 121
+   22 Bloco: TACHA ListaCmd TFCHA .
 
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TADD TExpressaoAritimetica   (rule 51)
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TSUB TExpressaoAritimetica   (rule 52)
-    ExpressaoRelacional  ->  ExpressaoAritimetica TMENOR ExpressaoAritimetica .   (rule 71)
+    $padrão  reduzir usando a regra 22 (Bloco)
 
-    TADD	shift, and go to state 72
-    TSUB	shift, and go to state 73
 
-    $default	reduce using rule 71 (ExpressaoRelacional)
+Estado 149
 
+   35 CmdSe: TIF TAPAR ExpressaoLogica TFPAR Bloco TELSE Bloco .
 
+    $padrão  reduzir usando a regra 35 (CmdSe)
 
-state 122
 
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TADD TExpressaoAritimetica   (rule 51)
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TSUB TExpressaoAritimetica   (rule 52)
-    ExpressaoRelacional  ->  ExpressaoAritimetica TMAIOR ExpressaoAritimetica .   (rule 69)
+Estado 150
 
-    TADD	shift, and go to state 72
-    TSUB	shift, and go to state 73
+   39 CmdEscrita: TPRINT TAPAR TASP ExpressaoAritimetica TASP TFPAR TPV .
 
-    $default	reduce using rule 69 (ExpressaoRelacional)
-
-
-
-state 123
-
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TADD TExpressaoAritimetica   (rule 51)
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TSUB TExpressaoAritimetica   (rule 52)
-    ExpressaoRelacional  ->  ExpressaoAritimetica TMENORIG ExpressaoAritimetica .   (rule 72)
-
-    TADD	shift, and go to state 72
-    TSUB	shift, and go to state 73
-
-    $default	reduce using rule 72 (ExpressaoRelacional)
-
-
-
-state 124
-
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TADD TExpressaoAritimetica   (rule 51)
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TSUB TExpressaoAritimetica   (rule 52)
-    ExpressaoRelacional  ->  ExpressaoAritimetica TMAIORIG ExpressaoAritimetica .   (rule 70)
-
-    TADD	shift, and go to state 72
-    TSUB	shift, and go to state 73
-
-    $default	reduce using rule 70 (ExpressaoRelacional)
-
-
-
-state 125
-
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TADD TExpressaoAritimetica   (rule 51)
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TSUB TExpressaoAritimetica   (rule 52)
-    ExpressaoRelacional  ->  ExpressaoAritimetica TCOM ExpressaoAritimetica .   (rule 73)
-
-    TADD	shift, and go to state 72
-    TSUB	shift, and go to state 73
-
-    $default	reduce using rule 73 (ExpressaoRelacional)
-
-
-
-state 126
-
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TADD TExpressaoAritimetica   (rule 51)
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TSUB TExpressaoAritimetica   (rule 52)
-    ExpressaoRelacional  ->  ExpressaoAritimetica TDIF ExpressaoAritimetica .   (rule 74)
-
-    TADD	shift, and go to state 72
-    TSUB	shift, and go to state 73
-
-    $default	reduce using rule 74 (ExpressaoRelacional)
-
-
-
-state 127
-
-    ExpressaoLogica  ->  ExpressaoLogica TCEE FExpressaoLogica .   (rule 61)
-
-    $default	reduce using rule 61 (ExpressaoLogica)
-
-
-
-state 128
-
-    ExpressaoLogica  ->  ExpressaoLogica TCOU FExpressaoLogica .   (rule 62)
-
-    $default	reduce using rule 62 (ExpressaoLogica)
-
-
-
-state 129
-
-    Bloco  ->  TACHA . ListaCmd TFCHA   (rule 22)
-
-    TIF 	shift, and go to state 11
-    TWHILE	shift, and go to state 12
-    TID 	shift, and go to state 13
-    TRET	shift, and go to state 14
-    TPRINT	shift, and go to state 15
-    TREAD	shift, and go to state 16
-
-    ListaCmd	go to state 141
-    Comando	go to state 21
-    Retorno	go to state 22
-    CmdSe	go to state 23
-    CmdEnquanto	go to state 24
-    CmdAtrib	go to state 25
-    CmdEscrita	go to state 26
-    CmdLeitura	go to state 27
-    ChamadaProc	go to state 28
-    ChamadaFuncao	go to state 29
-
-
-
-state 130
-
-    CmdSe  ->  TIF TAPAR ExpressaoLogica TFPAR Bloco .   (rule 34)
-    CmdSe  ->  TIF TAPAR ExpressaoLogica TFPAR Bloco . TELSE Bloco   (rule 35)
-
-    TELSE	shift, and go to state 142
-
-    $default	reduce using rule 34 (CmdSe)
-
-
-
-state 131
-
-    CmdEnquanto  ->  TWHILE TAPAR ExpressaoLogica TFPAR Bloco .   (rule 36)
-
-    $default	reduce using rule 36 (CmdEnquanto)
-
-
-
-state 132
-
-    ListaParametros  ->  ListaParametros TV TLITERAL .   (rule 48)
-
-    $default	reduce using rule 48 (ListaParametros)
-
-
-
-state 133
-
-    ListaParametros  ->  ListaParametros TV ExpressaoAritimetica .   (rule 47)
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TADD TExpressaoAritimetica   (rule 51)
-    ExpressaoAritimetica  ->  ExpressaoAritimetica . TSUB TExpressaoAritimetica   (rule 52)
-
-    TADD	shift, and go to state 72
-    TSUB	shift, and go to state 73
-
-    $default	reduce using rule 47 (ListaParametros)
-
-
-
-state 134
-
-    CmdEscrita  ->  TPRINT TAPAR TASP ExpressaoAritimetica TASP . TFPAR TPV   (rule 39)
-
-    TFPAR	shift, and go to state 143
-
-
-
-state 135
-
-    CmdEscrita  ->  TPRINT TAPAR TLITERAL TFPAR TPV .   (rule 41)
-
-    $default	reduce using rule 41 (CmdEscrita)
-
-
-
-state 136
-
-    CmdEscrita  ->  TPRINT TAPAR ExpressaoAritimetica TFPAR TPV .   (rule 40)
-
-    $default	reduce using rule 40 (CmdEscrita)
-
-
-
-state 137
-
-    CmdLeitura  ->  TREAD TAPAR TID TFPAR TPV .   (rule 42)
-
-    $default	reduce using rule 42 (CmdLeitura)
-
-
-
-state 138
-
-    CmdLeitura  ->  TREAD TAPAR TEND TID TFPAR . TPV   (rule 43)
-
-    TPV 	shift, and go to state 144
-
-
-
-state 139
-
-    DeclParametros  ->  DeclParametros TV Parametro .   (rule 9)
-
-    $default	reduce using rule 9 (DeclParametros)
-
-
-
-state 140
-
-    Funcao  ->  TipoRetorno TID TAPAR DeclParametros BlocoPrincipal TFPAR . BlocoPrincipal   (rule 5)
-
-    TACHA	shift, and go to state 1
-
-    BlocoPrincipal	go to state 145
-
-
-
-state 141
-
-    Bloco  ->  TACHA ListaCmd . TFCHA   (rule 22)
-    ListaCmd  ->  ListaCmd . Comando   (rule 23)
-
-    TIF 	shift, and go to state 11
-    TWHILE	shift, and go to state 12
-    TFCHA	shift, and go to state 146
-    TID 	shift, and go to state 13
-    TRET	shift, and go to state 14
-    TPRINT	shift, and go to state 15
-    TREAD	shift, and go to state 16
-
-    Comando	go to state 52
-    Retorno	go to state 22
-    CmdSe	go to state 23
-    CmdEnquanto	go to state 24
-    CmdAtrib	go to state 25
-    CmdEscrita	go to state 26
-    CmdLeitura	go to state 27
-    ChamadaProc	go to state 28
-    ChamadaFuncao	go to state 29
-
-
-
-state 142
-
-    CmdSe  ->  TIF TAPAR ExpressaoLogica TFPAR Bloco TELSE . Bloco   (rule 35)
-
-    TACHA	shift, and go to state 129
-
-    Bloco	go to state 147
-
-
-
-state 143
-
-    CmdEscrita  ->  TPRINT TAPAR TASP ExpressaoAritimetica TASP TFPAR . TPV   (rule 39)
-
-    TPV 	shift, and go to state 148
-
-
-
-state 144
-
-    CmdLeitura  ->  TREAD TAPAR TEND TID TFPAR TPV .   (rule 43)
-
-    $default	reduce using rule 43 (CmdLeitura)
-
-
-
-state 145
-
-    Funcao  ->  TipoRetorno TID TAPAR DeclParametros BlocoPrincipal TFPAR BlocoPrincipal .   (rule 5)
-
-    $default	reduce using rule 5 (Funcao)
-
-
-
-state 146
-
-    Bloco  ->  TACHA ListaCmd TFCHA .   (rule 22)
-
-    $default	reduce using rule 22 (Bloco)
-
-
-
-state 147
-
-    CmdSe  ->  TIF TAPAR ExpressaoLogica TFPAR Bloco TELSE Bloco .   (rule 35)
-
-    $default	reduce using rule 35 (CmdSe)
-
-
-
-state 148
-
-    CmdEscrita  ->  TPRINT TAPAR TASP ExpressaoAritimetica TASP TFPAR TPV .   (rule 39)
-
-    $default	reduce using rule 39 (CmdEscrita)
-
-
-
-state 149
-
-    $   	go to state 150
-
-
-
-state 150
-
-    $   	go to state 151
-
-
-
-state 151
-
-    $default	accept
+    $padrão  reduzir usando a regra 39 (CmdEscrita)

@@ -1,0 +1,23 @@
+{
+  int a, b, m;
+  float n, p;
+  String str;
+
+  a = 13;
+  n = a / 2;
+  b = 21;
+  m = b + a;
+
+  if(m >= 30 && b < 25){
+    m = m - 2;
+    while (!(b == a)){
+      p = n * b / 3;
+      b = b - 1;
+    }
+    a = 17;
+  }
+  else{
+    p = m + a;
+  }
+  b = 0;
+}

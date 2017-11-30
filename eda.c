@@ -121,6 +121,8 @@ tNo * criaNo(tLista *lista, int posicao, TIPO tipo){
 
 void printArvoreInicio(tArvore *arv){
     tNo *elem = (tNo*)malloc(sizeof(tNo));
+    printf("\tTabela de Simbolos:\n");
+    printf("Id:\tTipo:\tPos:\tValor:\n");
     elem = arv->raiz;
     printArvore(elem, 1);
     printf("\n");
@@ -136,15 +138,16 @@ void printArvore(tNo *elem, int nivel){
 }
 
 void printNos(tNo *no, int nivel){
-    int j;
-
     if(no == NULL) return;
-    //if(no->tipo == T_INT) printf("int ");
-    //if(no->tipo == T_FLOAT) printf("float ");
-    //if(no->tipo == T_STRING) printf("String ");
 
-    for(j=1;j<nivel;j++){ printf("\t");}
-    printf("%s(%d,%.1f)", no->valor, no->pos, no->atrib);
+    printf("%s", no->valor);
+
+    if(no->tipo == T_INT) printf("\tint");
+    if(no->tipo == T_FLOAT) printf("\tfloat");
+    if(no->tipo == T_STRING) printf("\tString");
+
+    if(no->tipo == T_INT) printf("\t%d\t%d\n", no->pos, (int)no->atrib);
+    else printf("\t%d\t%.2f\n", no->pos, no->atrib);
 }
 
 void insereListaNaArvore(tLista *lista, tArvore *arv){
@@ -572,7 +575,8 @@ void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos, FILE *arq_saida){
                 }else{
                     // se o id informado for um id válido (dentro da tabelaSimbolos)
                     printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
-                    fprintf(arq_saida, "\tistore %d\n", aux->pos);
+                    if (cabeca->tipo == T_INT) fprintf(arq_saida, "\tistore %d\n", aux->pos);
+                    if (cabeca->tipo == T_FLOAT) fprintf(arq_saida, "\tfstore %d\n", aux->pos);
                     printf("Salva (%s)\n", aux->valor);
                     break;
                 }
@@ -585,7 +589,8 @@ void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos, FILE *arq_saida){
                     exit(-1);
                 }else{
                     // se o id informado for um id válido (dentro da tabelaSimbolos)
-                    fprintf(arq_saida, "\tiload %d\n", aux->pos);
+                    if (cabeca->tipo == T_INT) fprintf(arq_saida, "\tiload %d\n", aux->pos);
+                    if (cabeca->tipo == T_FLOAT) fprintf(arq_saida, "\tfload %d\n", aux->pos);
                     printf("Carrega (%s)\n", cabeca->id);
                     break;
                 }
