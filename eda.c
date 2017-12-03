@@ -515,6 +515,25 @@ tAST *criaCmdWhile(tAST *exp_esq, tAST *exp_dir, int cod){
     return ast;
 }
 
+tAST *criaLiteral(char *msg, int cod){
+    tAST *ast = (tAST*)malloc(sizeof(tAST));
+
+    ast->cod = cod;
+    ast->atr_ch = msg;
+    //strcpy(ast->atr_ch, msg);
+
+    return ast;
+}
+
+tAST *cmdPrint(tAST *param, int cod){
+    tAST *ast = (tAST*)malloc(sizeof(tAST));
+
+    ast->cod = cod;
+    ast->pt1 = param;
+
+    return ast;
+}
+
 tAST *criaListaComando(tAST *comando, int cod){
     tAST *ast = (tAST*)malloc(sizeof(tAST));
 
@@ -550,6 +569,22 @@ tAST *f2i(tAST *ptr){
     ast->atrib = ptr->atrib;
 
     return ast;
+}
+
+char *retiraExtensao(char *nome_arquivo){
+	char *arq_sem_ext, ponto[] = ".";
+	int i;
+
+	strcpy(arq_sem_ext, nome_arquivo);
+
+	for (i = 0; i < strlen(arq_sem_ext); i++) {
+		if(arq_sem_ext[i] == ponto[0]){
+			arq_sem_ext[i] = '\0';
+			break;
+		}
+	}
+	return arq_sem_ext;
+
 }
 
 int geraLabel(){
@@ -781,6 +816,31 @@ void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos, FILE *arq_saida){
                 if (cabeca->pt2 != NULL)
                     printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
                 break;
+            case PRT:
+                fprintf(arq_saida, "\tgetstatic java/lang/System/out Ljava/io/PrintStream;\n");
+                printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
+                if(cabeca->pt1->cod == MSG){
+                    fprintf(arq_saida, "\tinvokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n");
+                }
+                else{
+                    switch (cabeca->pt1->tipo) {
+                        case T_INT:
+                            fprintf(arq_saida, "\tinvokevirtual java/io/PrintStream/println(I)V\n");
+                            break;
+                        case T_FLOAT:
+                            fprintf(arq_saida, "\tinvokevirtual java/io/PrintStream/println(F)V\n");
+                            break;
+                        case T_STRING:
+                            fprintf(arq_saida, "\tinvokevirtual java/io/PrintStream/println(S)V\n");
+                            break;
+                    }
+
+                }
+                break;
+            case MSG:
+                fprintf(arq_saida, "\tldc %s\n", cabeca->atr_ch);
+                break;
+
         }
     }
 }

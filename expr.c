@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "eda.h"
 extern FILE *yyin;
 extern tArvore *tabelaSimbolos;
@@ -9,11 +8,14 @@ int main(int c, char *argv[])
 {
 	FILE *file;
 	file = fopen (argv[1], "r");
+	char *arq_sem_ext;
 	arq_saida = fopen("opcodes", "w");
 	if ( file == NULL){
 		printf("Arquivo \"%s\" não econtrado.\n", argv[1] );
 		return 1;
 	}
+	//arq_sem_ext = retiraExtensao(argv[1]);
+
 	fprintf(arq_saida, ".class public %s\n", argv[1]);
 	fprintf(arq_saida, ".super java/lang/Object\n\n");
 	fprintf(arq_saida, ".method public <init>()V\n");

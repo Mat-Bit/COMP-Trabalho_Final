@@ -9,6 +9,8 @@
   b = 21;
   m = b + a;
 
+  print("Hello world");
+
   if(m >= 30 && b < 25){
     m = m - 2;
     while (!(b == a)){
@@ -19,6 +21,7 @@
   }
   else{
     p = m + a;
+    print(n);
   }
   b = 0;
 }

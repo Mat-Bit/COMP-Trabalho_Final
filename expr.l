@@ -55,7 +55,7 @@ id ([_]|{letras})+{metacharacter}*
 {id} { strncpy(yylval.id, yytext, 9); return TID;}
 {int}	{yylval.ConstInt=atoi(yytext); return TINT;}
 {float}	{yylval.ConstFloat=atof(yytext); return TFLOAT;}
-{literal} {return TLITERAL;}
+{literal} {strncpy(yylval.mensagem, yytext, 99); return TLITERAL;}
 "&" {return TEND;}
 \0	{return T_FIM;}
 \n  {__linha__ ++;}

@@ -12,6 +12,7 @@ typedef struct Atributo{
   tLista *listaId;
   tArvore *tabelaSimbolos;
   char id[MAXID];
+  char mensagem[100];
   TIPO tipo;
   int ConstInt;
   float ConstFloat;
@@ -62,8 +63,7 @@ Bloco: TACHA ListaCmd TFCHA {$$.ast = $2.ast;};
 
 
 ListaCmd: ListaCmd Comando {$$.ast = insereListaComando($1.ast, $2.ast, CMD);}
-    | Comando {$$.ast = $1.ast;}
-    ;
+    | Comando {$$.ast = $1.ast;} ;
 
 Comando: CmdSe {$$.ast = $1.ast;}
     | CmdEnquanto {$$.ast = $1.ast;}
@@ -84,9 +84,8 @@ CmdEnquanto: TWHILE TAPAR ExpressaoLogica TFPAR Bloco {$$.ast = criaCmdWhile($3.
 CmdAtrib: TID TATB ExpressaoAritimetica TPV {$$.ast = criaCmdAtrib(tabelaSimbolos, $3.ast, $1.id);}
     | TID TATB TLITERAL;
 
-CmdEscrita: TPRINT TAPAR TASP ExpressaoAritimetica TASP TFPAR TPV
-    | TPRINT TAPAR ExpressaoAritimetica TFPAR TPV
-    | TPRINT TAPAR TLITERAL TFPAR TPV;
+CmdEscrita: TPRINT TAPAR ExpressaoAritimetica TFPAR TPV {$$.ast = cmdPrint($3.ast, PRT)}
+    | TPRINT TAPAR TLITERAL TFPAR TPV {$3.ast = criaLiteral($3.mensagem, MSG); $$.ast = cmdPrint($3.ast, PRT);};
 
 CmdLeitura: TREAD TAPAR TID TFPAR TPV
     | TREAD TAPAR TEND TID TFPAR TPV;

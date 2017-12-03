@@ -16,6 +16,7 @@
 #define IDD 600
 #define CONSTI 700
 #define CONSTF 800
+#define MSG 850
 
 #define IGUAL 900
 #define DIF 910
@@ -31,9 +32,9 @@
 #define IFF  1200
 #define IFEL 1250
 #define WLE  1300
+#define PRT 1400
 #define CMD 2000
 #define BLC 3000
-#define BLP 4000
 
 #define MAXID 10
 #define TIPO int
@@ -106,7 +107,10 @@ tAST *criaAst_ExpLog(tAST *exp_esq, tAST *exp_dir, int cod);
 tAST *criaCmdIf(tAST *exp_esq, tAST *exp_dir, int cod);
 tAST *criaCmdIfElse(tAST *expr, tAST *p_if, tAST *p_else, int cod);
 tAST *criaCmdWhile(tAST *exp_esq, tAST *exp_dir, int cod);
+tAST *criaLiteral(char *msg, int cod);
+tAST *cmdPrint(tAST *param, int cod);
 
+char *retiraExtensao(char *nome_arquivo);
 int geraLabel();
 void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos, FILE *arq_saida);
 tAST *i2f(tAST *ptr);

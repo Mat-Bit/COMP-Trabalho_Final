@@ -1,4 +1,4 @@
-.class public Exemplo5.xxt
+.class public Exerc5_lista.bit
 .super java/lang/Object
 
 .method public <init>()V
@@ -10,21 +10,33 @@
 
 .method public static main([Ljava/lang/String;)V
 	.limit stacks 10
-	.limit locals 3
-	iconst_1
-	istore 1
-	bipush 20
-	istore 2
+	.limit locals 4
 L1:	iload 1
+	iconst_1
+	if_icmpgt L4
+	goto L3
+L4:	iload 1
 	iload 2
-	if_icmplt L2
+	if_icmpne L2
 	goto L3
 L2:	iload 1
-	iconst_2
-	iadd
+	iload 2
+	if_icmpgt L5
+	goto L6
+L5:	iload 1
+	iload 2
+	isub
 	istore 1
-	goto L1
-L3:	bipush 10
+L6:	iload 2
+	iload 1
+	if_icmpgt L7
+	goto L8
+L7:	iload 2
+	iload 1
+	isub
 	istore 2
+L8:	goto L1
+L3:	iload 1
+	istore 3
 	return
 .end method
