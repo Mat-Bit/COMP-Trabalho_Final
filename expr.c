@@ -8,15 +8,15 @@ int main(int c, char *argv[])
 {
 	FILE *file;
 	file = fopen (argv[1], "r");
-	char *arq_sem_ext;
+	char arq_sem_ext[100];
 	arq_saida = fopen("opcodes", "w");
 	if ( file == NULL){
 		printf("Arquivo \"%s\" não econtrado.\n", argv[1] );
 		return 1;
 	}
-	//arq_sem_ext = retiraExtensao(argv[1]);
+	retiraExtensao(argv[1], &arq_sem_ext);
 
-	fprintf(arq_saida, ".class public %s\n", argv[1]);
+	fprintf(arq_saida, ".class public %s\n", arq_sem_ext);
 	fprintf(arq_saida, ".super java/lang/Object\n\n");
 	fprintf(arq_saida, ".method public <init>()V\n");
 	fprintf(arq_saida, "\taload_0\n\n");
@@ -29,7 +29,7 @@ int main(int c, char *argv[])
 	yyin = file;
 	yyparse();
 
-	fprintf(arq_saida, "\t.limit stacks 10\n");
+	fprintf(arq_saida, "\t.limit stack 10\n");
 	fprintf(arq_saida, "\t.limit locals %d\n", (tabelaSimbolos->qtd + 1));
 
 	printa_op_code(raiz, tabelaSimbolos, arq_saida);

@@ -9,7 +9,7 @@
   b = 21;
   m = b + a;
 
-  print("Hello world");
+  print("OOOOH XANAINA");
 
   if(m >= 30 && b < 25){
     m = m - 2;
@@ -21,7 +21,7 @@
   }
   else{
     p = m + a;
-    print(n);
   }
+  print(b);
   b = 0;
 }

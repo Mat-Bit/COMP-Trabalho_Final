@@ -122,8 +122,8 @@ tNo * criaNo(tLista *lista, int posicao, TIPO tipo){
 
 void printArvoreInicio(tArvore *arv){
     tNo *elem = (tNo*)malloc(sizeof(tNo));
-    printf("\tTabela de Simbolos:\n");
-    printf("Id:\tTipo:\tPos:\tValor:\n");
+    printf("   Tabela de Simbolos:\n");
+    printf("Id:\tTipo:\tPos:\n");
     elem = arv->raiz;
     printArvore(elem, 1);
     printf("\n");
@@ -147,9 +147,9 @@ void printNos(tNo *no, int nivel){
     if(no->tipo == T_FLOAT) printf("\tfloat");
     if(no->tipo == T_STRING) printf("\tString");
 
-    if(no->tipo == T_INT) printf("\t%d\t%d\n", no->pos, (int)no->atrib);
-    if(no->tipo == T_FLOAT) printf("\t%d\t%.2f\n", no->pos, no->atrib);
-    if(no->tipo == T_STRING) printf("\t%d\t%s\n", no->pos, no->atr_ch);
+    if(no->tipo == T_INT) printf("\t%d\n", no->pos);
+    if(no->tipo == T_FLOAT) printf("\t%d\n", no->pos);
+    if(no->tipo == T_STRING) printf("\t%d\n", no->pos);
 }
 
 void insereListaNaArvore(tLista *lista, tArvore *arv){
@@ -515,7 +515,7 @@ tAST *criaCmdWhile(tAST *exp_esq, tAST *exp_dir, int cod){
     return ast;
 }
 
-tAST *criaLiteral(char *msg, int cod){
+tAST *criaLiteral(tMsg *msg, int cod){
     tAST *ast = (tAST*)malloc(sizeof(tAST));
 
     ast->cod = cod;
@@ -523,6 +523,14 @@ tAST *criaLiteral(char *msg, int cod){
     //strcpy(ast->atr_ch, msg);
 
     return ast;
+}
+
+tMsg *criaMensagem (char *escrita){
+    tMsg *elem = (tMsg*)malloc(sizeof(tMsg));
+    if (elem != NULL){
+        memcpy(elem->mensagem, escrita, 100);
+    }
+    return elem;
 }
 
 tAST *cmdPrint(tAST *param, int cod){
@@ -571,19 +579,25 @@ tAST *f2i(tAST *ptr){
     return ast;
 }
 
-char *retiraExtensao(char *nome_arquivo){
-	char *arq_sem_ext, ponto[] = ".";
-	int i;
+tAST *neg(tAST *ptr){
+    tAST *ast = (tAST*)malloc(sizeof(tAST));
 
-	strcpy(arq_sem_ext, nome_arquivo);
+    ast->cod = NEGAT;
+    ast->pt2 = ptr;
+    ast->tipo = ptr->tipo;
+    ast->atrib = ptr->atrib;
 
-	for (i = 0; i < strlen(arq_sem_ext); i++) {
-		if(arq_sem_ext[i] == ponto[0]){
-			arq_sem_ext[i] = '\0';
-			break;
-		}
-	}
-	return arq_sem_ext;
+    return ast;
+}
+
+void retiraExtensao(char *nome_arquivo, char arq_sem_ext[]){
+	int i = 0;
+
+    while (nome_arquivo[i] != '.') {
+        arq_sem_ext[i] = nome_arquivo[i];
+        i++;
+    }
+    arq_sem_ext[i] = '\0';
 
 }
 
@@ -637,8 +651,18 @@ void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos, FILE *arq_saida){
                 printf("Le (%d)\n", cabeca->ConstInt);
                 break;
             case CONSTF:
-                if(cabeca->ConstFloat <= 5.00) {fprintf(arq_saida, "\tfconst_%.2f\n", cabeca->ConstFloat);}
-                else {fprintf(arq_saida, "\tbipush %.2f\n", cabeca->ConstFloat);}
+                if(cabeca->ConstFloat > 5.0){
+                    if (cabeca->ConstFloat / (int)cabeca->ConstFloat == 1.0){
+                        fprintf(arq_saida, "\tbipush %d\n", (int)cabeca->ConstFloat);
+                    }
+                    else fprintf(arq_saida, "\tldc %.2f\n", cabeca->ConstFloat);
+                }
+                else{
+                    if (cabeca->ConstFloat / (int)cabeca->ConstFloat == 1.0){
+                        fprintf(arq_saida, "\tfconst %d\n", (int)cabeca->ConstFloat);
+                    }
+                    else fprintf(arq_saida, "\tldc %.2f\n", cabeca->ConstFloat);
+                }
                 printf("Le (%.2f)\n", cabeca->ConstFloat);
                 break;
             case ADD:
@@ -678,6 +702,12 @@ void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos, FILE *arq_saida){
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
                 fprintf(arq_saida, "\tf2i\n");
                 printf("Conv (f2i)\n");
+                break;
+            case NEGAT:
+                printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
+                if (cabeca->tipo == T_FLOAT) fprintf(arq_saida, "\tfneg\n");
+                if (cabeca->tipo == T_INT) fprintf(arq_saida, "\tineg\n");
+                printf("Conv (neg)\n");
                 break;
             case DIF:
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
@@ -740,7 +770,7 @@ void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos, FILE *arq_saida){
                 cabeca->pt1->lf = cabeca->lf;
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
 
-                fprintf(arq_saida, "L%d:", laux);
+                fprintf(arq_saida, "L%d:\n", laux);
 
                 cabeca->pt2->lv = cabeca->lv;
                 cabeca->pt2->lf = cabeca->lf;
@@ -753,7 +783,7 @@ void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos, FILE *arq_saida){
                 cabeca->pt1->lf = laux;
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
 
-                fprintf(arq_saida, "L%d:", laux);
+                fprintf(arq_saida, "L%d:\n", laux);
 
                 cabeca->pt2->lv = cabeca->lv;
                 cabeca->pt2->lf = cabeca->lf;
@@ -771,10 +801,10 @@ void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos, FILE *arq_saida){
                 cabeca->pt1->lf = cabeca->lf;
 
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
-                fprintf(arq_saida, "L%d:", cabeca->lv);
+                fprintf(arq_saida, "L%d:\n", cabeca->lv);
 
                 printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
-                fprintf(arq_saida, "L%d:", cabeca->lf);
+                fprintf(arq_saida, "L%d:\n", cabeca->lf);
                 break;
             case IFEL:
                 cabeca->lv = geraLabel();
@@ -784,31 +814,31 @@ void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos, FILE *arq_saida){
 
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
                 // Bloco if:
-                fprintf(arq_saida, "L%d:", cabeca->lv);
+                fprintf(arq_saida, "L%d:\n", cabeca->lv);
                 printa_op_code(cabeca->pt2->pt1, tabelaSimbolos, arq_saida);
 
                 laux = geraLabel();
                 fprintf(arq_saida, "\tgoto L%d\n", laux);
                 // Bloco else:
-                fprintf(arq_saida, "L%d:", cabeca->lf);
+                fprintf(arq_saida, "L%d:\n", cabeca->lf);
                 printa_op_code(cabeca->pt2->pt2, tabelaSimbolos, arq_saida);
-                fprintf(arq_saida, "L%d:", laux);
+                fprintf(arq_saida, "L%d:\n", laux);
                 break;
             case WLE:
                 laux = geraLabel();
                 cabeca->lv = geraLabel();
                 cabeca->lf = geraLabel();
-                fprintf(arq_saida, "L%d:", laux);
+                fprintf(arq_saida, "L%d:\n", laux);
 
                 cabeca->pt1->lv = cabeca->lv;
                 cabeca->pt1->lf = cabeca->lf;
 
                 printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
-                fprintf(arq_saida, "L%d:", cabeca->lv);
+                fprintf(arq_saida, "L%d:\n", cabeca->lv);
 
                 printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
                 fprintf(arq_saida, "\tgoto L%d\n", laux);
-                fprintf(arq_saida, "L%d:", cabeca->lf);
+                fprintf(arq_saida, "L%d:\n", cabeca->lf);
 
                 break;
             case BLC:
@@ -830,7 +860,6 @@ void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos, FILE *arq_saida){
                         case T_FLOAT:
                             fprintf(arq_saida, "\tinvokevirtual java/io/PrintStream/println(F)V\n");
                             break;
-                        case T_STRING:
                             fprintf(arq_saida, "\tinvokevirtual java/io/PrintStream/println(S)V\n");
                             break;
                     }
@@ -838,7 +867,8 @@ void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos, FILE *arq_saida){
                 }
                 break;
             case MSG:
-                fprintf(arq_saida, "\tldc %s\n", cabeca->atr_ch);
+                fprintf(arq_saida, "\tldc %s\n", cabeca->atr_ch->mensagem);
+                printf("%s\n", cabeca->atr_ch->mensagem);
                 break;
 
         }

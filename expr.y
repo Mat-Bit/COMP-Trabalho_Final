@@ -17,6 +17,7 @@ typedef struct Atributo{
   int ConstInt;
   float ConstFloat;
   tAST *ast;
+  tMsg *msg;
 //
 }tAtributo;
 
@@ -85,7 +86,7 @@ CmdAtrib: TID TATB ExpressaoAritimetica TPV {$$.ast = criaCmdAtrib(tabelaSimbolo
     | TID TATB TLITERAL;
 
 CmdEscrita: TPRINT TAPAR ExpressaoAritimetica TFPAR TPV {$$.ast = cmdPrint($3.ast, PRT)}
-    | TPRINT TAPAR TLITERAL TFPAR TPV {$3.ast = criaLiteral($3.mensagem, MSG); $$.ast = cmdPrint($3.ast, PRT);};
+    | TPRINT TAPAR TLITERAL TFPAR TPV {$3.msg = criaMensagem($3.mensagem); $$.ast = cmdPrint(criaLiteral($3.msg, MSG), PRT);};
 
 CmdLeitura: TREAD TAPAR TID TFPAR TPV
     | TREAD TAPAR TEND TID TFPAR TPV;
@@ -103,7 +104,8 @@ ListaParametros: ListaParametros TV ExpressaoAritimetica
 //Expressões
 ExpressaoAritimetica: ExpressaoAritimetica TADD TExpressaoAritimetica { $$.ast = criaAst_ExpArit($1.ast, $3.ast, ADD);}
     | ExpressaoAritimetica TSUB TExpressaoAritimetica { $$.ast = criaAst_ExpArit($1.ast, $3.ast, SUB); }
-    | TExpressaoAritimetica { $$.ast = $1.ast; } ;
+    | TExpressaoAritimetica { $$.ast = $1.ast; }
+    | TSUB FExpressaoAritmetica { $$.ast = neg($2.ast); } ;
 
 TExpressaoAritimetica: TExpressaoAritimetica TMUL FExpressaoAritmetica { $$.ast = criaAst_ExpArit($1.ast, $3.ast, MUL); }
     | TExpressaoAritimetica TDIV FExpressaoAritmetica { $$.ast = criaAst_ExpArit($1.ast, $3.ast, DIV); }

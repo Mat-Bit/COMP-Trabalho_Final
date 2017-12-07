@@ -11,6 +11,7 @@
 #define DIV 400
 #define I2F 1000
 #define F2I 1010
+#define NEGAT 1020
 
 #define ATR 500
 #define IDD 600
@@ -51,6 +52,10 @@ typedef struct Lista{
     struct Lista *proximo;
 } tLista;
 
+typedef struct Msg{
+    char mensagem[100];
+} tMsg;
+
 typedef struct no{
     char *valor;
     TIPO tipo;
@@ -70,7 +75,7 @@ typedef struct AST{
     int cod;
     char *id;
     float atrib;
-    char *atr_ch;
+    tMsg *atr_ch;
     TIPO tipo;
     int ConstInt;
     float ConstFloat;
@@ -107,13 +112,15 @@ tAST *criaAst_ExpLog(tAST *exp_esq, tAST *exp_dir, int cod);
 tAST *criaCmdIf(tAST *exp_esq, tAST *exp_dir, int cod);
 tAST *criaCmdIfElse(tAST *expr, tAST *p_if, tAST *p_else, int cod);
 tAST *criaCmdWhile(tAST *exp_esq, tAST *exp_dir, int cod);
-tAST *criaLiteral(char *msg, int cod);
+tAST *criaLiteral(tMsg *msg, int cod);
+tMsg *criaMensagem (char *escrita);
 tAST *cmdPrint(tAST *param, int cod);
 
-char *retiraExtensao(char *nome_arquivo);
+void retiraExtensao(char *nome_arquivo, char arq_sem_ext[]);
 int geraLabel();
 void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos, FILE *arq_saida);
 tAST *i2f(tAST *ptr);
 tAST *f2i(tAST *ptr);
+tAST *neg(tAST *ptr);
 
 #endif
