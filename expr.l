@@ -33,6 +33,7 @@ id ([_]|{letras})+{metacharacter}*
 "if"	{return TIF;}
 "while"	{return TWHILE;}
 "else"	{return TELSE;}
+"do"    {return TDO;}
 
 "("	{return TAPAR;}
 ")"	{return TFPAR;}

@@ -25,7 +25,7 @@ typedef struct Atributo{
 int __linha__ = 1;
 %}
 
-%token TADD TSUB TMUL TDIV TMENOR TMAIOR TATB TMENORIG TMAIORIG TCOM TDIF TCEE TCOU TNEG TIF TWHILE TELSE TAPAR TFPAR TACHA TFCHA TASP TINT TFLOAT TSTRING TID TPV TV TRET TPRINT TREAD TVOID TLITERAL TRUE FALSE TEND T_FIM
+%token TADD TSUB TMUL TDIV TMENOR TMAIOR TATB TMENORIG TMAIORIG TCOM TDIF TCEE TCOU TNEG TIF TWHILE TELSE TAPAR TFPAR TACHA TFCHA TASP TINT TFLOAT TSTRING TID TPV TV TRET TPRINT TDO TREAD TVOID TLITERAL TRUE FALSE TEND T_FIM
 
 %%
 Programa: ListaFuncoes BlocoPrincipal
@@ -71,6 +71,7 @@ Comando: CmdSe {$$.ast = $1.ast;}
     | CmdAtrib {$$.ast = $1.ast;}
     | CmdEscrita {$$.ast = $1.ast;}
     | CmdLeitura {$$.ast = $1.ast;}
+    | CmdDoWhile {$$.ast = $1.ast;}
     | ChamadaProc {$$.ast = $1.ast;}
     | Retorno {$$.ast = $1.ast;};
 
@@ -90,6 +91,8 @@ CmdEscrita: TPRINT TAPAR ExpressaoAritimetica TFPAR TPV {$$.ast = cmdPrint($3.as
 
 CmdLeitura: TREAD TAPAR TID TFPAR TPV
     | TREAD TAPAR TEND TID TFPAR TPV;
+
+CmdDoWhile: TDO Bloco TWHILE TAPAR ExpressaoLogica TFPAR TPV {$$.ast = criaCmdDoWhile($2.ast, $5.ast, DOWLE);};
 
 ChamadaProc: ChamadaFuncao TPV;
 

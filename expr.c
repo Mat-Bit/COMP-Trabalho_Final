@@ -14,7 +14,7 @@ int main(int c, char *argv[])
 		printf("Arquivo \"%s\" não econtrado.\n", argv[1] );
 		return 1;
 	}
-	retiraExtensao(argv[1], &arq_sem_ext);
+	retiraExtensao(argv[1], arq_sem_ext);
 
 	fprintf(arq_saida, ".class public %s\n", arq_sem_ext);
 	fprintf(arq_saida, ".super java/lang/Object\n\n");

@@ -515,6 +515,25 @@ tAST *criaCmdWhile(tAST *exp_esq, tAST *exp_dir, int cod){
     return ast;
 }
 
+tAST *criaCmdDoWhile(tAST *exp_esq, tAST *exp_dir, int cod){
+    tAST *ast = (tAST*)malloc(sizeof(tAST));
+    tAST *bloco = (tAST*)malloc(sizeof(tAST));
+
+    ast->cod = cod;
+
+    bloco->pt1 = exp_esq;
+    bloco->pt2 = NULL;
+    bloco->cod = BLC;
+    ast->pt1 = bloco;
+
+    ast->pt2 = exp_dir;
+
+    if (exp_dir->id == "TRUE") {ast->id = "TRUE";}
+    else {ast->id = "FALSE";}
+
+    return ast;
+}
+
 tAST *criaLiteral(tMsg *msg, int cod){
     tAST *ast = (tAST*)malloc(sizeof(tAST));
 
@@ -838,6 +857,19 @@ void printa_op_code(tAST *cabeca, tArvore *tabelaSimbolos, FILE *arq_saida){
 
                 printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
                 fprintf(arq_saida, "\tgoto L%d\n", laux);
+                fprintf(arq_saida, "L%d:\n", cabeca->lf);
+
+                break;
+            case DOWLE:
+                cabeca->lv = geraLabel();
+                cabeca->lf = geraLabel();
+                fprintf(arq_saida, "L%d:\n", cabeca->lv);
+                printa_op_code(cabeca->pt1, tabelaSimbolos, arq_saida);
+
+                cabeca->pt2->lv = cabeca->lv;
+                cabeca->pt2->lf = cabeca->lf;
+
+                printa_op_code(cabeca->pt2, tabelaSimbolos, arq_saida);
                 fprintf(arq_saida, "L%d:\n", cabeca->lf);
 
                 break;

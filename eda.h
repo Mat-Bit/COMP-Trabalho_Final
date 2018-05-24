@@ -34,6 +34,7 @@
 #define IFEL 1250
 #define WLE  1300
 #define PRT 1400
+#define DOWLE 1500
 #define CMD 2000
 #define BLC 3000
 
@@ -112,6 +113,7 @@ tAST *criaAst_ExpLog(tAST *exp_esq, tAST *exp_dir, int cod);
 tAST *criaCmdIf(tAST *exp_esq, tAST *exp_dir, int cod);
 tAST *criaCmdIfElse(tAST *expr, tAST *p_if, tAST *p_else, int cod);
 tAST *criaCmdWhile(tAST *exp_esq, tAST *exp_dir, int cod);
+tAST *criaCmdDoWhile(tAST *exp_esq, tAST *exp_dir, int cod);
 tAST *criaLiteral(tMsg *msg, int cod);
 tMsg *criaMensagem (char *escrita);
 tAST *cmdPrint(tAST *param, int cod);

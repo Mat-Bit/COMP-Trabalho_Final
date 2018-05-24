@@ -1,0 +1,15 @@
+{
+    int m, a, t;
+    m = 1;
+    t = 0;
+    a = 5;
+    print("t =");
+    do {
+        print(t);
+        t = t + m * a;
+        m = m + 1;
+    } while (t <= 50);
+    print("Finish");
+    print("valor final de t:");
+    print(t);
+}
